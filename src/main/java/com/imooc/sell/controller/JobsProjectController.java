@@ -9,6 +9,7 @@ import com.imooc.sell.exception.SellException;
 import com.imooc.sell.service.impl.JobsProjectServiceImpl;
 import com.imooc.sell.service.impl.ProjectMasterServiceImpl;
 import com.imooc.sell.utils.ResultVOUtil;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -23,13 +24,17 @@ import java.util.Map;
 @RestController
 @RequestMapping("/project/jobs")
 @Slf4j
-
+@Api(tags = "招聘项目-访问接口")
 public class JobsProjectController {
+
     @Autowired
     ProjectMasterServiceImpl projectMasterService;
+
     @Autowired
     JobsProjectServiceImpl jobsProjectService;
 
+    @ApiOperation(value = "创建招聘项目", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
     @PostMapping("/create")
     public ResultVO<Map<String, String>> create(@Valid JobsProjectFrom jobsProjectFrom,
                                                 BindingResult bindingResult) throws Exception {
@@ -47,19 +52,34 @@ public class JobsProjectController {
 
     }
 
+    @ApiOperation(value = "按照更新时间查询闲置项目", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page",value = "页数",required=true),
+            @ApiImplicitParam(name = "size",value = "页大小",required=true),
+    })
     @PostMapping("/list")
     public ResultVO list(@RequestParam(value = "page", defaultValue = "0") Integer page,
                              @RequestParam(value = "size", defaultValue = "10") Integer size) throws Exception {
         PageRequest pageRequest = new PageRequest(page, size);
         List<JobsProjectDTO> list = jobsProjectService.findJobsProjectsOrderByUpdateTime(pageRequest);
         return ResultVOUtil.success(list);
-
     }
+
+    @ApiOperation(value = "按照项目id查找项目详情", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "projectId",value = "项目id",required=true)
     @PostMapping("/findOne")
     public ResultVO findOne(@RequestParam(value = "projectId") String projectId){
         return  ResultVOUtil.success(jobsProjectService.findJobsProjectByProjectId(projectId));
     }
 
+    @ApiOperation(value = "删除项目", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "projectId",value = "项目Id",required=true),
+            @ApiImplicitParam(name = "openid",value = "用户Id",required=true),
+    })
     @PostMapping("/deleteOne")
     public ResultVO deleteOne(@RequestParam(value = "projectId") String projectId,
                               @RequestParam(value = "openid") String openid){

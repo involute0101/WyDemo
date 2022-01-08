@@ -8,6 +8,7 @@ import com.imooc.sell.service.impl.FavoritesServiceServiceImpl;
 import com.imooc.sell.service.impl.ProjectMasterServiceImpl;
 import com.imooc.sell.service.impl.UserInfoServiceImpl;
 import com.imooc.sell.utils.ResultVOUtil;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/project/favorites")
 @Slf4j
+@Api(tags = "收藏项目-访问接口")
 public class FavoritesController {
     @Autowired
     FavoritesServiceServiceImpl favoritesServiceService;
@@ -26,7 +28,12 @@ public class FavoritesController {
     @Autowired
     ProjectMasterServiceImpl projectMasterService;
 
-
+    @ApiOperation(value = "创建收藏项目", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "projectId",value = "项目Id",required=true),
+            @ApiImplicitParam(name = "openid",value = "用户Id",required=true),
+    })
     @PostMapping("/createOne")
     public ResultVO create(@RequestParam(value = "projectId") String projectId,
                            @RequestParam(value = "openid") String openid) throws Exception {
@@ -50,6 +57,12 @@ public class FavoritesController {
             return ResultVOUtil.error(ResultEnum.FAVORITES_EXISTED);
     }
 
+    @ApiOperation(value = "删除收藏项目", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "projectId",value = "项目Id",required=true),
+            @ApiImplicitParam(name = "openid",value = "用户Id",required=true),
+    })
     @PostMapping("/deleteOne")
     public ResultVO deleteOne(@RequestParam(value = "projectId") String projectId,
                               @RequestParam(value = "openid") String openid){
@@ -66,6 +79,9 @@ public class FavoritesController {
         return ResultVOUtil.success(favoritesServiceService.deleteFavoriteOne(openid,projectId));
     }
 
+    @ApiOperation(value = "查询一个用户收藏的项目数", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "openid",value = "用户Id",required=true)
     @PostMapping("/checkNumByOpenId")
     public ResultVO checkNumByOpenId(@RequestParam(value = "openid") String openid){
         UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(openid);
@@ -76,6 +92,9 @@ public class FavoritesController {
         return ResultVOUtil.success(num);
     }
 
+    @ApiOperation(value = "查询一个项目被用户收藏数", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "projectId",value = "项目Id",required=true)
     @PostMapping("/checkNumByProjectId")
     public ResultVO checkNumByprojectId(@RequestParam(value = "projectId") String projectId){
         if (projectMasterService.findProjectMasterByProjectId(projectId) == null){
@@ -85,6 +104,9 @@ public class FavoritesController {
         return ResultVOUtil.success(num);
     }
 
+    @ApiOperation(value = "查询用户收藏所有项目的详细", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "openid",value = "用户Id",required=true)
     @PostMapping("/checkAllByOpenId")
     public ResultVO checkAllByOpenId(@RequestParam(value = "openid") String openid){
         UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(openid);

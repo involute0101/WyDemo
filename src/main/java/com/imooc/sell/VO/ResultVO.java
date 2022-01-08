@@ -1,5 +1,7 @@
 package com.imooc.sell.VO;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -8,14 +10,15 @@ import lombok.Data;
  * 2020/4/2
  */
 @Data
+@ApiModel(value = "返回结果")
 public class ResultVO<T> {
 
-    /** 错误码. */
+    @ApiModelProperty(value = "错误码")
     private Integer code;
 
-    /** 提示信息. */
+    @ApiModelProperty(value = "提示信息")
     private String msg;
 
-    /** 具体内容. */
+    @ApiModelProperty(value = "具体内容")
     private T data;
 }

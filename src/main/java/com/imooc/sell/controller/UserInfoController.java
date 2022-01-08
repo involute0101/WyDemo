@@ -12,6 +12,7 @@ import com.imooc.sell.exception.SellException;
 import com.imooc.sell.service.UserInfoService;
 import com.imooc.sell.utils.ResultVOUtil;
 
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -23,12 +24,13 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/user/account")
 @Slf4j
-
+@Api(tags = "用户信息-访问接口")
 public class UserInfoController {
     @Autowired
     private UserInfoService userInfoService;
 
-    //注册账号
+    @ApiOperation(value = "注册账号", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
     @PostMapping("/register")
     public ResultVO register(@Valid UserInfoFrom userInfoFrom, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()){
@@ -45,6 +47,12 @@ public class UserInfoController {
 
     }
 
+    @ApiOperation(value = "登录", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "password",value = "密码",required=true),
+            @ApiImplicitParam(name = "openid",value = "用户Id",required=true),
+    })
     @PostMapping("/login")
     public ResultVO login(@RequestParam("openid") String openid,
                           @RequestParam("password") String password){
@@ -53,18 +61,27 @@ public class UserInfoController {
 
     }
 
+    @ApiOperation(value = "发送验证码", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "telephone",value = "手机号",required=true)
     @PostMapping("/captcha")
     public ResultVO captcha(@RequestParam("telephone") String telephone){
         CaptchaVO result =  userInfoService.sendSms(telephone);
         return  ResultVOUtil.success(result);
     }
 
+    @ApiOperation(value = "检查账号是否已注册", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "openid",value = "用户id",required=true)
     @PostMapping("/check")
     public ResultVO check(@RequestParam("openid") String openid){
         UserInfoDTO userInfoDTO =  userInfoService.checkUserInfoByBuyerOpenid(openid);
         return  ResultVOUtil.success(userInfoDTO);
     }
 
+    @ApiOperation(value = "查询用户认证信息", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "openid",value = "用户id",required=true)
     @PostMapping("/inquire/certification")
     public ResultVO getCertification(@RequestParam("openid") String openid){
         UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(openid);
@@ -73,6 +90,9 @@ public class UserInfoController {
         return ResultVOUtil.success(jsonObject);
     }
 
+    @ApiOperation(value = "查询用户信用等级", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "openid",value = "用户id",required=true)
     @PostMapping("inquire/userCreditLevel")
     public ResultVO getCreditLevel(@RequestParam("openid") String openid){
         UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(openid);

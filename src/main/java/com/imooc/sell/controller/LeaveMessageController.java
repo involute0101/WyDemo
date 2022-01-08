@@ -10,6 +10,7 @@ import com.imooc.sell.exception.SellException;
 import com.imooc.sell.service.impl.LeaveMessageServiceImpl;
 import com.imooc.sell.utils.ResultVOUtil;
 import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,18 @@ import java.util.Map;
 @RestController
 @RequestMapping("/leaveMessage")
 @Slf4j
+@Api(tags = "留言信息-访问接口")
 public class LeaveMessageController {
     @Autowired
     LeaveMessageServiceImpl leaveMessageService;
 
+    @ApiOperation(value = "创建留言", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "projectId",value = "项目Id",required=true),
+            @ApiImplicitParam(name = "openid",value = "用户Id",required=true),
+            @ApiImplicitParam(name = "content",value = "留言内容",required=true)
+    })
     @PostMapping("/create")
     public ResultVO create(@RequestParam(value = "openid") String openid,
                            @RequestParam(value = "projectId") String projectId,
@@ -44,16 +53,22 @@ public class LeaveMessageController {
         return ResultVOUtil.success(leaveMessageDTO);
     }
 
+    @ApiOperation(value = "查询一个用户的所有留言", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "userOpenId",value = "用户Id",required=true)
     @PostMapping("/find/userOpenId")
-    public ResultVO findByUserOpenId(@RequestParam(value = "openid") String userOpenId){
-        if (userOpenId == null){
+    public ResultVO findByUserOpenId(@RequestParam(value = "openid") String openid){
+        if (openid == null){
             log.error("【搜索留言】参数错误， userOpenId = {}", (Object) null);
             return ResultVOUtil.error(ResultEnum.PARAM_ERROR);
         }
-        List<LeaveMessageDTO>leaveMessageDTOS = leaveMessageService.findByOpenId(userOpenId);
+        List<LeaveMessageDTO>leaveMessageDTOS = leaveMessageService.findByOpenId(openid);
         return ResultVOUtil.success(leaveMessageDTOS);
     }
 
+    @ApiOperation(value = "查询一个项目下的所有留言", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "projectId",value = "项目Id",required=true)
     @PostMapping("/find/projectId")
     public ResultVO findByProjectId(@RequestParam(value = "projectId") String projectId){
         if (projectId == null){
@@ -64,29 +79,44 @@ public class LeaveMessageController {
         return ResultVOUtil.success(leaveMessageDTOS);
     }
 
+    @ApiOperation(value = "删除留言", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "projectId",value = "项目Id",required=true),
+            @ApiImplicitParam(name = "openid",value = "用户Id",required=true),
+            @ApiImplicitParam(name = "id",value = "留言Id",required=true)
+    })
     @PostMapping("/delete")
-    public ResultVO delete(@RequestParam(value = "openid") String userOpenId,
+    public ResultVO delete(@RequestParam(value = "openid") String openid,
                            @RequestParam(value = "projectId") String projectId,
-                           @RequestParam(value = "id") Integer key){
-        if (userOpenId == null || projectId == null){
-            log.error("【删除留言】参数错误， userOpenId = {}, projectId = {}",userOpenId,projectId);
+                           @RequestParam(value = "id") Integer id){
+        if (openid == null || projectId == null){
+            log.error("【删除留言】参数错误， userOpenId = {}, projectId = {}",openid,projectId);
             return ResultVOUtil.error(ResultEnum.PARAM_ERROR);
         }
-        boolean deleteResult = leaveMessageService.deleteOne(userOpenId,projectId,key);
+        boolean deleteResult = leaveMessageService.deleteOne(openid,projectId,id);
         return ResultVOUtil.success(deleteResult);
     }
 
+    @ApiOperation(value = "修改留言", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "projectId",value = "项目Id",required=true),
+            @ApiImplicitParam(name = "openid",value = "用户Id",required=true),
+            @ApiImplicitParam(name = "id",value = "留言Id",required=true),
+            @ApiImplicitParam(name = "content",value = "留言内容",required=true)
+    })
     @PostMapping("/change")
-    public ResultVO change(@RequestParam(value = "openid") String userOpenId,
+    public ResultVO change(@RequestParam(value = "openid") String openid,
                            @RequestParam(value = "projectId") String projectId,
                            @RequestParam(value = "content") String content,
-                           @RequestParam(value = "id") Integer key
+                           @RequestParam(value = "id") Integer id
     ) throws Exception{
-        if (userOpenId == null || projectId == null || content == null){
-            log.error("【修改留言】参数错误， userOpenId = {}, projectId = {}, content = {}",userOpenId,projectId,content);
+        if (openid == null || projectId == null || content == null){
+            log.error("【修改留言】参数错误， userOpenId = {}, projectId = {}, content = {}",openid,projectId,content);
             return ResultVOUtil.error(ResultEnum.PARAM_ERROR);
         }
-        LeaveMessageDTO leaveMessageDTO = leaveMessageService.changeOne(userOpenId,projectId,content,key);
+        LeaveMessageDTO leaveMessageDTO = leaveMessageService.changeOne(openid,projectId,content,id);
         if (leaveMessageDTO == null){
             return ResultVOUtil.error(ResultEnum.CHANGE_FAILED);
         }
