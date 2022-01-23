@@ -3,10 +3,7 @@ package com.imooc.sell.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.imooc.sell.service.impl.WhuService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +21,18 @@ public class WhuController {
     private WhuService whuService;
 
     @ApiOperation(value = "获取Whu的官网通知", notes = "")
+    @ApiImplicitParam(name = "page",value = "页数",required=true)
     @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
     @PostMapping("/notice")
-    public JSONArray WhuNotice(){
+    public JSONArray WhuNotice(@RequestParam("page") String page){
         try{
-            return whuService.getWhuNotice();
+            int pageNum = Integer.parseInt(page);
+            if(pageNum<=0 || pageNum >101){
+                JSONArray result = new JSONArray();
+                result.add(new JSONObject().put("title","页数不合规范！"));
+                return result;
+            }
+            return whuService.getWhuNotice(pageNum);
         }catch (IOException e){
             JSONArray result = new JSONArray();
             result.add(new JSONObject().put("title","出错啦！"));

@@ -57,9 +57,10 @@ public class LostPropertyProjectController {
             @ApiImplicitParam(name = "size",value = "页大小",required=true),
     })
     @PostMapping("/list")
-    public ResultVO list(@RequestParam(value = "page", defaultValue = "0") Integer page,
+    public ResultVO list(@RequestParam(value = "page", defaultValue = "1") Integer page,
                              @RequestParam(value = "size", defaultValue = "10") Integer size) throws Exception {
-        PageRequest pageRequest = new PageRequest(page, size);
+        if (page<=0)return ResultVOUtil.error(403,"请求页不合规范！");
+        PageRequest pageRequest = new PageRequest(page-1, size);
         List<LostPropertyProjectDTO> list = lostPropertyProjectService.findLostPropertyProjectsOrderByUpdateTime(pageRequest);
         return ResultVOUtil.success(list);
 

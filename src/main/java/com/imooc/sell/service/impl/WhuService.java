@@ -18,8 +18,8 @@ public class WhuService {
      * @return 通知的Json数组
      * @throws IOException
      */
-    public JSONArray getWhuNotice() throws IOException {
-        String startCmd = String.format("python3 /usr/java/wyxyScript/WhuNotice.py");
+    public JSONArray getWhuNotice(int page) throws IOException {
+        String startCmd = String.format("python3 /usr/java/wyxyScript/WhuNotice.py "+page);
         String sh[] = {"/bin/sh","-c",startCmd};
         StringBuilder sb =new StringBuilder();
         Process process = Runtime.getRuntime().exec(sh);
