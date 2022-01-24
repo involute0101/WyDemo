@@ -11,6 +11,8 @@ import com.imooc.sell.service.PurchasingProjectService;
 import com.imooc.sell.service.UserInfoService;
 import com.imooc.sell.utils.KeyUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,9 @@ import java.util.List;
 @Service
 @Slf4j
 public class PurchasingServiceImpl implements PurchasingProjectService {
+
+    public static final Logger logger = LoggerFactory.getLogger(PurchasingServiceImpl.class);
+
     @Autowired
     PurchasingProjectRepository purchasingProjectRepository;
 
@@ -52,6 +57,7 @@ public class PurchasingServiceImpl implements PurchasingProjectService {
         purchasingProjectDTO.setProjectId(projectMasterDTO.getProjectId());
         PurchasingProject purchasingProject = new PurchasingProject();
         BeanUtils.copyProperties(purchasingProjectDTO,purchasingProject);
+        logger.info("创建跑腿项目："+purchasingProject.toString());
         PurchasingProject result = purchasingProjectRepository.save(purchasingProject);
         PurchasingProjectDTO resultDTO = new PurchasingProjectDTO();
         BeanUtils.copyProperties(result, resultDTO);

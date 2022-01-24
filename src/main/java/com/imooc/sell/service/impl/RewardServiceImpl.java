@@ -11,6 +11,8 @@ import com.imooc.sell.service.RewardProjectService;
 import com.imooc.sell.service.UserInfoService;
 import com.imooc.sell.utils.KeyUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,9 @@ import java.util.List;
 @Service
 @Slf4j
 public class RewardServiceImpl implements RewardProjectService {
+
+    public static final Logger logger = LoggerFactory.getLogger(JobsProjectServiceImpl.class);
+
     @Autowired
     RewardProjectRepository rewardProjectRepository;
 
@@ -52,6 +57,7 @@ public class RewardServiceImpl implements RewardProjectService {
         rewardProjectDTO.setProjectId(projectMasterDTO.getProjectId());
         RewardProject rewardProject = new RewardProject();
         BeanUtils.copyProperties(rewardProjectDTO,rewardProject);
+        logger.info("创建悬赏项目:"+rewardProject.toString());
         RewardProject result = rewardProjectRepository.save(rewardProject);
         RewardProjectDTO resultDTO = new RewardProjectDTO();
         BeanUtils.copyProperties(result, resultDTO);

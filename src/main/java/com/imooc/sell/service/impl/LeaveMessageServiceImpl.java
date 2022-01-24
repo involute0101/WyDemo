@@ -11,6 +11,8 @@ import com.imooc.sell.repository.ProjectMasterRepository;
 import com.imooc.sell.repository.UserInfoRepository;
 import com.imooc.sell.service.LeaveMessageService;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +24,9 @@ import java.util.List;
 @Service
 @Slf4j
 public class LeaveMessageServiceImpl implements LeaveMessageService {
+
+    public static final Logger logger = LoggerFactory.getLogger(LeaveMessageServiceImpl.class);
+
     @Autowired
     LeaveMessageRepository leaveMessageRepository;
 
@@ -49,6 +54,7 @@ public class LeaveMessageServiceImpl implements LeaveMessageService {
         leaveMessage.setProjectId(projectId);
         leaveMessage.setContent(content);
         leaveMessage.setUserId(userInfo.getUserId());
+        logger.info("创建留言:"+leaveMessage.toString());
         LeaveMessage result = leaveMessageRepository.save(leaveMessage);
         if (result != null){
             LeaveMessageDTO leaveMessageDTO = new LeaveMessageDTO();

@@ -11,6 +11,8 @@ import com.imooc.sell.service.JobsProjectService;
 import com.imooc.sell.service.UserInfoService;
 import com.imooc.sell.utils.KeyUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,9 @@ import java.util.List;
 @Service
 @Slf4j
 public class JobsProjectServiceImpl implements JobsProjectService {
+
+    public static final Logger logger = LoggerFactory.getLogger(JobsProjectServiceImpl.class);
+
     @Autowired
     UserInfoService userInfoService ;
 
@@ -52,6 +57,7 @@ public class JobsProjectServiceImpl implements JobsProjectService {
         jobsProjectDTO.setProjectId(projectMasterDTO.getProjectId());
         JobsProject jobsProject = new JobsProject();
         BeanUtils.copyProperties(jobsProjectDTO,jobsProject);
+        logger.info("创建招聘项目:"+jobsProject.toString());
         JobsProject result = jobsProjectRepository.save(jobsProject);
         JobsProjectDTO resultDTO = new JobsProjectDTO();
         BeanUtils.copyProperties(result, resultDTO);

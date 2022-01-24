@@ -11,6 +11,8 @@ import com.imooc.sell.service.LostPropertyProjectService;
 import com.imooc.sell.service.UserInfoService;
 import com.imooc.sell.utils.KeyUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,9 @@ import java.util.List;
 @Service
 @Slf4j
 public class LostPropertyProjectServiceImpl implements LostPropertyProjectService {
+
+    public static final Logger logger = LoggerFactory.getLogger(LostPropertyProjectServiceImpl.class);
+
     @Autowired
     LostPropertyProjectRepository lostPropertyProjectRepository;
 
@@ -52,6 +57,7 @@ public class LostPropertyProjectServiceImpl implements LostPropertyProjectServic
         lostPropertyProjectDTO.setProjectId(projectMasterDTO.getProjectId());
         LostPropertyProject lostPropertyProject = new LostPropertyProject();
         BeanUtils.copyProperties(lostPropertyProjectDTO,lostPropertyProject);
+        logger.info("创建失物招领项目："+lostPropertyProject.toString());
         LostPropertyProject result = lostPropertyProjectRepository.save(lostPropertyProject);
         LostPropertyProjectDTO resultDTO = new LostPropertyProjectDTO();
         BeanUtils.copyProperties(result, resultDTO);

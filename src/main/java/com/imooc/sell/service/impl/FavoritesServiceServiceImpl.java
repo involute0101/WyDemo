@@ -11,6 +11,8 @@ import com.imooc.sell.service.FavoritesService;
 import com.imooc.sell.service.UserInfoService;
 import com.sun.org.apache.bcel.internal.generic.FADD;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,9 @@ import java.util.List;
 @Service
 @Slf4j
 public class FavoritesServiceServiceImpl implements FavoritesService {
+
+    public static final Logger logger = LoggerFactory.getLogger(FavoritesServiceServiceImpl.class);
+
     @Autowired
     FavoritesRepository favoritesRepository;
 
@@ -54,6 +59,7 @@ public class FavoritesServiceServiceImpl implements FavoritesService {
         favorites = new Favorites();
         favorites.setUserId(userInfoDTO.getUserId());
         favorites.setProjectId(projectId);
+        logger.info("创建收藏项目:"+favorites.toString());
         favoritesRepository.save(favorites);
         FavoritesDTO favoritesDTO = new FavoritesDTO();
         BeanUtils.copyProperties(favorites, favoritesDTO);

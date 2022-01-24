@@ -11,6 +11,8 @@ import com.imooc.sell.service.StudyProjectService;
 import com.imooc.sell.service.UserInfoService;
 import com.imooc.sell.utils.KeyUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,9 @@ import java.util.List;
 @Service
 @Slf4j
 public class StudyServiceImpl implements StudyProjectService {
+
+    public static final Logger logger = LoggerFactory.getLogger(StudyServiceImpl.class);
+
     @Autowired
     StudyProjectRepository studyProjectRepository;
 
@@ -52,6 +57,7 @@ public class StudyServiceImpl implements StudyProjectService {
         studyProjectDTO.setProjectId(projectMasterDTO.getProjectId());
         StudyProject studyProject = new StudyProject();
         BeanUtils.copyProperties(studyProjectDTO,studyProject);
+        logger.info("创建学习项目:"+studyProject.toString());
         StudyProject result = studyProjectRepository.save(studyProject);
         StudyProjectDTO resultDTO = new StudyProjectDTO();
         BeanUtils.copyProperties(result, resultDTO);
