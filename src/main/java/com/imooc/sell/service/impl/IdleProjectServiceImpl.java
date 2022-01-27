@@ -47,7 +47,7 @@ public class IdleProjectServiceImpl implements IdleProjectService {
         }
         Integer userId = userInfoDTO.getUserId();
         ProjectMasterDTO projectMasterDTO = new ProjectMasterDTO();
-        projectMasterDTO.setProjectType(6);
+        projectMasterDTO.setProjectType(4);
         projectMasterDTO.setProjectId(KeyUtil.genUniqueKey());
         projectMasterDTO.setUserId(userId);
         ProjectMasterDTO createResult = projectMasterService.createProjectMasterOne(projectMasterDTO);

@@ -2,6 +2,8 @@ package com.imooc.sell.dto;
 
 import lombok.Data;
 
+import java.util.Date;
+
 
 @Data
 public class LeaveMessageDTO {
@@ -14,5 +16,9 @@ public class LeaveMessageDTO {
     private String projectId;
 
     private String content;
+
+    private Date publishTime;
+
+    private int likeNumber;
 
 }

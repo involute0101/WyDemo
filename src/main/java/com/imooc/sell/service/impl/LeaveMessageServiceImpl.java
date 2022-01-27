@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 @Service
 @Slf4j
@@ -54,6 +55,8 @@ public class LeaveMessageServiceImpl implements LeaveMessageService {
         leaveMessage.setProjectId(projectId);
         leaveMessage.setContent(content);
         leaveMessage.setUserId(userInfo.getUserId());
+        leaveMessage.setLikeNumber(0);
+        leaveMessage.setPublishTime(new Date());
         logger.info("创建留言:"+leaveMessage.toString());
         LeaveMessage result = leaveMessageRepository.save(leaveMessage);
         if (result != null){

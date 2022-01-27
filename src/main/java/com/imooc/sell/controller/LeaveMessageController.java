@@ -1,6 +1,8 @@
 package com.imooc.sell.controller;
 
 import com.imooc.sell.VO.ResultVO;
+import com.imooc.sell.controller.form.IdleProjectFrom;
+import com.imooc.sell.controller.form.LeaveMessageForm;
 import com.imooc.sell.controller.form.LectureProjectFrom;
 import com.imooc.sell.converter.LecutreProjectFrom2LectureProjectDTOConverter;
 import com.imooc.sell.dto.LeaveMessageDTO;
@@ -32,21 +34,11 @@ public class LeaveMessageController {
 
     @ApiOperation(value = "创建留言", notes = "")
     @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "projectId",value = "项目Id",required=true),
-            @ApiImplicitParam(name = "openid",value = "用户Id",required=true),
-            @ApiImplicitParam(name = "content",value = "留言内容",required=true)
-    })
     @PostMapping("/create")
-    public ResultVO create(@RequestParam(value = "openid") String openid,
-                           @RequestParam(value = "projectId") String projectId,
-                           @RequestParam(value = "content") String content
+    public ResultVO create(@Valid LeaveMessageForm leaveMessageForm, BindingResult bindingResult
                            ) throws Exception {
-        if (openid == null || projectId == null || content == null){
-            log.error("【创建留言】参数错误， userOpenId = {}, projectId = {}, content = {}",openid,projectId,content);
-            return ResultVOUtil.error(ResultEnum.PARAM_ERROR);
-        }
-        LeaveMessageDTO leaveMessageDTO = leaveMessageService.createOne(openid,projectId,content);
+        LeaveMessageDTO leaveMessageDTO = leaveMessageService.createOne(leaveMessageForm.getUserId(),
+                leaveMessageForm.getProjectId(),leaveMessageForm.getContent());
         if (leaveMessageDTO == null){
             return ResultVOUtil.error(ResultEnum.CREATE_FAILED);
         }
