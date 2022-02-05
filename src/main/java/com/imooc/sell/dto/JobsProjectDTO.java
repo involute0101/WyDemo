@@ -34,4 +34,6 @@ public class JobsProjectDTO {
     private Date createTime;
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date updateTime;
+
+    private String tags;
 }

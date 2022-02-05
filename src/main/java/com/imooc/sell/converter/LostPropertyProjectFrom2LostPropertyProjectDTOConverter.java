@@ -20,6 +20,9 @@ public class LostPropertyProjectFrom2LostPropertyProjectDTOConverter {
         lostPropertyProjectDTO.setGender(lostPropertyProjectFrom.getGender());
         lostPropertyProjectDTO.setPicture(lostPropertyProjectFrom.getPicture());
         lostPropertyProjectDTO.setLocation(lostPropertyProjectFrom.getLocation());
+        String tags = "";
+        for(String tag : lostPropertyProjectFrom.getTags())tags = tags + tag + ",";
+        lostPropertyProjectDTO.setTags(tags.substring(0,tags.length()-1));
         return lostPropertyProjectDTO;
     }
 }

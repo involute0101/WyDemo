@@ -43,4 +43,9 @@ public class RewardProject {
     private Date createTime;
 
     private Date updateTime;
+
+    /**
+     * 前端传入标签数组，把多个标签用英文逗号拼接起来（便于数据库存储）
+     */
+    private String tags;
 }

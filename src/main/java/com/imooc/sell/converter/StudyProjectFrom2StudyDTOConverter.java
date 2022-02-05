@@ -20,6 +20,9 @@ public class StudyProjectFrom2StudyDTOConverter {
         studyProjectDTO.setPicture(studyProjectFrom.getPicture());
         studyProjectDTO.setLocation(studyProjectFrom.getLocation());
         studyProjectDTO.setHyperlink(studyProjectFrom.getHyperlink());
+        String tags = "";
+        for(String tag : studyProjectFrom.getTags())tags = tags + tag + ",";
+        studyProjectDTO.setTags(tags.substring(0,tags.length()-1));
         return studyProjectDTO;
     }
 }

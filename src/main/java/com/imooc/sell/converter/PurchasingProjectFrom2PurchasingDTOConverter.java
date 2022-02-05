@@ -20,6 +20,9 @@ public class PurchasingProjectFrom2PurchasingDTOConverter {
         purchasingProjectDTO.setGender(purchasingProjectFrom.getGender());
         purchasingProjectDTO.setPicture(purchasingProjectFrom.getPicture());
         purchasingProjectDTO.setLocation(purchasingProjectFrom.getLocation());
+        String tags = "";
+        for(String tag : purchasingProjectFrom.getTags())tags = tags + tag + ",";
+        purchasingProjectDTO.setTags(tags.substring(0,tags.length()-1));
         return purchasingProjectDTO;
     }
 }

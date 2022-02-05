@@ -37,4 +37,7 @@ public class JobsProjectFrom {
     @ApiModelProperty(value = "超链接",required = false)
     private String hyperlink;
 
+    @ApiModelProperty(value = "标签（数组）",required = false)
+    private String[] tags;
+
 }

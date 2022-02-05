@@ -38,4 +38,7 @@ public class LostPropertyProjectFrom {
 
     @ApiModelProperty(value = "数量",required = true)
     private BigDecimal amount;
+
+    @ApiModelProperty(value = "标签（数组）",required = false)
+    private String[] tags;
 }

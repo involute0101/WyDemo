@@ -19,6 +19,9 @@ public class JobsProjectFrom2JobsProjectProjectDTOConverter {
         jobsProjectDTO.setContent(jobsProjectFrom.getContent());
         jobsProjectDTO.setGender(jobsProjectFrom.getGender());
         jobsProjectDTO.setPicture(jobsProjectFrom.getPicture());
+        String tags = "";
+        for(String tag : jobsProjectFrom.getTags())tags = tags + tag + ",";
+        jobsProjectDTO.setTags(tags.substring(0,tags.length()-1));
         return jobsProjectDTO;
     }
 }

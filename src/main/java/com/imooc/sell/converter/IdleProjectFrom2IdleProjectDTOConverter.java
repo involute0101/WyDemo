@@ -19,6 +19,9 @@ public class IdleProjectFrom2IdleProjectDTOConverter {
         idleProjectDTO.setContent(idleProjectFrom.getContent());
         idleProjectDTO.setGender(idleProjectFrom.getGender());
         idleProjectDTO.setPicture(idleProjectFrom.getPicture());
+        String tags = "";
+        for (String tag : idleProjectFrom.getTags()) tags = tags + tag + ",";
+        idleProjectDTO.setTags(tags.substring(0,tags.length()-1));
         return idleProjectDTO;
     }
 }

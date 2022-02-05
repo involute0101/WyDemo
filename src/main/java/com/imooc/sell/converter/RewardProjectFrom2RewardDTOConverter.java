@@ -20,6 +20,9 @@ public class RewardProjectFrom2RewardDTOConverter {
         rewardProjectDTO.setGender(rewardProjectFrom.getGender());
         rewardProjectDTO.setPicture(rewardProjectFrom.getPicture());
         rewardProjectDTO.setLocation(rewardProjectFrom.getLocation());
+        String tags = "";
+        for(String tag : rewardProjectFrom.getTags())tags = tags + tag + ",";
+        rewardProjectDTO.setTags(tags.substring(0,tags.length()-1));
         return rewardProjectDTO;
     }
 }

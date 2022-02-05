@@ -39,5 +39,6 @@ public class IdleProjectFrom {
     @ApiModelProperty(value = "性别",required = true)
     private Integer gender;
 
-
+    @ApiModelProperty(value = "标签（数组）",required = false)
+    private String[] tags;
 }
