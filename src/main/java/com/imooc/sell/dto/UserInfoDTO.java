@@ -61,4 +61,14 @@ public class UserInfoDTO {
 
     //信用等级
     private Integer creditLevel;
+
+
+    //QQ
+    private String qqNumber;
+
+    //微信
+    private String weChat;
+
+    //电话
+    private String telephone;
 }

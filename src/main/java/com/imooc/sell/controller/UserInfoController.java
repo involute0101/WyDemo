@@ -100,4 +100,19 @@ public class UserInfoController {
         jsonObject.put("creditLevel",userInfoDTO.getCreditLevel());
         return ResultVOUtil.success(jsonObject);
     }
+
+    @ApiOperation(value = "查询用户个人信息", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "openid",value = "用户id",required=true)
+    @PostMapping("inquire/userInfo")
+    public ResultVO getUserInfo(@RequestParam("openid") String openid){
+        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(openid);
+        JSONObject user = new JSONObject();
+        user.put("userName",userInfoDTO.getUserName());
+        user.put("headPortrait","");
+        user.put("QQ",userInfoDTO.getQqNumber());
+        user.put("WeChat",userInfoDTO.getWeChat());
+        user.put("telephone",userInfoDTO.getTelephone());
+        return ResultVOUtil.success(user);
+    }
 }

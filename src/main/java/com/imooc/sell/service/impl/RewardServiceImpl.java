@@ -90,4 +90,9 @@ public class RewardServiceImpl implements RewardProjectService {
         }
 
     }
+
+    public void findUserOpenIdByProjectId(String projectId){
+        RewardProject rewardProject = rewardProjectRepository.findByProjectId(projectId);
+
+    }
 }

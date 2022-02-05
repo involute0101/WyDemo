@@ -72,4 +72,14 @@ public class UserInfo {
     //信用等级,一共五级
     private Integer creditLevel;
 
+    //QQ
+    private String qqNumber;
+
+    //微信
+    private String weChat;
+
+    //电话
+    private String telephone;
+
+
 }
