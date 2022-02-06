@@ -13,4 +13,6 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, Integer> {
     UserInfo findByUserOpenid(String openid);
 
     List<UserInfo> findByUserIdIn(Collection<Integer> c);
+
+    UserInfo findByUserId(Integer userId);
 }

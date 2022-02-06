@@ -23,4 +23,7 @@ public interface UserInfoService {
 
     //通过批量userId查找用户
     List<UserInfoDTO> findUserInfos(Collection<Integer> collection);
+
+    //根据id查找用户
+    UserInfoDTO findByUserId(Integer userId);
 }

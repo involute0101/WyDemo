@@ -128,4 +128,12 @@ public class UserInfoServiceImpl implements UserInfoService {
         }
         return userInfoDTOS;
     }
+
+    @Override
+    public UserInfoDTO findByUserId(Integer userId) {
+        UserInfo userInfo = userInfoRepository.findByUserId(userId);
+        UserInfoDTO userInfoDTO = new UserInfoDTO();
+        BeanUtils.copyProperties(userInfo,userInfoDTO);
+        return userInfoDTO;
+    }
 }

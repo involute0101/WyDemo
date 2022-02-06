@@ -91,8 +91,15 @@ public class RewardServiceImpl implements RewardProjectService {
 
     }
 
-    public void findUserOpenIdByProjectId(String projectId){
-        RewardProject rewardProject = rewardProjectRepository.findByProjectId(projectId);
-
+    /**
+     * 根据projectId查找userOpenId
+     * @param projectId 项目id
+     * @return 用户OpenId
+     */
+    public String findUserOpenIdByProjectId(String projectId){
+        ProjectMasterDTO projectMaster = projectMasterService.findProjectMasterByProjectId(projectId);
+        Integer userId = projectMaster.getUserId();
+        UserInfoDTO userInfoDTO = userInfoService.findByUserId(userId);
+        return userInfoDTO.getUserOpenid();
     }
 }

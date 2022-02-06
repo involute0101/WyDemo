@@ -1,16 +1,12 @@
 package com.imooc.sell.controller;
 
 import com.imooc.sell.VO.ResultVO;
-import com.imooc.sell.controller.form.PurchasingProjectFrom;
 import com.imooc.sell.controller.form.RewardProjectFrom;
-import com.imooc.sell.converter.PurchasingProjectFrom2PurchasingDTOConverter;
 import com.imooc.sell.converter.RewardProjectFrom2RewardDTOConverter;
-import com.imooc.sell.dto.PurchasingProjectDTO;
 import com.imooc.sell.dto.RewardProjectDTO;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
 import com.imooc.sell.service.impl.ProjectMasterServiceImpl;
-import com.imooc.sell.service.impl.PurchasingServiceImpl;
 import com.imooc.sell.service.impl.RewardServiceImpl;
 import com.imooc.sell.utils.ResultVOUtil;
 import io.swagger.annotations.*;
@@ -88,5 +84,14 @@ public class RewardProjectController {
     public ResultVO deleteOne(@RequestParam(value = "projectId") String projectId,
                               @RequestParam(value = "openid") String openid){
         return  ResultVOUtil.success(projectMasterService.deleateProjectMaster(projectId,openid));
+    }
+
+    @ApiOperation(value = "根据projectId查找用户userOpenId", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "projectId",value = "项目id",required=true)
+    @PostMapping("/findUserOpenIdByProjectId")
+    public ResultVO findUserOpenIdByProjectId(@RequestParam(value = "projectId") String projectId){
+        String userOpenId = rewardService.findUserOpenIdByProjectId(projectId);
+        return ResultVOUtil.success(userOpenId);
     }
 }
