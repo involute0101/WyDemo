@@ -12,6 +12,8 @@ import java.util.List;
 public interface RewardProjectRepository extends JpaRepository<RewardProject, Integer> {
     RewardProject findByProjectId(String projectId);
     Page<RewardProject> findByOrderByUpdateTimeDesc(Pageable pageable);
+    Page<RewardProject> findByOrderByAmount(Pageable pageable);
+    Page<RewardProject> findByOrderByAmountDesc(Pageable pageable);
     List<RewardProject> findByTitle(String title);
     List<RewardProject> findByLocation(String location);
 

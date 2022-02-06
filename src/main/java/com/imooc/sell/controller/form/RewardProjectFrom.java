@@ -37,7 +37,7 @@ public class RewardProjectFrom {
     @ApiModelProperty(value = "性别",required = true)
     private Integer gender;
 
-    @ApiModelProperty(value = "数量",required = true)
+    @ApiModelProperty(value = "数量（价格）",required = true)
     private BigDecimal amount;
 
     @ApiModelProperty(value = "标签（数组）",required = false)

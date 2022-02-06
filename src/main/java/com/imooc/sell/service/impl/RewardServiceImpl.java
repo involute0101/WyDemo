@@ -92,6 +92,26 @@ public class RewardServiceImpl implements RewardProjectService {
     }
 
     /**
+     * 根据悬赏金额大小排序，查询悬赏项目
+     * @param pageable
+     * @param sort 升序（asc）降序（desc）方式
+     * @return
+     */
+    @Override
+    public List<RewardProjectDTO> findRewardProjectOrderByAmount(Pageable pageable,String sort) {
+        Page<RewardProject> page = null;
+        if("desc".equals(sort))page = rewardProjectRepository.findByOrderByAmountDesc(pageable);
+        else page = rewardProjectRepository.findByOrderByAmount(pageable);
+        List<RewardProjectDTO> list = new ArrayList<>();
+        for(RewardProject rewardProject : page){
+            RewardProjectDTO rewardProjectDTO = new RewardProjectDTO();
+            BeanUtils.copyProperties(rewardProject, rewardProjectDTO);
+            list.add(rewardProjectDTO);
+        }
+        return list;
+    }
+
+    /**
      * 根据projectId查找userOpenId
      * @param projectId 项目id
      * @return 用户OpenId

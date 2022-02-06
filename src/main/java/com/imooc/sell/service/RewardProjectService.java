@@ -8,6 +8,10 @@ import java.util.List;
 
 public interface RewardProjectService {
     RewardProjectDTO createRewardProject(RewardProjectDTO rewardProjectDTO) throws Exception;
+
     List<RewardProjectDTO> findRewardProjectsOrderByUpdateTime(Pageable pageable);
+
     RewardProjectDTO findRewardByProjectId(String projectId);
+
+    List<RewardProjectDTO> findRewardProjectOrderByAmount(Pageable pageable, String sort);
 }
