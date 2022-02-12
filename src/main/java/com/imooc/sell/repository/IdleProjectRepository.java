@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Id;
 import java.util.List;
 
 
@@ -14,5 +15,6 @@ public interface IdleProjectRepository extends JpaRepository<IdleProject, Intege
     Page<IdleProject> findByOrderByUpdateTimeDesc(Pageable pageable);
     List<IdleProject> findByTitle(String title);
     List<IdleProject> findByLocation(String location);
-
+    //调用者要在关键字前后加上“%”，以实现模糊查询
+    Page<IdleProject> findByTagsLike(String keyword,Pageable pageable);
 }

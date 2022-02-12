@@ -1,6 +1,8 @@
 package com.imooc.sell.service.impl;
 
+import com.imooc.sell.dataobject.LostPropertyProject;
 import com.imooc.sell.dataobject.PurchasingProject;
+import com.imooc.sell.dto.LostPropertyProjectDTO;
 import com.imooc.sell.dto.ProjectMasterDTO;
 import com.imooc.sell.dto.PurchasingProjectDTO;
 import com.imooc.sell.dto.UserInfoDTO;
@@ -89,5 +91,17 @@ public class PurchasingServiceImpl implements PurchasingProjectService {
             throw new SellException(ResultEnum.PROJECT_MASTER_NOT_FOUND_BY_PROJECT_ID);
         }
 
+    }
+
+    @Override
+    public List<PurchasingProjectDTO> findPurchasingProjectByTagsLike(String keyword, Pageable pageable) {
+        List<PurchasingProjectDTO> list = new ArrayList<>();
+        Page<PurchasingProject> page = purchasingProjectRepository.findByTagsLike("%" + keyword + "%", pageable);
+        for(PurchasingProject purchasingProject: page){
+            PurchasingProjectDTO purchasingProjectDTO = new PurchasingProjectDTO();
+            BeanUtils.copyProperties(purchasingProject,purchasingProjectDTO);
+            list.add(purchasingProjectDTO);
+        }
+        return list;
     }
 }

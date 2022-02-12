@@ -30,7 +30,7 @@ public class JobsProjectServiceImpl implements JobsProjectService {
     public static final Logger logger = LoggerFactory.getLogger(JobsProjectServiceImpl.class);
 
     @Autowired
-    UserInfoService userInfoService ;
+    UserInfoService userInfoService;
 
     @Autowired
     ProjectMasterServiceImpl projectMasterService;
@@ -42,8 +42,8 @@ public class JobsProjectServiceImpl implements JobsProjectService {
     @Transactional
     public JobsProjectDTO createJobsProjectOne(JobsProjectDTO jobsProjectDTO) throws Exception {
         UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(jobsProjectDTO.getUserOpenid());
-        if (userInfoDTO == null){
-            throw  new SellException(ResultEnum.USER_NOT_FOUND);
+        if (userInfoDTO == null) {
+            throw new SellException(ResultEnum.USER_NOT_FOUND);
         }
         Integer userId = userInfoDTO.getUserId();
         ProjectMasterDTO projectMasterDTO = new ProjectMasterDTO();
@@ -51,13 +51,13 @@ public class JobsProjectServiceImpl implements JobsProjectService {
         projectMasterDTO.setProjectId(KeyUtil.genUniqueKey());
         projectMasterDTO.setUserId(userId);
         ProjectMasterDTO createResult = projectMasterService.createProjectMasterOne(projectMasterDTO);
-        if (createResult == null){
+        if (createResult == null) {
             throw new SellException(ResultEnum.PARAM_ERROR);
         }
         jobsProjectDTO.setProjectId(projectMasterDTO.getProjectId());
         JobsProject jobsProject = new JobsProject();
-        BeanUtils.copyProperties(jobsProjectDTO,jobsProject);
-        logger.info("创建招聘项目:"+jobsProject.toString());
+        BeanUtils.copyProperties(jobsProjectDTO, jobsProject);
+        logger.info("创建招聘项目:" + jobsProject.toString());
         JobsProject result = jobsProjectRepository.save(jobsProject);
         JobsProjectDTO resultDTO = new JobsProjectDTO();
         BeanUtils.copyProperties(result, resultDTO);
@@ -68,7 +68,7 @@ public class JobsProjectServiceImpl implements JobsProjectService {
     public List<JobsProjectDTO> findJobsProjectsOrderByUpdateTime(Pageable pageable) {
         List<JobsProjectDTO> list = new ArrayList<>();
         Page<JobsProject> page = jobsProjectRepository.findByOrderByUpdateTimeDesc(pageable);
-        for(JobsProject jobsProject : page){
+        for (JobsProject jobsProject : page) {
             JobsProjectDTO jobsProjectDTO = new JobsProjectDTO();
             BeanUtils.copyProperties(jobsProject, jobsProjectDTO);
             list.add(jobsProjectDTO);
@@ -80,12 +80,23 @@ public class JobsProjectServiceImpl implements JobsProjectService {
     public JobsProjectDTO findJobsProjectByProjectId(String projectId) {
         JobsProject jobsProject = jobsProjectRepository.findByProjectId(projectId);
         JobsProjectDTO jobsProjectDTO = new JobsProjectDTO();
-        if (jobsProject != null){
+        if (jobsProject != null) {
             BeanUtils.copyProperties(jobsProject, jobsProjectDTO);
             return jobsProjectDTO;
-        }
-        else {
+        } else {
             throw new SellException(ResultEnum.PROJECT_ID_NOT_FOUND);
         }
+    }
+
+    @Override
+    public List<JobsProjectDTO> findJobsProjectByTagsLike(String keyword, Pageable pageable) {
+        List<JobsProjectDTO> list = new ArrayList<>();
+        Page<JobsProject> page = jobsProjectRepository.findByTagsLike("%" + keyword + "%", pageable);
+        for (JobsProject jobsProject : page) {
+            JobsProjectDTO jobsProjectDTO = new JobsProjectDTO();
+            BeanUtils.copyProperties(jobsProject, jobsProjectDTO);
+            list.add(jobsProjectDTO);
+        }
+        return list;
     }
 }

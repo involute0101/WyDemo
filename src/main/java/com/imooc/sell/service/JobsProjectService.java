@@ -10,4 +10,5 @@ public interface JobsProjectService {
     JobsProjectDTO createJobsProjectOne(JobsProjectDTO jobsProjectDTO) throws Exception;
     List<JobsProjectDTO> findJobsProjectsOrderByUpdateTime(Pageable pageable);
     JobsProjectDTO findJobsProjectByProjectId(String projectId);
+    List<JobsProjectDTO> findJobsProjectByTagsLike(String keyword,Pageable pageable);
 }

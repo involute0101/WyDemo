@@ -10,4 +10,5 @@ public interface PurchasingProjectService {
     PurchasingProjectDTO createPurchasingProject(PurchasingProjectDTO purchasingProjectDTO) throws Exception;
     List<PurchasingProjectDTO> findPurchasingProjectsOrderByUpdateTime(Pageable pageable);
     PurchasingProjectDTO findPurchasingByProjectId(String projectId);
+    List<PurchasingProjectDTO> findPurchasingProjectByTagsLike(String keyword,Pageable pageable);
 }

@@ -10,4 +10,5 @@ public interface IdleProjectService {
     IdleProjectDTO createIdleProjectOne(IdleProjectDTO idleProjectDTO) throws Exception;
     List<IdleProjectDTO> findIdleProjectsOrderByUpdateTime(Pageable pageable);
     IdleProjectDTO findIdleProjectByProjectId(String projectId);
+    List<IdleProjectDTO> findIdleProjectByTagsLike(String keyword,Pageable pageable);
 }

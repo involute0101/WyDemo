@@ -16,5 +16,6 @@ public interface RewardProjectRepository extends JpaRepository<RewardProject, In
     Page<RewardProject> findByOrderByAmountDesc(Pageable pageable);
     List<RewardProject> findByTitle(String title);
     List<RewardProject> findByLocation(String location);
-
+    //调用者要在关键字前后加上“%”，以实现模糊查询
+    Page<RewardProject> findByTagsLike(String keyword,Pageable pageable);
 }

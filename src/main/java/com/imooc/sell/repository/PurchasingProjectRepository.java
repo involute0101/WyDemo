@@ -14,5 +14,6 @@ public interface PurchasingProjectRepository extends JpaRepository<PurchasingPro
     Page<PurchasingProject> findByOrderByUpdateTimeDesc(Pageable pageable);
     List<PurchasingProject> findByTitle(String title);
     List<PurchasingProject> findByLocation(String location);
-
+    //调用者要在关键字前后加上“%”，以实现模糊查询
+    Page<PurchasingProject> findByTagsLike(String keyword,Pageable pageable);
 }

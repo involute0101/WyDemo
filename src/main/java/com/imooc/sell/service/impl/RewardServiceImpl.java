@@ -113,6 +113,18 @@ public class RewardServiceImpl implements RewardProjectService {
         return list;
     }
 
+    @Override
+    public List<RewardProjectDTO> findRewardProjectLikeTags(String keyword,Pageable pageable) {
+        List<RewardProjectDTO> rewardProjectDTOList = new ArrayList<>();
+        Page<RewardProject> page = rewardProjectRepository.findByTagsLike("%"+keyword+"%", pageable);
+        for(RewardProject rewardProject : page){
+            RewardProjectDTO rewardProjectDTO = new RewardProjectDTO();
+            BeanUtils.copyProperties(rewardProject,rewardProjectDTO);
+            rewardProjectDTOList.add(rewardProjectDTO);
+        }
+        return rewardProjectDTOList;
+    }
+
     /**
      * 根据projectId查找userOpenId
      * @param projectId 项目id

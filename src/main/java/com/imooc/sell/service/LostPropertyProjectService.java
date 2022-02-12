@@ -10,4 +10,5 @@ public interface LostPropertyProjectService {
     LostPropertyProjectDTO createLostPropertyProject(LostPropertyProjectDTO lostPropertyProjectDTO) throws Exception;
     List<LostPropertyProjectDTO> findLostPropertyProjectsOrderByUpdateTime(Pageable pageable);
     LostPropertyProjectDTO findLostPropertyProjectByProjectId(String projectId);
+    List<LostPropertyProjectDTO> findLostPropertyProjectByTagsLike(String keyword,Pageable pageable);
 }

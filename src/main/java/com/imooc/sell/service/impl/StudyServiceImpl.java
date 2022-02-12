@@ -1,7 +1,9 @@
 package com.imooc.sell.service.impl;
 
+import com.imooc.sell.dataobject.PurchasingProject;
 import com.imooc.sell.dataobject.StudyProject;
 import com.imooc.sell.dto.ProjectMasterDTO;
+import com.imooc.sell.dto.PurchasingProjectDTO;
 import com.imooc.sell.dto.StudyProjectDTO;
 import com.imooc.sell.dto.UserInfoDTO;
 import com.imooc.sell.enums.ResultEnum;
@@ -89,5 +91,17 @@ public class StudyServiceImpl implements StudyProjectService {
             throw new SellException(ResultEnum.PROJECT_MASTER_NOT_FOUND_BY_PROJECT_ID);
         }
 
+    }
+
+    @Override
+    public List<StudyProjectDTO> findStudyProjectByTagsLike(String keyword, Pageable pageable) {
+        List<StudyProjectDTO> list = new ArrayList<>();
+        Page<StudyProject> page = studyProjectRepository.findByTagsLike("%" + keyword + "%", pageable);
+        for(StudyProject studyProject: page){
+            StudyProjectDTO studyProjectDTO = new StudyProjectDTO();
+            BeanUtils.copyProperties(studyProject,studyProjectDTO);
+            list.add(studyProjectDTO);
+        }
+        return list;
     }
 }

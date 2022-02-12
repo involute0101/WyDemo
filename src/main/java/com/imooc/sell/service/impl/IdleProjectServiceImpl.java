@@ -90,4 +90,16 @@ public class IdleProjectServiceImpl implements IdleProjectService {
             throw new SellException(ResultEnum.PROJECT_MASTER_NOT_FOUND_BY_PROJECT_ID);
         }
     }
+
+    @Override
+    public List<IdleProjectDTO> findIdleProjectByTagsLike(String keyword, Pageable pageable) {
+        List<IdleProjectDTO> list = new ArrayList<>();
+        Page<IdleProject> page = idleProjectRepository.findByTagsLike("%" + keyword + "%", pageable);
+        for(IdleProject idleProject:page){
+            IdleProjectDTO idleProjectDTO = new IdleProjectDTO();
+            BeanUtils.copyProperties(idleProject,idleProjectDTO);
+            list.add(idleProjectDTO);
+        }
+        return list;
+    }
 }

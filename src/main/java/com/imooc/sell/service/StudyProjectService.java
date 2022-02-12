@@ -9,4 +9,5 @@ public interface StudyProjectService {
     StudyProjectDTO createStudyProject(StudyProjectDTO studyProjectDTO) throws Exception;
     List<StudyProjectDTO> findStudyProjectsOrderByUpdateTime(Pageable pageable);
     StudyProjectDTO findStudyByProjectId(String projectId);
+    List<StudyProjectDTO> findStudyProjectByTagsLike(String keyword,Pageable pageable);
 }

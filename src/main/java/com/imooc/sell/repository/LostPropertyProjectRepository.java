@@ -14,5 +14,6 @@ public interface LostPropertyProjectRepository extends JpaRepository<LostPropert
     Page<LostPropertyProject> findByOrderByUpdateTimeDesc(Pageable pageable);
     List<LostPropertyProject> findByTitle(String title);
     List<LostPropertyProject> findByLocation(String location);
-
+    //调用者要在关键字前后加上“%”，以实现模糊查询
+    Page<LostPropertyProject> findByTagsLike(String keyword,Pageable pageable);
 }

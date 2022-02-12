@@ -1,6 +1,8 @@
 package com.imooc.sell.service.impl;
 
+import com.imooc.sell.dataobject.JobsProject;
 import com.imooc.sell.dataobject.LostPropertyProject;
+import com.imooc.sell.dto.JobsProjectDTO;
 import com.imooc.sell.dto.LostPropertyProjectDTO;
 import com.imooc.sell.dto.ProjectMasterDTO;
 import com.imooc.sell.dto.UserInfoDTO;
@@ -89,6 +91,18 @@ public class LostPropertyProjectServiceImpl implements LostPropertyProjectServic
         else {
             throw new SellException(ResultEnum.PROJECT_MASTER_NOT_FOUND_BY_PROJECT_ID);
         }
+    }
+
+    @Override
+    public List<LostPropertyProjectDTO> findLostPropertyProjectByTagsLike(String keyword, Pageable pageable) {
+        List<LostPropertyProjectDTO> list = new ArrayList<>();
+        Page<LostPropertyProject> page = lostPropertyProjectRepository.findByTagsLike("%" + keyword + "%", pageable);
+        for(LostPropertyProject lostPropertyProject: page){
+            LostPropertyProjectDTO lostPropertyProjectDTO = new LostPropertyProjectDTO();
+            BeanUtils.copyProperties(lostPropertyProject,lostPropertyProjectDTO);
+            list.add(lostPropertyProjectDTO);
+        }
+        return list;
     }
 
 }

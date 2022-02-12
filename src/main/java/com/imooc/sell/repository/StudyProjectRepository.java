@@ -11,8 +11,13 @@ import java.util.List;
 
 public interface StudyProjectRepository extends JpaRepository<StudyProject, Integer> {
     StudyProject findByProjectId(String projectId);
+
     Page<StudyProject> findByOrderByUpdateTimeDesc(Pageable pageable);
+
     List<StudyProject> findByTitle(String title);
+
     List<StudyProject> findByLocation(String location);
 
+    //调用者要在关键字前后加上“%”，以实现模糊查询
+    Page<StudyProject> findByTagsLike(String keyword, Pageable pageable);
 }
