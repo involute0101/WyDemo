@@ -58,6 +58,22 @@ public class UserInfoServiceImpl implements UserInfoService {
         return userInfoDTO;
     }
 
+    @Override
+    @Transactional
+    public UserInfo updateUserInfo(UserInfoDTO userInfoDTO) {
+        String userOpenid = userInfoDTO.getUserOpenid();
+        UserInfo userInfobyUserOpenid = userInfoRepository.findByUserOpenid(userOpenid);
+        if(userInfobyUserOpenid==null)throw new SellException(ResultEnum.USER_NOT_FOUND);
+        userInfobyUserOpenid.setQqNumber(userInfoDTO.getQqNumber());
+        userInfobyUserOpenid.setWeChat(userInfoDTO.getWeChat());
+        userInfobyUserOpenid.setHeadPortrait(userInfoDTO.getHeadPortrait());
+        userInfobyUserOpenid.setUserName(userInfoDTO.getUserName());
+        userInfobyUserOpenid.setTelephone(userInfoDTO.getTelephone());
+        UserInfo saveResult = userInfoRepository.save(userInfobyUserOpenid);
+        return saveResult;
+    }
+
+
     //登录
     public UserInfoDTO findUserInfoByBuyerOpenidAndPassword(String openid, String password){
         UserInfo userInfo = userInfoRepository.findByUserOpenid(openid);

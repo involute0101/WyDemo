@@ -5,7 +5,10 @@ import com.imooc.sell.VO.CaptchaVO;
 import com.imooc.sell.VO.ResultVO;
 
 import com.imooc.sell.controller.form.UserInfoFrom;
+import com.imooc.sell.controller.form.UserInfoUpdateForm;
 import com.imooc.sell.converter.UserInfoFrom2UserInfoDTOConverter;
+import com.imooc.sell.converter.UserInfoUpdateForm2UserInfoDTOConverter;
+import com.imooc.sell.dataobject.UserInfo;
 import com.imooc.sell.dto.UserInfoDTO;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
@@ -101,7 +104,7 @@ public class UserInfoController {
         return ResultVOUtil.success(jsonObject);
     }
 
-    @ApiOperation(value = "查询用户个人信息", notes = "")
+    @ApiOperation(value = "openId查询用户个人信息", notes = "")
     @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
     @ApiImplicitParam(name = "openid",value = "用户id",required=true)
     @PostMapping("inquire/userInfo")
@@ -114,5 +117,33 @@ public class UserInfoController {
         user.put("WeChat",userInfoDTO.getWeChat());
         user.put("telephone",userInfoDTO.getTelephone());
         return ResultVOUtil.success(user);
+    }
+
+    @ApiOperation(value = "userId查询用户个人信息", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "userId",value = "用户id",required=true)
+    @PostMapping("inquire/userInfoByUserId")
+    public ResultVO getUserInfo(@RequestParam("userId") Integer userId){
+        UserInfoDTO userInfoDTO = userInfoService.findByUserId(userId);
+        JSONObject user = new JSONObject();
+        user.put("userName",userInfoDTO.getUserName());
+        user.put("headPortrait",userInfoDTO.getHeadPortrait());
+        user.put("QQ",userInfoDTO.getQqNumber());
+        user.put("WeChat",userInfoDTO.getWeChat());
+        user.put("telephone",userInfoDTO.getTelephone());
+        return ResultVOUtil.success(user);
+    }
+
+    @ApiOperation(value = "更新用户信息", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @PostMapping("update/userInfo")
+    public ResultVO updateUserInfo(@Valid UserInfoUpdateForm userInfoUpdateForm, BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            log.error("[用户信息] 参数不正确， userInfoUpdateForm={}", userInfoUpdateForm);
+            throw new SellException(ResultEnum.PARAM_ERROR.getCode(),bindingResult.getFieldError().getDefaultMessage());
+        }
+        UserInfoDTO userInfoDTO = UserInfoUpdateForm2UserInfoDTOConverter.converter(userInfoUpdateForm);
+        UserInfo userInfo = userInfoService.updateUserInfo(userInfoDTO);
+        return ResultVOUtil.success(userInfoUpdateForm);
     }
 }

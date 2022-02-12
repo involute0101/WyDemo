@@ -1,6 +1,7 @@
 package com.imooc.sell.service;
 
 import com.imooc.sell.VO.CaptchaVO;
+import com.imooc.sell.dataobject.UserInfo;
 import com.imooc.sell.dto.UserInfoDTO;
 
 import java.util.Collection;
@@ -9,6 +10,8 @@ import java.util.List;
 public interface UserInfoService {
     //注册
     UserInfoDTO createUserInfoOne(UserInfoDTO userInfoDTO) throws Exception;
+
+    UserInfo updateUserInfo(UserInfoDTO userInfoDTO);
 
     //登录
     UserInfoDTO findUserInfoByBuyerOpenidAndPassword(String openid, String password);

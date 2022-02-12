@@ -81,5 +81,6 @@ public class UserInfo {
     //电话
     private String telephone;
 
-
+    //头像
+    private String headPortrait;
 }
