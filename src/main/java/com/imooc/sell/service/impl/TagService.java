@@ -8,6 +8,8 @@ import com.imooc.sell.exception.SellException;
 import com.imooc.sell.repository.TagRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -49,6 +51,13 @@ public class TagService {
             tag.setTagContent(tagContent);
             tags.add(tagRepository.save(tag)) ;
         }
+        return tags;
+    }
+
+    public List<Tag> findByTagContentLike(String keyword, Pageable pageable){
+        List<Tag> tags = new ArrayList<>();
+        Page<Tag> page = tagRepository.findByTagContentLike("%" + keyword + "%", pageable);
+        for(Tag tag : page)tags.add(tag);
         return tags;
     }
 }

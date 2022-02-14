@@ -112,7 +112,7 @@ public class UserInfoController {
         UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(openid);
         JSONObject user = new JSONObject();
         user.put("userName",userInfoDTO.getUserName());
-        user.put("headPortrait","");
+        user.put("headPortrait",userInfoDTO.getHeadPortrait());
         user.put("QQ",userInfoDTO.getQqNumber());
         user.put("WeChat",userInfoDTO.getWeChat());
         user.put("telephone",userInfoDTO.getTelephone());
