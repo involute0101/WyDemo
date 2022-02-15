@@ -58,7 +58,12 @@ public class StudyServiceImpl implements StudyProjectService {
         }
         studyProjectDTO.setProjectId(projectMasterDTO.getProjectId());
         StudyProject studyProject = new StudyProject();
-        BeanUtils.copyProperties(studyProjectDTO,studyProject);
+        BeanUtils.copyProperties(studyProjectDTO,studyProject,"picture");
+        String pictureArray = "";
+        for(String picture : studyProjectDTO.getPicture()){
+            pictureArray = pictureArray + picture + ",";
+        }
+        studyProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
         logger.info("创建学习项目:"+studyProject.toString());
         StudyProject result = studyProjectRepository.save(studyProject);
         StudyProjectDTO resultDTO = new StudyProjectDTO();
@@ -73,7 +78,10 @@ public class StudyServiceImpl implements StudyProjectService {
 
         for (StudyProject studyProject: page){
             StudyProjectDTO studyProjectDTO = new StudyProjectDTO();
-            BeanUtils.copyProperties(studyProject, studyProjectDTO);
+            BeanUtils.copyProperties(studyProject, studyProjectDTO,"picture");
+            if (studyProject.getPicture()!=null){
+                studyProjectDTO.setPicture(studyProject.getPicture().split(","));
+            }
             list.add(studyProjectDTO);
         }
         return list;
@@ -84,7 +92,10 @@ public class StudyServiceImpl implements StudyProjectService {
         StudyProject studyProject = studyProjectRepository.findByProjectId(projectId);
         StudyProjectDTO studyProjectDTO = new StudyProjectDTO();
         if(studyProject != null) {
-            BeanUtils.copyProperties(studyProject, studyProjectDTO);
+            BeanUtils.copyProperties(studyProject, studyProjectDTO,"picture");
+            if (studyProject.getPicture()!=null){
+                studyProjectDTO.setPicture(studyProject.getPicture().split(","));
+            }
             return studyProjectDTO;
         }
         else {
@@ -99,7 +110,10 @@ public class StudyServiceImpl implements StudyProjectService {
         Page<StudyProject> page = studyProjectRepository.findByTagsLike("%" + keyword + "%", pageable);
         for(StudyProject studyProject: page){
             StudyProjectDTO studyProjectDTO = new StudyProjectDTO();
-            BeanUtils.copyProperties(studyProject,studyProjectDTO);
+            BeanUtils.copyProperties(studyProject,studyProjectDTO,"picture");
+            if (studyProject.getPicture()!=null){
+                studyProjectDTO.setPicture(studyProject.getPicture().split(","));
+            }
             list.add(studyProjectDTO);
         }
         return list;

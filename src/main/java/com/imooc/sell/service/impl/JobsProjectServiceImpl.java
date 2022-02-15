@@ -56,7 +56,12 @@ public class JobsProjectServiceImpl implements JobsProjectService {
         }
         jobsProjectDTO.setProjectId(projectMasterDTO.getProjectId());
         JobsProject jobsProject = new JobsProject();
-        BeanUtils.copyProperties(jobsProjectDTO, jobsProject);
+        BeanUtils.copyProperties(jobsProjectDTO, jobsProject,"picture");
+        String pictureArray = "";
+        for(String picture : jobsProjectDTO.getPicture()){
+            pictureArray = pictureArray + picture + ",";
+        }
+        jobsProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
         logger.info("创建招聘项目:" + jobsProject.toString());
         JobsProject result = jobsProjectRepository.save(jobsProject);
         JobsProjectDTO resultDTO = new JobsProjectDTO();
@@ -70,7 +75,10 @@ public class JobsProjectServiceImpl implements JobsProjectService {
         Page<JobsProject> page = jobsProjectRepository.findByOrderByUpdateTimeDesc(pageable);
         for (JobsProject jobsProject : page) {
             JobsProjectDTO jobsProjectDTO = new JobsProjectDTO();
-            BeanUtils.copyProperties(jobsProject, jobsProjectDTO);
+            BeanUtils.copyProperties(jobsProject, jobsProjectDTO,"picture");
+            if (jobsProject.getPicture()!=null){
+                jobsProjectDTO.setPicture(jobsProject.getPicture().split(","));
+            }
             list.add(jobsProjectDTO);
         }
         return list;
@@ -81,7 +89,10 @@ public class JobsProjectServiceImpl implements JobsProjectService {
         JobsProject jobsProject = jobsProjectRepository.findByProjectId(projectId);
         JobsProjectDTO jobsProjectDTO = new JobsProjectDTO();
         if (jobsProject != null) {
-            BeanUtils.copyProperties(jobsProject, jobsProjectDTO);
+            BeanUtils.copyProperties(jobsProject, jobsProjectDTO,"picture");
+            if (jobsProject.getPicture()!=null){
+                jobsProjectDTO.setPicture(jobsProject.getPicture().split(","));
+            }
             return jobsProjectDTO;
         } else {
             throw new SellException(ResultEnum.PROJECT_ID_NOT_FOUND);
@@ -94,7 +105,10 @@ public class JobsProjectServiceImpl implements JobsProjectService {
         Page<JobsProject> page = jobsProjectRepository.findByTagsLike("%" + keyword + "%", pageable);
         for (JobsProject jobsProject : page) {
             JobsProjectDTO jobsProjectDTO = new JobsProjectDTO();
-            BeanUtils.copyProperties(jobsProject, jobsProjectDTO);
+            BeanUtils.copyProperties(jobsProject, jobsProjectDTO,"picture");
+            if (jobsProject.getPicture()!=null){
+                jobsProjectDTO.setPicture(jobsProject.getPicture().split(","));
+            }
             list.add(jobsProjectDTO);
         }
         return list;

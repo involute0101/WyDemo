@@ -18,7 +18,7 @@ public class StudyProjectDTO {
 
     private String location;
 
-    private String picture;
+    private String[] picture;
     //认证状态
     private Integer certificationStat;
     //浏览量

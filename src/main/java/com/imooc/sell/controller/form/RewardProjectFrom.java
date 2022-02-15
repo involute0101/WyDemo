@@ -32,7 +32,7 @@ public class RewardProjectFrom {
     private String location;
 
     @ApiModelProperty(value = "图片",required = false)
-    private String picture;
+    private String[] picture;
 
     @ApiModelProperty(value = "性别",required = true)
     private Integer gender;

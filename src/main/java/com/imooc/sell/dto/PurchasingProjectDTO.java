@@ -20,7 +20,7 @@ public class PurchasingProjectDTO {
 
     private String location;
 
-    private String picture;
+    private String[] picture;
 
     private Integer certificationStat;
 

@@ -68,7 +68,7 @@ public class LostPropertyProjectController {
 
     @ApiOperation(value = "按照项目id查找项目详情", notes = "")
     @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
-    @ApiImplicitParam(name = "projectId",value = "项目id",required=true,paramType="form")
+    @ApiImplicitParam(name = "projectId",value = "项目id",required=true)
     @PostMapping("/findOne")
     public ResultVO findOne(@RequestParam(value = "projectId") String projectId){
         return  ResultVOUtil.success(lostPropertyProjectService.findLostPropertyProjectByProjectId(projectId));

@@ -56,7 +56,12 @@ public class IdleProjectServiceImpl implements IdleProjectService {
         }
         idleProjectDTO.setProjectId(projectMasterDTO.getProjectId());
         IdleProject idleProject = new IdleProject();
-        BeanUtils.copyProperties(idleProjectDTO,idleProject);
+        BeanUtils.copyProperties(idleProjectDTO,idleProject,"picture");
+        String pictureArray = "";
+        for(String picture : idleProjectDTO.getPicture()){
+            pictureArray = pictureArray + picture + ",";
+        }
+        idleProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
         logger.info("创建闲置项目："+idleProject.toString());
         IdleProject result = idleProjectRepository.save(idleProject);
         IdleProjectDTO resultDTO = new IdleProjectDTO();
@@ -71,7 +76,10 @@ public class IdleProjectServiceImpl implements IdleProjectService {
 
         for (IdleProject idleProject: page){
             IdleProjectDTO idleProjectDTO = new IdleProjectDTO();
-            BeanUtils.copyProperties(idleProject, idleProjectDTO);
+            BeanUtils.copyProperties(idleProject, idleProjectDTO,"picture");
+            if (idleProject.getPicture()!=null){
+                idleProjectDTO.setPicture(idleProject.getPicture().split(","));
+            }
             list.add(idleProjectDTO);
         }
         return list;
@@ -83,7 +91,10 @@ public class IdleProjectServiceImpl implements IdleProjectService {
         IdleProject idleProject = idleProjectRepository.findByProjectId(projectId);
         IdleProjectDTO idleProjectDTO = new IdleProjectDTO();
         if(idleProject != null) {
-            BeanUtils.copyProperties(idleProject, idleProjectDTO);
+            BeanUtils.copyProperties(idleProject, idleProjectDTO,"picture");
+            if (idleProject.getPicture()!=null){
+                idleProjectDTO.setPicture(idleProject.getPicture().split(","));
+            }
             return idleProjectDTO;
         }
         else {
@@ -97,7 +108,10 @@ public class IdleProjectServiceImpl implements IdleProjectService {
         Page<IdleProject> page = idleProjectRepository.findByTagsLike("%" + keyword + "%", pageable);
         for(IdleProject idleProject:page){
             IdleProjectDTO idleProjectDTO = new IdleProjectDTO();
-            BeanUtils.copyProperties(idleProject,idleProjectDTO);
+            BeanUtils.copyProperties(idleProject,idleProjectDTO,"picture");
+            if (idleProject.getPicture()!=null){
+                idleProjectDTO.setPicture(idleProject.getPicture().split(","));
+            }
             list.add(idleProjectDTO);
         }
         return list;

@@ -58,7 +58,12 @@ public class LostPropertyProjectServiceImpl implements LostPropertyProjectServic
         }
         lostPropertyProjectDTO.setProjectId(projectMasterDTO.getProjectId());
         LostPropertyProject lostPropertyProject = new LostPropertyProject();
-        BeanUtils.copyProperties(lostPropertyProjectDTO,lostPropertyProject);
+        BeanUtils.copyProperties(lostPropertyProjectDTO,lostPropertyProject,"picture");
+        String pictureArray = "";
+        for(String picture : lostPropertyProjectDTO.getPicture()){
+            pictureArray = pictureArray + picture + ",";
+        }
+        lostPropertyProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
         logger.info("创建失物招领项目："+lostPropertyProject.toString());
         LostPropertyProject result = lostPropertyProjectRepository.save(lostPropertyProject);
         LostPropertyProjectDTO resultDTO = new LostPropertyProjectDTO();
@@ -73,7 +78,10 @@ public class LostPropertyProjectServiceImpl implements LostPropertyProjectServic
 
         for (LostPropertyProject lostPropertyProject: page){
             LostPropertyProjectDTO lostPropertyProjectDTO = new LostPropertyProjectDTO();
-            BeanUtils.copyProperties(lostPropertyProject, lostPropertyProjectDTO);
+            BeanUtils.copyProperties(lostPropertyProject, lostPropertyProjectDTO,"picture");
+            if(lostPropertyProject.getPicture()!=null){
+                lostPropertyProjectDTO.setPicture(lostPropertyProject.getPicture().split(","));
+            }
             list.add(lostPropertyProjectDTO);
         }
         return list;
@@ -85,7 +93,10 @@ public class LostPropertyProjectServiceImpl implements LostPropertyProjectServic
         LostPropertyProject lostPropertyProject = lostPropertyProjectRepository.findByProjectId(projectId);
         LostPropertyProjectDTO lostPropertyProjectDTO = new LostPropertyProjectDTO();
         if(lostPropertyProject != null) {
-            BeanUtils.copyProperties(lostPropertyProject, lostPropertyProjectDTO);
+            BeanUtils.copyProperties(lostPropertyProject, lostPropertyProjectDTO,"picture");
+            if(lostPropertyProject.getPicture()!=null){
+                lostPropertyProjectDTO.setPicture(lostPropertyProject.getPicture().split(","));
+            }
             return lostPropertyProjectDTO;
         }
         else {
@@ -99,7 +110,10 @@ public class LostPropertyProjectServiceImpl implements LostPropertyProjectServic
         Page<LostPropertyProject> page = lostPropertyProjectRepository.findByTagsLike("%" + keyword + "%", pageable);
         for(LostPropertyProject lostPropertyProject: page){
             LostPropertyProjectDTO lostPropertyProjectDTO = new LostPropertyProjectDTO();
-            BeanUtils.copyProperties(lostPropertyProject,lostPropertyProjectDTO);
+            BeanUtils.copyProperties(lostPropertyProject,lostPropertyProjectDTO,"picture");
+            if(lostPropertyProject.getPicture()!=null){
+                lostPropertyProjectDTO.setPicture(lostPropertyProject.getPicture().split(","));
+            }
             list.add(lostPropertyProjectDTO);
         }
         return list;

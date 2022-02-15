@@ -26,7 +26,7 @@ public class JobsProjectFrom {
     private String location;
 
     @ApiModelProperty(value = "图片",required = false)
-    private String picture;
+    private String[] picture;
 
     @ApiModelProperty(value = "数量",required = true)
     private BigDecimal amount;

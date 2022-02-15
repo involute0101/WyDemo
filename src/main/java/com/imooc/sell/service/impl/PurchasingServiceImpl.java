@@ -58,7 +58,12 @@ public class PurchasingServiceImpl implements PurchasingProjectService {
         }
         purchasingProjectDTO.setProjectId(projectMasterDTO.getProjectId());
         PurchasingProject purchasingProject = new PurchasingProject();
-        BeanUtils.copyProperties(purchasingProjectDTO,purchasingProject);
+        BeanUtils.copyProperties(purchasingProjectDTO,purchasingProject,"picture");
+        String pictureArray = "";
+        for(String picture : purchasingProjectDTO.getPicture()){
+            pictureArray = pictureArray + picture + ",";
+        }
+        purchasingProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
         logger.info("创建跑腿项目："+purchasingProject.toString());
         PurchasingProject result = purchasingProjectRepository.save(purchasingProject);
         PurchasingProjectDTO resultDTO = new PurchasingProjectDTO();
@@ -73,7 +78,10 @@ public class PurchasingServiceImpl implements PurchasingProjectService {
 
         for (PurchasingProject purchasingProject: page){
             PurchasingProjectDTO purchasingProjectDTO = new PurchasingProjectDTO();
-            BeanUtils.copyProperties(purchasingProject, purchasingProjectDTO);
+            BeanUtils.copyProperties(purchasingProject, purchasingProjectDTO,"picture");
+            if(purchasingProject.getPicture()!=null){
+                purchasingProjectDTO.setPicture(purchasingProject.getPicture().split(","));
+            }
             list.add(purchasingProjectDTO);
         }
         return list;
@@ -84,7 +92,10 @@ public class PurchasingServiceImpl implements PurchasingProjectService {
         PurchasingProject purchasingProject = purchasingProjectRepository.findByProjectId(projectId);
         PurchasingProjectDTO purchasingProjectDTO = new PurchasingProjectDTO();
         if(purchasingProject != null) {
-            BeanUtils.copyProperties(purchasingProject, purchasingProjectDTO);
+            BeanUtils.copyProperties(purchasingProject, purchasingProjectDTO,"picture");
+            if(purchasingProject.getPicture()!=null){
+                purchasingProjectDTO.setPicture(purchasingProject.getPicture().split(","));
+            }
             return purchasingProjectDTO;
         }
         else {
@@ -99,7 +110,10 @@ public class PurchasingServiceImpl implements PurchasingProjectService {
         Page<PurchasingProject> page = purchasingProjectRepository.findByTagsLike("%" + keyword + "%", pageable);
         for(PurchasingProject purchasingProject: page){
             PurchasingProjectDTO purchasingProjectDTO = new PurchasingProjectDTO();
-            BeanUtils.copyProperties(purchasingProject,purchasingProjectDTO);
+            BeanUtils.copyProperties(purchasingProject,purchasingProjectDTO,"picture");
+            if(purchasingProject.getPicture()!=null){
+                purchasingProjectDTO.setPicture(purchasingProject.getPicture().split(","));
+            }
             list.add(purchasingProjectDTO);
         }
         return list;

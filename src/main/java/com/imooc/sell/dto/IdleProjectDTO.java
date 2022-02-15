@@ -19,7 +19,7 @@ public class IdleProjectDTO {
 
     private String location;
 
-    private String picture;
+    private String[] picture;
 
     private Integer certificationStat;
 

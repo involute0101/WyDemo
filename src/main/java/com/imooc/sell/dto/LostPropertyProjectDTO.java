@@ -18,7 +18,7 @@ public class LostPropertyProjectDTO {
 
     private String location;
 
-    private String picture;
+    private String[] picture;
 
     private Integer certificationStat;
 

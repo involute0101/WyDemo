@@ -56,7 +56,12 @@ public class RewardServiceImpl implements RewardProjectService {
         }
         rewardProjectDTO.setProjectId(projectMasterDTO.getProjectId());
         RewardProject rewardProject = new RewardProject();
-        BeanUtils.copyProperties(rewardProjectDTO,rewardProject);
+        BeanUtils.copyProperties(rewardProjectDTO,rewardProject,"picture");
+        String pictureArray = "";
+        for(String picture : rewardProjectDTO.getPicture()){
+            pictureArray = pictureArray + picture + ",";
+        }
+        rewardProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
         logger.info("创建悬赏项目:"+rewardProject.toString());
         RewardProject result = rewardProjectRepository.save(rewardProject);
         RewardProjectDTO resultDTO = new RewardProjectDTO();
@@ -73,7 +78,10 @@ public class RewardServiceImpl implements RewardProjectService {
 
         for (RewardProject rewardProject: page){
             RewardProjectDTO rewardProjectDTO = new RewardProjectDTO();
-            BeanUtils.copyProperties(rewardProject, rewardProjectDTO);
+            BeanUtils.copyProperties(rewardProject, rewardProjectDTO,"picture");
+            if(rewardProject.getPicture()!=null){
+                rewardProjectDTO.setPicture(rewardProject.getPicture().split(","));
+            }
             list.add(rewardProjectDTO);
         }
         return list;
@@ -84,7 +92,10 @@ public class RewardServiceImpl implements RewardProjectService {
         RewardProject rewardProject = rewardProjectRepository.findByProjectId(projectId);
         RewardProjectDTO rewardProjectDTO = new RewardProjectDTO();
         if(rewardProject != null) {
-            BeanUtils.copyProperties(rewardProject, rewardProjectDTO);
+            BeanUtils.copyProperties(rewardProject, rewardProjectDTO,"picture");
+            if(rewardProject.getPicture()!=null){
+                rewardProjectDTO.setPicture(rewardProject.getPicture().split(","));
+            }
             return rewardProjectDTO;
         }
         else {
@@ -107,7 +118,10 @@ public class RewardServiceImpl implements RewardProjectService {
         List<RewardProjectDTO> list = new ArrayList<>();
         for(RewardProject rewardProject : page){
             RewardProjectDTO rewardProjectDTO = new RewardProjectDTO();
-            BeanUtils.copyProperties(rewardProject, rewardProjectDTO);
+            BeanUtils.copyProperties(rewardProject, rewardProjectDTO,"picture");
+            if(rewardProject.getPicture()!=null){
+                rewardProjectDTO.setPicture(rewardProject.getPicture().split(","));
+            }
             list.add(rewardProjectDTO);
         }
         return list;
@@ -119,7 +133,10 @@ public class RewardServiceImpl implements RewardProjectService {
         Page<RewardProject> page = rewardProjectRepository.findByTagsLike("%"+keyword+"%", pageable);
         for(RewardProject rewardProject : page){
             RewardProjectDTO rewardProjectDTO = new RewardProjectDTO();
-            BeanUtils.copyProperties(rewardProject,rewardProjectDTO);
+            BeanUtils.copyProperties(rewardProject,rewardProjectDTO,"picture");
+            if(rewardProject.getPicture()!=null){
+                rewardProjectDTO.setPicture(rewardProject.getPicture().split(","));
+            }
             rewardProjectDTOList.add(rewardProjectDTO);
         }
         return rewardProjectDTOList;
