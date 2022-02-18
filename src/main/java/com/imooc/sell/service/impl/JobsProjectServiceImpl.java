@@ -58,10 +58,12 @@ public class JobsProjectServiceImpl implements JobsProjectService {
         JobsProject jobsProject = new JobsProject();
         BeanUtils.copyProperties(jobsProjectDTO, jobsProject,"picture");
         String pictureArray = "";
-        for(String picture : jobsProjectDTO.getPicture()){
-            pictureArray = pictureArray + picture + ",";
+        if(jobsProjectDTO.getPicture()!=null){
+            for(String picture : jobsProjectDTO.getPicture()){
+                pictureArray = pictureArray + picture + ",";
+            }
+            jobsProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
         }
-        jobsProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
         logger.info("创建招聘项目:" + jobsProject.toString());
         JobsProject result = jobsProjectRepository.save(jobsProject);
         JobsProjectDTO resultDTO = new JobsProjectDTO();

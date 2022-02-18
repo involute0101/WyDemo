@@ -40,29 +40,25 @@ public class LeaveMessageServiceImpl implements LeaveMessageService {
 
     @Override
     @Transactional
-    public LeaveMessageDTO createOne(String userOpenId, String projectId, String content) {
-        //检查userOpenId
-        UserInfo userInfo = userInfoRepository.findByUserOpenid(userOpenId);
+    public LeaveMessageDTO createOne(LeaveMessageDTO leaveMessageDTO) {
+        //检查userId
+        UserInfo userInfo = userInfoRepository.findByUserId(leaveMessageDTO.getUserId());
         if (userInfo == null) {
             throw new SellException(ResultEnum.USER_NOT_FOUND);
         }
         //检查projetId
-        ProjectMaster projectMaster = projectMasterRepository.findByProjectId(projectId);
+        ProjectMaster projectMaster = projectMasterRepository.findByProjectId(leaveMessageDTO.getProjectId());
         if (projectMaster == null) {
             throw new SellException(ResultEnum.PROJECT_ID_NOT_FOUND);
         }
         LeaveMessage leaveMessage = new LeaveMessage();
-        leaveMessage.setProjectId(projectId);
-        leaveMessage.setContent(content);
-        leaveMessage.setUserId(userInfo.getUserId());
-        leaveMessage.setLikeNumber(0);
-        leaveMessage.setPublishTime(new Date());
-        logger.info("创建留言:"+leaveMessage.toString());
+        BeanUtils.copyProperties(leaveMessageDTO,leaveMessage);
+        logger.info("创建留言:"+leaveMessage);
         LeaveMessage result = leaveMessageRepository.save(leaveMessage);
         if (result != null){
-            LeaveMessageDTO leaveMessageDTO = new LeaveMessageDTO();
-            BeanUtils.copyProperties(result,leaveMessageDTO);
-            return leaveMessageDTO;
+            LeaveMessageDTO leaveMessageDTOResult = new LeaveMessageDTO();
+            BeanUtils.copyProperties(result,leaveMessageDTOResult);
+            return leaveMessageDTOResult;
         }
         else
             return null;

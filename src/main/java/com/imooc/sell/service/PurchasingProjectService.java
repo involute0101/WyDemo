@@ -11,4 +11,5 @@ public interface PurchasingProjectService {
     List<PurchasingProjectDTO> findPurchasingProjectsOrderByUpdateTime(Pageable pageable);
     PurchasingProjectDTO findPurchasingByProjectId(String projectId);
     List<PurchasingProjectDTO> findPurchasingProjectByTagsLike(String keyword,Pageable pageable);
+    List<PurchasingProjectDTO> findPurchasingProjectOrderByAmount(Pageable pageable,String sort);
 }

@@ -12,6 +12,8 @@ import java.util.List;
 public interface PurchasingProjectRepository extends JpaRepository<PurchasingProject, Integer> {
     PurchasingProject findByProjectId(String projectId);
     Page<PurchasingProject> findByOrderByUpdateTimeDesc(Pageable pageable);
+    Page<PurchasingProject> findByOrderByAmount(Pageable pageable);
+    Page<PurchasingProject> findByOrderByAmountDesc(Pageable pageable);
     List<PurchasingProject> findByTitle(String title);
     List<PurchasingProject> findByLocation(String location);
     //调用者要在关键字前后加上“%”，以实现模糊查询

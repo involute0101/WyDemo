@@ -58,10 +58,12 @@ public class IdleProjectServiceImpl implements IdleProjectService {
         IdleProject idleProject = new IdleProject();
         BeanUtils.copyProperties(idleProjectDTO,idleProject,"picture");
         String pictureArray = "";
-        for(String picture : idleProjectDTO.getPicture()){
-            pictureArray = pictureArray + picture + ",";
+        if(idleProjectDTO.getPicture()!=null) {
+            for(String picture : idleProjectDTO.getPicture()){
+                pictureArray = pictureArray + picture + ",";
+            }
+            idleProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
         }
-        idleProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
         logger.info("创建闲置项目："+idleProject.toString());
         IdleProject result = idleProjectRepository.save(idleProject);
         IdleProjectDTO resultDTO = new IdleProjectDTO();
@@ -115,5 +117,28 @@ public class IdleProjectServiceImpl implements IdleProjectService {
             list.add(idleProjectDTO);
         }
         return list;
+    }
+
+    /**
+     * 根据悬赏金额大小排序，查询闲置项目
+     * @param pageable 分页请求
+     * @param sort 排序方式
+     * @return
+     */
+    @Override
+    public List<IdleProjectDTO> findIdleProjectOrderByAmount(Pageable pageable, String sort) {
+        Page<IdleProject> page = null;
+        if ("desc".equals(sort))page = idleProjectRepository.findByOrderByAmountDesc(pageable);
+        else page = idleProjectRepository.findByOrderByAmount(pageable);
+        List<IdleProjectDTO> arrayList = new ArrayList<>();
+        for(IdleProject idleProject : page){
+            IdleProjectDTO idleProjectDTO = new IdleProjectDTO();
+            BeanUtils.copyProperties(idleProject,idleProjectDTO,"picture");
+            if (idleProject.getPicture()!=null){
+                idleProjectDTO.setPicture(idleProject.getPicture().split(","));
+            }
+            arrayList.add(idleProjectDTO);
+        }
+        return arrayList;
     }
 }

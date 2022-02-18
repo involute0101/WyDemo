@@ -8,6 +8,8 @@ import com.imooc.sell.controller.form.StudyProjectFrom;
 import com.imooc.sell.dto.RewardProjectDTO;
 import com.imooc.sell.dto.StudyProjectDTO;
 
+import java.util.Date;
+
 public class StudyProjectFrom2StudyDTOConverter {
     public static StudyProjectDTO convert(StudyProjectFrom studyProjectFrom) {
         StudyProjectDTO studyProjectDTO = new StudyProjectDTO();
@@ -20,9 +22,13 @@ public class StudyProjectFrom2StudyDTOConverter {
         studyProjectDTO.setPicture(studyProjectFrom.getPicture());
         studyProjectDTO.setLocation(studyProjectFrom.getLocation());
         studyProjectDTO.setHyperlink(studyProjectFrom.getHyperlink());
+        studyProjectDTO.setCreateTime(new Date());
+        studyProjectDTO.setUpdateTime(new Date());
         String tags = "";
-        for(String tag : studyProjectFrom.getTags())tags = tags + tag + ",";
-        studyProjectDTO.setTags(tags.substring(0,tags.length()-1));
+        if(studyProjectFrom.getTags()!=null){
+            for(String tag : studyProjectFrom.getTags())tags = tags + tag + ",";
+            studyProjectDTO.setTags(tags.substring(0,tags.length()-1));
+        }
         return studyProjectDTO;
     }
 }

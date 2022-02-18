@@ -8,6 +8,8 @@ import com.imooc.sell.controller.form.UserInfoFrom;
 import com.imooc.sell.dto.IdleProjectDTO;
 import com.imooc.sell.dto.UserInfoDTO;
 
+import java.util.Date;
+
 public class IdleProjectFrom2IdleProjectDTOConverter {
     public static IdleProjectDTO convert(IdleProjectFrom idleProjectFrom) {
         IdleProjectDTO idleProjectDTO = new IdleProjectDTO();
@@ -19,9 +21,13 @@ public class IdleProjectFrom2IdleProjectDTOConverter {
         idleProjectDTO.setContent(idleProjectFrom.getContent());
         idleProjectDTO.setGender(idleProjectFrom.getGender());
         idleProjectDTO.setPicture(idleProjectFrom.getPicture());
+        idleProjectDTO.setCreateTime(new Date());
+        idleProjectDTO.setUpdateTime(new Date());
         String tags = "";
-        for (String tag : idleProjectFrom.getTags()) tags = tags + tag + ",";
-        idleProjectDTO.setTags(tags.substring(0,tags.length()-1));
+        if(idleProjectFrom.getTags()!=null){
+            for (String tag : idleProjectFrom.getTags()) tags = tags + tag + ",";
+            idleProjectDTO.setTags(tags.substring(0,tags.length()-1));
+        }
         return idleProjectDTO;
     }
 }

@@ -60,10 +60,12 @@ public class PurchasingServiceImpl implements PurchasingProjectService {
         PurchasingProject purchasingProject = new PurchasingProject();
         BeanUtils.copyProperties(purchasingProjectDTO,purchasingProject,"picture");
         String pictureArray = "";
-        for(String picture : purchasingProjectDTO.getPicture()){
-            pictureArray = pictureArray + picture + ",";
+        if(purchasingProjectDTO.getPicture()!=null){
+            for(String picture : purchasingProjectDTO.getPicture()){
+                pictureArray = pictureArray + picture + ",";
+            }
+            purchasingProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
         }
-        purchasingProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
         logger.info("创建跑腿项目："+purchasingProject.toString());
         PurchasingProject result = purchasingProjectRepository.save(purchasingProject);
         PurchasingProjectDTO resultDTO = new PurchasingProjectDTO();
@@ -117,5 +119,28 @@ public class PurchasingServiceImpl implements PurchasingProjectService {
             list.add(purchasingProjectDTO);
         }
         return list;
+    }
+
+    /**
+     * 根据悬赏金额大小排序，查询闲置项目
+     * @param pageable 分页请求
+     * @param sort 排序方式
+     * @return
+     */
+    @Override
+    public List<PurchasingProjectDTO> findPurchasingProjectOrderByAmount(Pageable pageable, String sort) {
+        Page<PurchasingProject> page = null;
+        if("desc".equals(sort))page = purchasingProjectRepository.findByOrderByAmountDesc(pageable);
+        else page = purchasingProjectRepository.findByOrderByAmount(pageable);
+        List<PurchasingProjectDTO> arrayList = new ArrayList<>();
+        for(PurchasingProject purchasingProject : page){
+            PurchasingProjectDTO purchasingProjectDTO = new PurchasingProjectDTO();
+            BeanUtils.copyProperties(purchasingProject,purchasingProjectDTO,"picture");
+            if(purchasingProject.getPicture()!=null){
+                purchasingProjectDTO.setPicture(purchasingProject.getPicture().split(","));
+            }
+            arrayList.add(purchasingProjectDTO);
+        }
+        return arrayList;
     }
 }

@@ -22,10 +22,13 @@ public class RewardProjectFrom2RewardDTOConverter {
         rewardProjectDTO.setGender(rewardProjectFrom.getGender());
         rewardProjectDTO.setPicture(rewardProjectFrom.getPicture());
         rewardProjectDTO.setLocation(rewardProjectFrom.getLocation());
+        rewardProjectDTO.setCreateTime(new Date());
         rewardProjectDTO.setUpdateTime(new Date());
         String tags = "";
-        for(String tag : rewardProjectFrom.getTags())tags = tags + tag + ",";
-        rewardProjectDTO.setTags(tags.substring(0,tags.length()-1));
+        if(rewardProjectFrom.getTags()!=null){
+            for(String tag : rewardProjectFrom.getTags())tags = tags + tag + ",";
+            rewardProjectDTO.setTags(tags.substring(0,tags.length()-1));
+        }
         return rewardProjectDTO;
     }
 }

@@ -8,6 +8,8 @@ import com.imooc.sell.controller.form.JobsProjectFrom;
 import com.imooc.sell.dto.IdleProjectDTO;
 import com.imooc.sell.dto.JobsProjectDTO;
 
+import java.util.Date;
+
 public class JobsProjectFrom2JobsProjectProjectDTOConverter {
     public static JobsProjectDTO convert(JobsProjectFrom jobsProjectFrom) {
         JobsProjectDTO jobsProjectDTO = new JobsProjectDTO();
@@ -19,9 +21,13 @@ public class JobsProjectFrom2JobsProjectProjectDTOConverter {
         jobsProjectDTO.setContent(jobsProjectFrom.getContent());
         jobsProjectDTO.setGender(jobsProjectFrom.getGender());
         jobsProjectDTO.setPicture(jobsProjectFrom.getPicture());
+        jobsProjectDTO.setCreateTime(new Date());
+        jobsProjectDTO.setUpdateTime(new Date());
         String tags = "";
-        for(String tag : jobsProjectFrom.getTags())tags = tags + tag + ",";
-        jobsProjectDTO.setTags(tags.substring(0,tags.length()-1));
+        if(jobsProjectFrom.getTags()!=null){
+            for(String tag : jobsProjectFrom.getTags())tags = tags + tag + ",";
+            jobsProjectDTO.setTags(tags.substring(0,tags.length()-1));
+        }
         return jobsProjectDTO;
     }
 }

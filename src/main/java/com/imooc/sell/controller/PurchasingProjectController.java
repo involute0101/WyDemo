@@ -5,6 +5,7 @@ import com.imooc.sell.controller.form.LostPropertyProjectFrom;
 import com.imooc.sell.controller.form.PurchasingProjectFrom;
 import com.imooc.sell.converter.LostPropertyProjectFrom2LostPropertyProjectDTOConverter;
 import com.imooc.sell.converter.PurchasingProjectFrom2PurchasingDTOConverter;
+import com.imooc.sell.dto.IdleProjectDTO;
 import com.imooc.sell.dto.LostPropertyProjectDTO;
 import com.imooc.sell.dto.PurchasingProjectDTO;
 import com.imooc.sell.enums.ResultEnum;
@@ -105,5 +106,23 @@ public class PurchasingProjectController {
         PageRequest pageRequest = new PageRequest(page - 1, size);
         List<PurchasingProjectDTO> purchasingProjectByTagsLike = purchasingService.findPurchasingProjectByTagsLike(tagKeyword, pageRequest);
         return ResultVOUtil.success(purchasingProjectByTagsLike);
+    }
+
+    @ApiOperation(value = "按照悬赏金额大小排序,查询跑腿项目", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page",value = "页数",required=true),
+            @ApiImplicitParam(name = "size",value = "页大小",required=true),
+            @ApiImplicitParam(name = "sort",value = "排序方式（asc/desc）",required=true),
+    })
+    @PostMapping("/orderByAmount")
+    public ResultVO findOrderByAmount(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                      @RequestParam(value = "size", defaultValue = "10") Integer size,
+                                      @RequestParam(value = "sort", defaultValue = "asc") String sort){
+        if (page<=0)return ResultVOUtil.error(403,"请求页不合规范！");
+        if(!"desc".equals(sort) && !"asc".equals(sort))return ResultVOUtil.error(403,"排序方式不正确");
+        PageRequest pageRequest = new PageRequest(page-1,size);
+        List<PurchasingProjectDTO> purchasingProjectOrderByAmount = purchasingService.findPurchasingProjectOrderByAmount(pageRequest, sort);
+        return ResultVOUtil.success(purchasingProjectOrderByAmount);
     }
 }

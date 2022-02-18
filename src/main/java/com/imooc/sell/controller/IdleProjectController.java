@@ -6,6 +6,7 @@ import com.imooc.sell.controller.form.UserInfoFrom;
 import com.imooc.sell.converter.IdleProjectFrom2IdleProjectDTOConverter;
 import com.imooc.sell.converter.UserInfoFrom2UserInfoDTOConverter;
 import com.imooc.sell.dto.IdleProjectDTO;
+import com.imooc.sell.dto.RewardProjectDTO;
 import com.imooc.sell.dto.UserInfoDTO;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
@@ -108,5 +109,23 @@ public class IdleProjectController {
         PageRequest pageRequest = new PageRequest(page-1,size);
         List<IdleProjectDTO> idleProjectByTagsLike = idleProjectService.findIdleProjectByTagsLike(tagKeyword, pageRequest);
         return ResultVOUtil.success(idleProjectByTagsLike);
+    }
+
+    @ApiOperation(value = "按照悬赏金额大小排序,查询闲置项目", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page",value = "页数",required=true),
+            @ApiImplicitParam(name = "size",value = "页大小",required=true),
+            @ApiImplicitParam(name = "sort",value = "排序方式（asc/desc）",required=true),
+    })
+    @PostMapping("/orderByAmount")
+    public ResultVO findOrderByAmount(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                      @RequestParam(value = "size", defaultValue = "10") Integer size,
+                                      @RequestParam(value = "sort", defaultValue = "asc") String sort){
+        if (page<=0)return ResultVOUtil.error(403,"请求页不合规范！");
+        if(!"desc".equals(sort) && !"asc".equals(sort))return ResultVOUtil.error(403,"排序方式不正确");
+        PageRequest pageRequest = new PageRequest(page-1,size);
+        List<IdleProjectDTO> idleProjectOrderByAmount = idleProjectService.findIdleProjectOrderByAmount(pageRequest, sort);
+        return ResultVOUtil.success(idleProjectOrderByAmount);
     }
 }

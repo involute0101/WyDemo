@@ -60,10 +60,12 @@ public class LostPropertyProjectServiceImpl implements LostPropertyProjectServic
         LostPropertyProject lostPropertyProject = new LostPropertyProject();
         BeanUtils.copyProperties(lostPropertyProjectDTO,lostPropertyProject,"picture");
         String pictureArray = "";
-        for(String picture : lostPropertyProjectDTO.getPicture()){
-            pictureArray = pictureArray + picture + ",";
+        if(lostPropertyProjectDTO.getPicture()!=null){
+            for(String picture : lostPropertyProjectDTO.getPicture()){
+                pictureArray = pictureArray + picture + ",";
+            }
+            lostPropertyProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
         }
-        lostPropertyProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
         logger.info("创建失物招领项目："+lostPropertyProject.toString());
         LostPropertyProject result = lostPropertyProjectRepository.save(lostPropertyProject);
         LostPropertyProjectDTO resultDTO = new LostPropertyProjectDTO();

@@ -4,6 +4,7 @@ import com.imooc.sell.VO.ResultVO;
 import com.imooc.sell.controller.form.IdleProjectFrom;
 import com.imooc.sell.controller.form.LeaveMessageForm;
 import com.imooc.sell.controller.form.LectureProjectFrom;
+import com.imooc.sell.converter.LeaveMessageFrom2LeaveMessageDTOConverter;
 import com.imooc.sell.converter.LecutreProjectFrom2LectureProjectDTOConverter;
 import com.imooc.sell.dto.LeaveMessageDTO;
 import com.imooc.sell.dto.LectureProjectDTO;
@@ -37,24 +38,26 @@ public class LeaveMessageController {
     @PostMapping("/create")
     public ResultVO create(@Valid LeaveMessageForm leaveMessageForm, BindingResult bindingResult
                            ) throws Exception {
-        LeaveMessageDTO leaveMessageDTO = leaveMessageService.createOne(leaveMessageForm.getUserId(),
-                leaveMessageForm.getProjectId(),leaveMessageForm.getContent());
-        if (leaveMessageDTO == null){
-            return ResultVOUtil.error(ResultEnum.CREATE_FAILED);
+        if (bindingResult.hasErrors()) {
+            log.error("【创建留言项目】参数不正确, leaveMessageForm={}", leaveMessageForm);
+            throw new SellException(ResultEnum.PARAM_ERROR.getCode(),
+                    bindingResult.getFieldError().getDefaultMessage());
         }
-        return ResultVOUtil.success(leaveMessageDTO);
+        LeaveMessageDTO leaveMessageDTO = LeaveMessageFrom2LeaveMessageDTOConverter.convert(leaveMessageForm);
+        LeaveMessageDTO result = leaveMessageService.createOne(leaveMessageDTO);
+        return ResultVOUtil.success(result);
     }
 
     @ApiOperation(value = "查询一个用户的所有留言", notes = "")
     @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
-    @ApiImplicitParam(name = "userOpenId",value = "用户Id",required=true)
+    @ApiImplicitParam(name = "userOpenId",value = "用户openId",required=true)
     @PostMapping("/find/userOpenId")
-    public ResultVO findByUserOpenId(@RequestParam(value = "openid") String openid){
-        if (openid == null){
+    public ResultVO findByUserOpenId(@RequestParam(value = "userOpenId") String userOpenId){
+        if (userOpenId == null){
             log.error("【搜索留言】参数错误， userOpenId = {}", (Object) null);
             return ResultVOUtil.error(ResultEnum.PARAM_ERROR);
         }
-        List<LeaveMessageDTO>leaveMessageDTOS = leaveMessageService.findByOpenId(openid);
+        List<LeaveMessageDTO>leaveMessageDTOS = leaveMessageService.findByOpenId(userOpenId);
         return ResultVOUtil.success(leaveMessageDTOS);
     }
 

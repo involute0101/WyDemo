@@ -58,10 +58,12 @@ public class RewardServiceImpl implements RewardProjectService {
         RewardProject rewardProject = new RewardProject();
         BeanUtils.copyProperties(rewardProjectDTO,rewardProject,"picture");
         String pictureArray = "";
-        for(String picture : rewardProjectDTO.getPicture()){
-            pictureArray = pictureArray + picture + ",";
+        if(rewardProjectDTO.getPicture()!=null){
+            for(String picture : rewardProjectDTO.getPicture()){
+                pictureArray = pictureArray + picture + ",";
+            }
+            rewardProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
         }
-        rewardProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
         logger.info("创建悬赏项目:"+rewardProject.toString());
         RewardProject result = rewardProjectRepository.save(rewardProject);
         RewardProjectDTO resultDTO = new RewardProjectDTO();

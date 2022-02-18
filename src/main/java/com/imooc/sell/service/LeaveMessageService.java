@@ -5,7 +5,7 @@ import com.imooc.sell.dto.LeaveMessageDTO;
 import java.util.List;
 
 public interface LeaveMessageService {
-    LeaveMessageDTO createOne(String userOpenId, String projectId, String content);
+    LeaveMessageDTO createOne(LeaveMessageDTO leaveMessageDTO);
     List<LeaveMessageDTO> findByOpenId(String userOpenId);
     List<LeaveMessageDTO> findByProjectId(String projectId);
     boolean deleteOne(String userOpenId, String projectId, Integer key);

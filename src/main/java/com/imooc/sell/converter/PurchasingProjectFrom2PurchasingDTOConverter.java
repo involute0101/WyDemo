@@ -8,6 +8,8 @@ import com.imooc.sell.controller.form.PurchasingProjectFrom;
 import com.imooc.sell.dto.LostPropertyProjectDTO;
 import com.imooc.sell.dto.PurchasingProjectDTO;
 
+import java.util.Date;
+
 public class PurchasingProjectFrom2PurchasingDTOConverter {
     public static PurchasingProjectDTO convert(PurchasingProjectFrom purchasingProjectFrom) {
         PurchasingProjectDTO purchasingProjectDTO = new PurchasingProjectDTO();
@@ -20,9 +22,13 @@ public class PurchasingProjectFrom2PurchasingDTOConverter {
         purchasingProjectDTO.setGender(purchasingProjectFrom.getGender());
         purchasingProjectDTO.setPicture(purchasingProjectFrom.getPicture());
         purchasingProjectDTO.setLocation(purchasingProjectFrom.getLocation());
+        purchasingProjectDTO.setCreateTime(new Date());
+        purchasingProjectDTO.setUpdateTime(new Date());
         String tags = "";
-        for(String tag : purchasingProjectFrom.getTags())tags = tags + tag + ",";
-        purchasingProjectDTO.setTags(tags.substring(0,tags.length()-1));
+        if(purchasingProjectFrom.getTags()!=null){
+            for(String tag : purchasingProjectFrom.getTags())tags = tags + tag + ",";
+            purchasingProjectDTO.setTags(tags.substring(0,tags.length()-1));
+        }
         return purchasingProjectDTO;
     }
 }
