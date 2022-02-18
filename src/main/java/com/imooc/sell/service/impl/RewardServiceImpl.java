@@ -155,4 +155,25 @@ public class RewardServiceImpl implements RewardProjectService {
         UserInfoDTO userInfoDTO = userInfoService.findByUserId(userId);
         return userInfoDTO.getUserOpenid();
     }
+
+    /**
+     * 根据标题关键字查找悬赏项目
+     * @param titleKeyword  标题的关键字
+     * @param pageable  分页请求
+     * @return
+     */
+    @Override
+    public List<RewardProjectDTO> findRewardProjectByTitleLike(String titleKeyword,Pageable pageable){
+        List<RewardProjectDTO> list = new ArrayList<>();
+        Page<RewardProject> page = rewardProjectRepository.findByTitleLike("%" + titleKeyword + "%", pageable);
+        for(RewardProject rewardProject : page){
+            RewardProjectDTO rewardProjectDTO = new RewardProjectDTO();
+            BeanUtils.copyProperties(rewardProject,rewardProjectDTO,"picture");
+            if(rewardProject.getPicture()!=null){
+                rewardProjectDTO.setPicture(rewardProject.getPicture().split(","));
+            }
+            list.add(rewardProjectDTO);
+        }
+        return list;
+    }
 }

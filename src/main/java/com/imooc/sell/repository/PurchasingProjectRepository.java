@@ -18,4 +18,5 @@ public interface PurchasingProjectRepository extends JpaRepository<PurchasingPro
     List<PurchasingProject> findByLocation(String location);
     //调用者要在关键字前后加上“%”，以实现模糊查询
     Page<PurchasingProject> findByTagsLike(String keyword,Pageable pageable);
+    Page<PurchasingProject> findByTitleLike(String titleKeyword,Pageable pageable);
 }

@@ -19,4 +19,5 @@ public interface IdleProjectRepository extends JpaRepository<IdleProject, Intege
     List<IdleProject> findByLocation(String location);
     //调用者要在关键字前后加上“%”，以实现模糊查询
     Page<IdleProject> findByTagsLike(String keyword,Pageable pageable);
+    Page<IdleProject> findByTitleLike(String keyword,Pageable pageable);
 }

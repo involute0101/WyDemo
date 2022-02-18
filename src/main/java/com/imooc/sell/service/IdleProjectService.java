@@ -12,4 +12,5 @@ public interface IdleProjectService {
     IdleProjectDTO findIdleProjectByProjectId(String projectId);
     List<IdleProjectDTO> findIdleProjectByTagsLike(String keyword,Pageable pageable);
     List<IdleProjectDTO> findIdleProjectOrderByAmount(Pageable pageable,String sort);
+    List<IdleProjectDTO> findIdleProjectByTitleLike(String titleKeyword,Pageable pageable);
 }

@@ -136,4 +136,16 @@ public class FavoritesServiceServiceImpl implements FavoritesService {
         else
             return null;
     }
+
+    /**
+     * 检查项目是否被某一用户收藏
+     * @param projectId 项目id
+     * @param userId 用户id
+     * @return
+     */
+    public boolean checkProjectFavoritedByUser(String projectId,String userId){
+        Favorites favorites = favoritesRepository.findByProjectIdAndUserId(projectId, Integer.valueOf(userId));
+        if(favorites != null)return true;
+        return false;
+    }
 }

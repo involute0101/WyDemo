@@ -116,5 +116,20 @@ public class FavoritesController {
         return ResultVOUtil.success(favoritesServiceService.findAllFavoriteProject(userInfoDTO.getUserId()));
     }
 
+    @ApiOperation(value = "查询项目是否被某一用户收藏", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "projectId",value = "项目Id",required=true),
+            @ApiImplicitParam(name = "openId",value = "用户OpenId",required=true),
+    })
+    @PostMapping("/favoritedByUser")
+    public ResultVO checkProjectFavoritedByUser(@RequestParam(value = "projectId") String projectId,
+                                                @RequestParam(value = "openId") String openId){
+        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(openId);
+        if (userInfoDTO == null){
+            return ResultVOUtil.error(ResultEnum.USER_NOT_FOUND);
+        }
+        return ResultVOUtil.success(favoritesServiceService.checkProjectFavoritedByUser(projectId,String.valueOf(userInfoDTO.getUserId())));
+    }
 
 }

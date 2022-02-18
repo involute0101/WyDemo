@@ -16,4 +16,6 @@ public interface RewardProjectService {
     List<RewardProjectDTO> findRewardProjectOrderByAmount(Pageable pageable, String sort);
 
     List<RewardProjectDTO> findRewardProjectLikeTags(String keyword,Pageable pageable);
+
+    public List<RewardProjectDTO> findRewardProjectByTitleLike(String titleKeyword,Pageable pageable);
 }

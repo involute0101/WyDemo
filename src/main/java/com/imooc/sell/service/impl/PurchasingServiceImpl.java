@@ -143,4 +143,25 @@ public class PurchasingServiceImpl implements PurchasingProjectService {
         }
         return arrayList;
     }
+
+    /**
+     * 根据标题关键词查找跑腿项目
+     * @param titleKeyword 标题关键词
+     * @param pageable 分页请求
+     * @return
+     */
+    @Override
+    public List<PurchasingProjectDTO> findByPurchasingProjectByTitleLike(String titleKeyword, Pageable pageable) {
+        List<PurchasingProjectDTO> list = new ArrayList<>();
+        Page<PurchasingProject> page = purchasingProjectRepository.findByTitleLike("%" + titleKeyword + "%", pageable);
+        for(PurchasingProject purchasingProject : page){
+            PurchasingProjectDTO purchasingProjectDTO = new PurchasingProjectDTO();
+            BeanUtils.copyProperties(purchasingProject,purchasingProjectDTO,"picture");
+            if(purchasingProject.getPicture()!=null){
+                purchasingProjectDTO.setPicture(purchasingProject.getPicture().split(","));
+            }
+            list.add(purchasingProjectDTO);
+        }
+        return list;
+    }
 }

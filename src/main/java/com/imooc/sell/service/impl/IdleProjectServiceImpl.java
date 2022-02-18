@@ -141,4 +141,25 @@ public class IdleProjectServiceImpl implements IdleProjectService {
         }
         return arrayList;
     }
+
+    /**
+     * 根据标题关键字查询闲置项目
+     * @param titleKeyword  标题关键字
+     * @param pageable 分页请求
+     * @return
+     */
+    @Override
+    public List<IdleProjectDTO> findIdleProjectByTitleLike(String titleKeyword,Pageable pageable){
+        List<IdleProjectDTO> list = new ArrayList<>();
+        Page<IdleProject> page = idleProjectRepository.findByTitleLike("%" + titleKeyword + "%", pageable);
+        for(IdleProject idleProject : page){
+            IdleProjectDTO idleProjectDTO = new IdleProjectDTO();
+            BeanUtils.copyProperties(idleProject,idleProjectDTO,"picture");
+            if (idleProject.getPicture()!=null){
+                idleProjectDTO.setPicture(idleProject.getPicture().split(","));
+            }
+            list.add(idleProjectDTO);
+        }
+        return list;
+    }
 }
