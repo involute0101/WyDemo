@@ -146,4 +146,18 @@ public class UserInfoController {
         UserInfo userInfo = userInfoService.updateUserInfo(userInfoDTO);
         return ResultVOUtil.success(userInfoUpdateForm);
     }
+
+    @ApiOperation(value = "修改用户密码", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userOpenId",value = "用户openId",required=true),
+            @ApiImplicitParam(name = "oldPassword",value = "旧密码",required=true),
+            @ApiImplicitParam(name = "newPassword",value = "新密码",required=true)
+    })
+    @PostMapping("/modifyPassword")
+    public ResultVO modifyPassword(@RequestParam("userOpenId") String userOpenId,
+                               @RequestParam("oldPassword") String oldPassword,
+                               @RequestParam("newPassword") String newPassword){
+        return userInfoService.modifyPassword(userOpenId,oldPassword,newPassword);
+    }
 }

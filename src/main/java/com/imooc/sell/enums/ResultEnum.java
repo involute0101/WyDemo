@@ -46,7 +46,9 @@ public enum ResultEnum {
 
     FILE_EMPTY(19,"文件为空"),
 
-    USERINFO_OR_PROJECTINFO_NOT_MATCH(19,"用户信息或项目信息不匹配")
+    ERROR_PASSWORD(20,"密码错误"),
+
+    USERINFO_OR_PROJECTINFO_NOT_MATCH(21,"用户信息或项目信息不匹配")
     ;
 
     private Integer code;

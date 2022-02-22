@@ -1,11 +1,15 @@
 package com.imooc.sell.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.imooc.sell.dataobject.LeaveMessage;
+import com.imooc.sell.dataobject.LeaveMessageLike;
 import com.imooc.sell.dataobject.ProjectMaster;
 import com.imooc.sell.dataobject.UserInfo;
 import com.imooc.sell.dto.LeaveMessageDTO;
+import com.imooc.sell.dto.LeaveMessageLikeDTO;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
+import com.imooc.sell.repository.LeaveMessageLikeRepository;
 import com.imooc.sell.repository.LeaveMessageRepository;
 import com.imooc.sell.repository.ProjectMasterRepository;
 import com.imooc.sell.repository.UserInfoRepository;
@@ -32,6 +36,9 @@ public class LeaveMessageServiceImpl implements LeaveMessageService {
     LeaveMessageRepository leaveMessageRepository;
 
     @Autowired
+    LeaveMessageLikeRepository leaveMessageLikeRepository;
+
+    @Autowired
     UserInfoRepository userInfoRepository;
 
     @Autowired
@@ -41,11 +48,12 @@ public class LeaveMessageServiceImpl implements LeaveMessageService {
     @Override
     @Transactional
     public LeaveMessageDTO createOne(LeaveMessageDTO leaveMessageDTO) {
-        //检查userId
-        UserInfo userInfo = userInfoRepository.findByUserId(leaveMessageDTO.getUserId());
+        //检查userOpenId
+        UserInfo userInfo = userInfoRepository.findByUserOpenid(leaveMessageDTO.getUserOpenid());
         if (userInfo == null) {
             throw new SellException(ResultEnum.USER_NOT_FOUND);
         }
+        leaveMessageDTO.setUserId(userInfo.getUserId());
         //检查projetId
         ProjectMaster projectMaster = projectMasterRepository.findByProjectId(leaveMessageDTO.getProjectId());
         if (projectMaster == null) {
@@ -58,6 +66,7 @@ public class LeaveMessageServiceImpl implements LeaveMessageService {
         if (result != null){
             LeaveMessageDTO leaveMessageDTOResult = new LeaveMessageDTO();
             BeanUtils.copyProperties(result,leaveMessageDTOResult);
+            leaveMessageDTOResult.setUserOpenid(leaveMessageDTO.getUserOpenid());
             return leaveMessageDTOResult;
         }
         else
@@ -80,6 +89,7 @@ public class LeaveMessageServiceImpl implements LeaveMessageService {
         for (LeaveMessage leaveMessage : leaveMessages) {
             LeaveMessageDTO leaveMessageDTO = new LeaveMessageDTO();
             BeanUtils.copyProperties(leaveMessage,leaveMessageDTO);
+            leaveMessageDTO.setUserOpenid(userOpenId);
             leaveMessageDTOS.add(leaveMessageDTO);
         }
         return leaveMessageDTOS;
@@ -100,6 +110,7 @@ public class LeaveMessageServiceImpl implements LeaveMessageService {
         for (LeaveMessage leaveMessage : leaveMessages) {
             LeaveMessageDTO leaveMessageDTO = new LeaveMessageDTO();
             BeanUtils.copyProperties(leaveMessage, leaveMessageDTO);
+            leaveMessageDTO.setUserOpenid(userInfoRepository.findByUserId(leaveMessage.getUserId()).getUserOpenid());
             leaveMessageDTOS.add(leaveMessageDTO);
 
         }
@@ -153,10 +164,45 @@ public class LeaveMessageServiceImpl implements LeaveMessageService {
         if (result != null){
             LeaveMessageDTO leaveMessageDTO = new LeaveMessageDTO();
             BeanUtils.copyProperties(result,leaveMessageDTO);
+            leaveMessageDTO.setUserOpenid(userOpenId);
             return leaveMessageDTO;
         }
         else
             return null;
     }
 
+    /**
+     * 对留言进行点赞和取消，点赞->取消 || 取消->点赞
+     * @param leaveMessageLikeDTO 点赞信息
+     * @return
+     */
+    @Override
+    @Transactional
+    public JSONObject likeLeaveMessageOrNot(LeaveMessageLikeDTO leaveMessageLikeDTO){
+        JSONObject result = new JSONObject();
+        UserInfo userInfo = userInfoRepository.findByUserOpenid(leaveMessageLikeDTO.getUserOpenId());
+        if (userInfo == null) {
+            throw new SellException(ResultEnum.USER_NOT_FOUND);
+        }
+        LeaveMessageLike leaveMessageLike = leaveMessageLikeRepository.findByUserOpenIdAndLeaveMessageId(
+                leaveMessageLikeDTO.getUserOpenId(), leaveMessageLikeDTO.getLeaveMessageId());
+        if (leaveMessageLike==null){
+            LeaveMessageLike leaveMessageLikeSave = new LeaveMessageLike();
+            BeanUtils.copyProperties(leaveMessageLikeDTO,leaveMessageLikeSave);
+            LeaveMessageLike saveResult = leaveMessageLikeRepository.save(leaveMessageLikeSave);
+            LeaveMessage leaveMessage = leaveMessageRepository.findOne(leaveMessageLikeDTO.getLeaveMessageId());
+            leaveMessage.setLikeNumber(leaveMessage.getLikeNumber()+1);
+            leaveMessageRepository.save(leaveMessage);
+            result.put("message","点赞成功！感谢您的喜欢~~");
+            result.put("content",saveResult);
+        }else{
+            leaveMessageLikeRepository.delete(leaveMessageLike);
+            LeaveMessage leaveMessage = leaveMessageRepository.findOne(leaveMessageLikeDTO.getLeaveMessageId());
+            leaveMessage.setLikeNumber(leaveMessage.getLikeNumber()-1);
+            leaveMessageRepository.save(leaveMessage);
+            result.put("message","取消点赞~~");
+            result.put("content",leaveMessageLikeDTO);
+        }
+        return result;
+    }
 }

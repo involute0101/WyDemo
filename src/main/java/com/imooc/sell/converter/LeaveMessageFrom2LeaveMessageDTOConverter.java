@@ -9,7 +9,7 @@ public class LeaveMessageFrom2LeaveMessageDTOConverter {
     public static LeaveMessageDTO convert(LeaveMessageForm leaveMessageForm){
         LeaveMessageDTO leaveMessageDTO = new LeaveMessageDTO();
         leaveMessageDTO.setProjectId(leaveMessageForm.getProjectId());
-        leaveMessageDTO.setUserId(Integer.valueOf(leaveMessageForm.getUserId()));
+        leaveMessageDTO.setUserOpenid(leaveMessageForm.getUserOpenId());
         leaveMessageDTO.setContent(leaveMessageForm.getContent());
         leaveMessageDTO.setLikeNumber(0);
         leaveMessageDTO.setPublishTime(new Date());

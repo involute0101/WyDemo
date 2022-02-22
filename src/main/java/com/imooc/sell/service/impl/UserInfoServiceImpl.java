@@ -1,6 +1,7 @@
 package com.imooc.sell.service.impl;
 
 import com.imooc.sell.VO.CaptchaVO;
+import com.imooc.sell.VO.ResultVO;
 import com.imooc.sell.dataobject.UserInfo;
 import com.imooc.sell.dto.UserInfoDTO;
 import com.imooc.sell.enums.ResultEnum;
@@ -151,5 +152,27 @@ public class UserInfoServiceImpl implements UserInfoService {
         UserInfoDTO userInfoDTO = new UserInfoDTO();
         BeanUtils.copyProperties(userInfo,userInfoDTO);
         return userInfoDTO;
+    }
+
+    /**
+     * 修改用户密码
+     * @param userOpenId 用户openId
+     * @param oldPassword   旧密码
+     * @param newPassword   新密码
+     * @return
+     */
+    @Override
+    @Transactional
+    public ResultVO modifyPassword(String userOpenId, String oldPassword, String newPassword){
+        UserInfo userInfo = userInfoRepository.findByUserOpenid(userOpenId);
+        if(userInfo==null){
+            throw new SellException(ResultEnum.USER_NOT_FOUND);
+        }
+        if(!userInfo.getUserPassword().equals(oldPassword)){
+            throw new SellException(ResultEnum.ERROR_PASSWORD);
+        }
+        userInfo.setUserPassword(newPassword);
+        userInfoRepository.save(userInfo);
+        return ResultVOUtil.success("修改密码成功！");
     }
 }

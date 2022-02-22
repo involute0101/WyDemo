@@ -1,12 +1,16 @@
 package com.imooc.sell.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.imooc.sell.VO.ResultVO;
 import com.imooc.sell.controller.form.IdleProjectFrom;
 import com.imooc.sell.controller.form.LeaveMessageForm;
+import com.imooc.sell.controller.form.LeaveMessageLikeForm;
 import com.imooc.sell.controller.form.LectureProjectFrom;
 import com.imooc.sell.converter.LeaveMessageFrom2LeaveMessageDTOConverter;
+import com.imooc.sell.converter.LeaveMessageLikeFrom2LeaveMessageLikeDTOConverter;
 import com.imooc.sell.converter.LecutreProjectFrom2LectureProjectDTOConverter;
 import com.imooc.sell.dto.LeaveMessageDTO;
+import com.imooc.sell.dto.LeaveMessageLikeDTO;
 import com.imooc.sell.dto.LectureProjectDTO;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
@@ -116,5 +120,19 @@ public class LeaveMessageController {
             return ResultVOUtil.error(ResultEnum.CHANGE_FAILED);
         }
         return ResultVOUtil.success(leaveMessageDTO);
+    }
+
+    @ApiOperation(value = "对留言点赞和取消", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @PostMapping("/like")
+    public ResultVO likeLeaveMessageOrNot(@Valid LeaveMessageLikeForm leaveMessageLikeForm, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            log.error("【留言点赞】参数不正确, leaveMessageLikeForm={}", leaveMessageLikeForm);
+            throw new SellException(ResultEnum.PARAM_ERROR.getCode(),
+                    bindingResult.getFieldError().getDefaultMessage());
+        }
+        LeaveMessageLikeDTO leaveMessageLikeDTO = LeaveMessageLikeFrom2LeaveMessageLikeDTOConverter.convert(leaveMessageLikeForm);
+        JSONObject result = leaveMessageService.likeLeaveMessageOrNot(leaveMessageLikeDTO);
+        return ResultVOUtil.success(result);
     }
 }

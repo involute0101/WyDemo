@@ -1,6 +1,7 @@
 package com.imooc.sell.service;
 
 import com.imooc.sell.VO.CaptchaVO;
+import com.imooc.sell.VO.ResultVO;
 import com.imooc.sell.dataobject.UserInfo;
 import com.imooc.sell.dto.UserInfoDTO;
 
@@ -29,4 +30,6 @@ public interface UserInfoService {
 
     //根据id查找用户
     UserInfoDTO findByUserId(Integer userId);
+
+    ResultVO modifyPassword(String userOpenId, String oldPassword, String newPassword);
 }

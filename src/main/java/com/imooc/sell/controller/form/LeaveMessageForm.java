@@ -15,8 +15,8 @@ public class LeaveMessageForm {
     private Integer id;
 
     @NotEmpty(message = "账号必填")
-    @ApiModelProperty(value = "用户id()",required = true)
-    private String userId;
+    @ApiModelProperty(value = "用户openId",required = true)
+    private String userOpenId;
 
     @NotEmpty(message = "项目id不能为空")
     @ApiModelProperty(value = "项目id",required = true)
