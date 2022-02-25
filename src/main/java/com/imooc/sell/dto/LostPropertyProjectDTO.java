@@ -8,6 +8,8 @@ import java.util.Date;
 
 @Data
 public class LostPropertyProjectDTO {
+    private Integer id;
+
     private String userOpenid;
 
     private String projectId;
@@ -36,4 +38,6 @@ public class LostPropertyProjectDTO {
     private Date updateTime;
 
     private String tags;
+
+    private Integer favoriteNumber;
 }

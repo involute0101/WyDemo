@@ -115,4 +115,27 @@ public class JobsProjectServiceImpl implements JobsProjectService {
         }
         return list;
     }
+
+    /**
+     *
+     * @param jobsProjectDTO
+     * @return
+     */
+    @Override
+    public JobsProjectDTO updateJobsProject(JobsProjectDTO jobsProjectDTO) {
+        JobsProject jobsProject = new JobsProject();
+        BeanUtils.copyProperties(jobsProjectDTO, jobsProject,"picture");
+        String pictureArray = "";
+        if(jobsProjectDTO.getPicture()!=null){
+            for(String picture : jobsProjectDTO.getPicture()){
+                pictureArray = pictureArray + picture + ",";
+            }
+            jobsProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
+        }
+        logger.info("更新招聘项目:" + jobsProject.toString());
+        JobsProject result = jobsProjectRepository.save(jobsProject);
+        JobsProjectDTO resultDTO = new JobsProjectDTO();
+        BeanUtils.copyProperties(result, resultDTO);
+        return resultDTO;
+    }
 }

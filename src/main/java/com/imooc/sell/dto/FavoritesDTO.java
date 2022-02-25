@@ -11,8 +11,6 @@ public class FavoritesDTO {
 
     private String projectId;
 
-    private Integer userId;
-
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
     @JsonSerialize(using = Date2LongSerializer.class)

@@ -118,4 +118,25 @@ public class StudyServiceImpl implements StudyProjectService {
         }
         return list;
     }
+
+    /**
+     * 更新项目，用于其他项目调用，当其他项目要修改信息时，调用此方法保存修改后的值
+     * @param studyProjectDTO
+     * @return
+     */
+    @Override
+    public StudyProjectDTO updateStudyProjectDTO(StudyProjectDTO studyProjectDTO) {
+        StudyProject studyProject = new StudyProject();
+        BeanUtils.copyProperties(studyProjectDTO,studyProject,"picture");
+        String pictureArray = "";
+        for(String picture : studyProjectDTO.getPicture()){
+            pictureArray = pictureArray + picture + ",";
+        }
+        studyProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
+        logger.info("更新学习项目:"+studyProject);
+        StudyProject result = studyProjectRepository.save(studyProject);
+        StudyProjectDTO resultDTO = new StudyProjectDTO();
+        BeanUtils.copyProperties(result, resultDTO);
+        return resultDTO;
+    }
 }

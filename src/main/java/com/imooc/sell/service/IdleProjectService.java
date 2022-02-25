@@ -8,9 +8,16 @@ import java.util.List;
 
 public interface IdleProjectService {
     IdleProjectDTO createIdleProjectOne(IdleProjectDTO idleProjectDTO) throws Exception;
+
     List<IdleProjectDTO> findIdleProjectsOrderByUpdateTime(Pageable pageable);
+
     IdleProjectDTO findIdleProjectByProjectId(String projectId);
-    List<IdleProjectDTO> findIdleProjectByTagsLike(String keyword,Pageable pageable);
-    List<IdleProjectDTO> findIdleProjectOrderByAmount(Pageable pageable,String sort);
-    List<IdleProjectDTO> findIdleProjectByTitleLike(String titleKeyword,Pageable pageable);
+
+    List<IdleProjectDTO> findIdleProjectByTagsLike(String keyword, Pageable pageable);
+
+    List<IdleProjectDTO> findIdleProjectOrderByAmount(Pageable pageable, String sort);
+
+    List<IdleProjectDTO> findIdleProjectByTitleLike(String titleKeyword, Pageable pageable);
+
+    IdleProjectDTO updateIdleProjectDTO(IdleProjectDTO idleProjectDTO);
 }

@@ -205,4 +205,32 @@ public class LeaveMessageServiceImpl implements LeaveMessageService {
         }
         return result;
     }
+
+    /**
+     * 查询用户是否点赞过该留言
+     * @param leaveMessageId    留言id
+     * @param userOpenId    用户openId
+     * @return
+     */
+    @Override
+    public JSONObject checkLikeOrNot(Integer leaveMessageId, String userOpenId) {
+        JSONObject result = new JSONObject();
+        UserInfo userInfo = userInfoRepository.findByUserOpenid(userOpenId);
+        if (userInfo == null) {
+            throw new SellException(ResultEnum.USER_NOT_FOUND);
+        }
+        LeaveMessage leaveMessage = leaveMessageRepository.findOne(leaveMessageId);
+        if(leaveMessage==null){
+            throw new SellException(ResultEnum.LEAVEMESSAGE_NOT_FOUND);
+        }
+        LeaveMessageLike leaveMessageLike = leaveMessageLikeRepository.findByUserOpenIdAndLeaveMessageId(userOpenId, leaveMessageId);
+        if(leaveMessageLike==null){
+            result.put("message","该用户未点赞过该留言");
+            result.put("content",false);
+        }else{
+            result.put("message","该用户已点赞");
+            result.put("content",true);
+        }
+        return result;
+    }
 }

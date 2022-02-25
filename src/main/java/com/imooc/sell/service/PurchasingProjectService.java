@@ -1,5 +1,6 @@
 package com.imooc.sell.service;
 
+import com.imooc.sell.dataobject.PurchasingProject;
 import com.imooc.sell.dto.LostPropertyProjectDTO;
 import com.imooc.sell.dto.PurchasingProjectDTO;
 import org.springframework.data.domain.Pageable;
@@ -13,4 +14,6 @@ public interface PurchasingProjectService {
     List<PurchasingProjectDTO> findPurchasingProjectByTagsLike(String keyword,Pageable pageable);
     List<PurchasingProjectDTO> findPurchasingProjectOrderByAmount(Pageable pageable,String sort);
     List<PurchasingProjectDTO> findByPurchasingProjectByTitleLike(String titleKeyword,Pageable pageable);
+    PurchasingProjectDTO updatePurchasingProject(PurchasingProjectDTO purchasingProjectDTO);
+    List<PurchasingProjectDTO> findPurchasingProjectOrderByFavoritesNumber(Pageable pageable);
 }

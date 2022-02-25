@@ -162,4 +162,27 @@ public class IdleProjectServiceImpl implements IdleProjectService {
         }
         return list;
     }
+
+    /**
+     * 更新项目，用于其他项目调用，当其他项目要修改信息时，调用此方法保存修改后的值
+     * @param idleProjectDTO
+     * @return
+     */
+    @Override
+    public IdleProjectDTO updateIdleProjectDTO(IdleProjectDTO idleProjectDTO) {
+        IdleProject idleProject = new IdleProject();
+        BeanUtils.copyProperties(idleProjectDTO,idleProject,"picture");
+        String pictureArray = "";
+        if(idleProjectDTO.getPicture()!=null) {
+            for(String picture : idleProjectDTO.getPicture()){
+                pictureArray = pictureArray + picture + ",";
+            }
+            idleProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
+        }
+        logger.info("更新闲置项目："+idleProject.toString());
+        IdleProject result = idleProjectRepository.save(idleProject);
+        IdleProjectDTO resultDTO = new IdleProjectDTO();
+        BeanUtils.copyProperties(result, resultDTO);
+        return resultDTO;
+    }
 }

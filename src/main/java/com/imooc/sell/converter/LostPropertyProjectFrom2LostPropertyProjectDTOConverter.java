@@ -22,6 +22,7 @@ public class LostPropertyProjectFrom2LostPropertyProjectDTOConverter {
         lostPropertyProjectDTO.setGender(lostPropertyProjectFrom.getGender());
         lostPropertyProjectDTO.setPicture(lostPropertyProjectFrom.getPicture());
         lostPropertyProjectDTO.setLocation(lostPropertyProjectFrom.getLocation());
+        lostPropertyProjectDTO.setFavoriteNumber(0);
         lostPropertyProjectDTO.setCreateTime(new Date());
         lostPropertyProjectDTO.setUpdateTime(new Date());
         String tags = "";

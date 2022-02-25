@@ -164,4 +164,48 @@ public class PurchasingServiceImpl implements PurchasingProjectService {
         }
         return list;
     }
+
+    /**
+     * 更新项目，用于其他项目调用，当其他项目要修改信息时，调用此方法保存修改后的值
+     * @param purchasingProjectDTO
+     * @return
+     */
+    @Override
+    public PurchasingProjectDTO updatePurchasingProject(PurchasingProjectDTO purchasingProjectDTO) {
+        PurchasingProject purchasingProject = new PurchasingProject();
+        BeanUtils.copyProperties(purchasingProjectDTO,purchasingProject,"picture");
+        String pictureArray = "";
+        if(purchasingProjectDTO.getPicture()!=null){
+            for(String picture : purchasingProjectDTO.getPicture()){
+                pictureArray = pictureArray + picture + ",";
+            }
+            purchasingProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
+        }
+        logger.info("更新跑腿项目："+purchasingProject);
+        PurchasingProject result = purchasingProjectRepository.save(purchasingProject);
+        PurchasingProjectDTO resultDTO = new PurchasingProjectDTO();
+        BeanUtils.copyProperties(result, resultDTO);
+        return resultDTO;
+    }
+
+    /**
+     * 根据收藏数降序，查询最热的项目
+     * @param pageable 分页查询
+     * @return
+     */
+    @Override
+    public List<PurchasingProjectDTO> findPurchasingProjectOrderByFavoritesNumber(Pageable pageable) {
+        Page<PurchasingProject> page = purchasingProjectRepository.findByOrderByFavoriteNumberDesc(pageable);
+        List<PurchasingProjectDTO> list = new ArrayList<>();
+
+        for (PurchasingProject purchasingProject: page){
+            PurchasingProjectDTO purchasingProjectDTO = new PurchasingProjectDTO();
+            BeanUtils.copyProperties(purchasingProject, purchasingProjectDTO,"picture");
+            if(purchasingProject.getPicture()!=null){
+                purchasingProjectDTO.setPicture(purchasingProject.getPicture().split(","));
+            }
+            list.add(purchasingProjectDTO);
+        }
+        return list;
+    }
 }

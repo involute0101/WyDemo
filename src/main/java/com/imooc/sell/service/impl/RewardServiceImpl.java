@@ -176,4 +176,48 @@ public class RewardServiceImpl implements RewardProjectService {
         }
         return list;
     }
+
+    /**
+     * 更新项目，用于其他项目调用，当其他项目要修改信息时，调用此方法保存修改后的值
+     * @param rewardProjectDTO
+     * @return
+     */
+    @Override
+    public RewardProjectDTO updateRewardProject(RewardProjectDTO rewardProjectDTO) {
+        RewardProject rewardProject = new RewardProject();
+        BeanUtils.copyProperties(rewardProjectDTO,rewardProject,"picture");
+        String pictureArray = "";
+        if(rewardProjectDTO.getPicture()!=null){
+            for(String picture : rewardProjectDTO.getPicture()){
+                pictureArray = pictureArray + picture + ",";
+            }
+            rewardProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
+        }
+        logger.info("更新悬赏项目:"+rewardProject);
+        RewardProject result = rewardProjectRepository.save(rewardProject);
+        RewardProjectDTO resultDTO = new RewardProjectDTO();
+        BeanUtils.copyProperties(result, resultDTO);
+        return resultDTO;
+    }
+
+    /**
+     * 根据收藏数降序，查询最热的项目
+     * @param pageable  分页查询
+     * @return
+     */
+    @Override
+    public List<RewardProjectDTO> findRewardProjectOrderByFavoritesNumber(Pageable pageable) {
+        Page<RewardProject> page = rewardProjectRepository.findByOrderByFavoriteNumberDesc(pageable);
+        List<RewardProjectDTO> list = new ArrayList<>();
+
+        for (RewardProject rewardProject: page){
+            RewardProjectDTO rewardProjectDTO = new RewardProjectDTO();
+            BeanUtils.copyProperties(rewardProject, rewardProjectDTO,"picture");
+            if(rewardProject.getPicture()!=null){
+                rewardProjectDTO.setPicture(rewardProject.getPicture().split(","));
+            }
+            list.add(rewardProjectDTO);
+        }
+        return list;
+    }
 }

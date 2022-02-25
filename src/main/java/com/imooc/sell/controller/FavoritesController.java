@@ -1,9 +1,12 @@
 package com.imooc.sell.controller;
 
 import com.imooc.sell.VO.ResultVO;
+import com.imooc.sell.controller.form.FavoritesForm;
+import com.imooc.sell.converter.FavoriteFrom2FavoritesDTOConverter;
 import com.imooc.sell.dto.FavoritesDTO;
 import com.imooc.sell.dto.UserInfoDTO;
 import com.imooc.sell.enums.ResultEnum;
+import com.imooc.sell.exception.SellException;
 import com.imooc.sell.service.impl.FavoritesServiceServiceImpl;
 import com.imooc.sell.service.impl.ProjectMasterServiceImpl;
 import com.imooc.sell.service.impl.UserInfoServiceImpl;
@@ -11,7 +14,10 @@ import com.imooc.sell.utils.ResultVOUtil;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @CrossOrigin
 @RestController
@@ -30,27 +36,24 @@ public class FavoritesController {
 
     @ApiOperation(value = "创建收藏项目", notes = "")
     @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "projectId",value = "项目Id",required=true),
-            @ApiImplicitParam(name = "openid",value = "用户Id",required=true),
-    })
     @PostMapping("/createOne")
-    public ResultVO create(@RequestParam(value = "projectId") String projectId,
-                           @RequestParam(value = "openid") String openid) throws Exception {
-        if (projectId==null || openid == null) {
-            log.error("【创建项目】参数不正确,projectId={}, openid= {}",projectId,openid);
-            return ResultVOUtil.error(ResultEnum.PARAM_ERROR);
+    public ResultVO create(@Valid FavoritesForm favoritesForm, BindingResult bindingResult) throws Exception {
+        if (bindingResult.hasErrors()) {
+            log.error("【创建收藏项目】参数不正确, favoriteForm={}", favoritesForm);
+            throw new SellException(ResultEnum.PARAM_ERROR.getCode(),
+                    bindingResult.getFieldError().getDefaultMessage());
         }
-        if (userInfoService.findUserInfoByUserOpeinid(openid) == null){
+        if (userInfoService.findUserInfoByUserOpeinid(favoritesForm.getUserOpenId()) == null){
             return ResultVOUtil.error(ResultEnum.USER_NOT_FOUND);
         }
 
-        if (projectMasterService.findProjectMasterByProjectId(projectId) == null) {
+        if (projectMasterService.findProjectMasterByProjectId(favoritesForm.getProjectId()) == null) {
             return ResultVOUtil.error(ResultEnum.PROJECT_ID_NOT_FOUND);
         }
 
-        if (favoritesServiceService.findFavoriteOne(openid, projectId) == null) {
-            FavoritesDTO createResult =  favoritesServiceService.createFavoriteOne(openid,projectId);
+        if (favoritesServiceService.findFavoriteOne(favoritesForm.getUserOpenId(), favoritesForm.getProjectId()) == null) {
+            FavoritesDTO favoritesDTO = FavoriteFrom2FavoritesDTOConverter.convert(favoritesForm);
+            FavoritesDTO createResult =  favoritesServiceService.createFavoriteOne(favoritesDTO);
             return ResultVOUtil.success(createResult);
         }
         else

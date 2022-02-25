@@ -121,4 +121,27 @@ public class LostPropertyProjectServiceImpl implements LostPropertyProjectServic
         return list;
     }
 
+    /**
+     * 更新项目，用于其他项目调用，当其他项目要修改信息时，调用此方法保存修改后的值
+     * @param lostPropertyProjectDTO
+     * @return
+     */
+    @Override
+    public LostPropertyProjectDTO updateLostPropertyProject(LostPropertyProjectDTO lostPropertyProjectDTO) {
+        LostPropertyProject lostPropertyProject = new LostPropertyProject();
+        BeanUtils.copyProperties(lostPropertyProjectDTO,lostPropertyProject,"picture");
+        String pictureArray = "";
+        if(lostPropertyProjectDTO.getPicture()!=null){
+            for(String picture : lostPropertyProjectDTO.getPicture()){
+                pictureArray = pictureArray + picture + ",";
+            }
+            lostPropertyProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
+        }
+        logger.info("更新失物招领项目："+lostPropertyProject);
+        LostPropertyProject result = lostPropertyProjectRepository.save(lostPropertyProject);
+        LostPropertyProjectDTO resultDTO = new LostPropertyProjectDTO();
+        BeanUtils.copyProperties(result, resultDTO);
+        return resultDTO;
+    }
+
 }

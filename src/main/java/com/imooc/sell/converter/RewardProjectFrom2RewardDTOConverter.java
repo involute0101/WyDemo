@@ -24,6 +24,7 @@ public class RewardProjectFrom2RewardDTOConverter {
         rewardProjectDTO.setLocation(rewardProjectFrom.getLocation());
         rewardProjectDTO.setCreateTime(new Date());
         rewardProjectDTO.setUpdateTime(new Date());
+        rewardProjectDTO.setFavoriteNumber(0);
         String tags = "";
         if(rewardProjectFrom.getTags()!=null){
             for(String tag : rewardProjectFrom.getTags())tags = tags + tag + ",";

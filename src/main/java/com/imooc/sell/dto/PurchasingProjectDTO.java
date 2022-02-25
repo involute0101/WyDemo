@@ -10,6 +10,8 @@ import java.util.Date;
 
 @Data
 public class PurchasingProjectDTO {
+    private Integer id;
+
     private String userOpenid;
 
     private String projectId;
@@ -38,4 +40,6 @@ public class PurchasingProjectDTO {
     private Date updateTime;
 
     private String tags;
+
+    private Integer favoriteNumber;
 }

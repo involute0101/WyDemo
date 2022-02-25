@@ -8,6 +8,8 @@ import java.util.Date;
 
 @Data
 public class StudyProjectDTO {
+    private Integer id;
+
     private String userOpenid;
 
     private String projectId;
@@ -36,4 +38,6 @@ public class StudyProjectDTO {
     private Date updateTime;
 
     private String tags;
+
+    private Integer favoriteNumber;
 }

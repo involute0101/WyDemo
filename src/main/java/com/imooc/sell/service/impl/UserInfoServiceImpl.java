@@ -157,19 +157,15 @@ public class UserInfoServiceImpl implements UserInfoService {
     /**
      * 修改用户密码
      * @param userOpenId 用户openId
-     * @param oldPassword   旧密码
      * @param newPassword   新密码
      * @return
      */
     @Override
     @Transactional
-    public ResultVO modifyPassword(String userOpenId, String oldPassword, String newPassword){
+    public ResultVO modifyPassword(String userOpenId, String newPassword){
         UserInfo userInfo = userInfoRepository.findByUserOpenid(userOpenId);
         if(userInfo==null){
             throw new SellException(ResultEnum.USER_NOT_FOUND);
-        }
-        if(!userInfo.getUserPassword().equals(oldPassword)){
-            throw new SellException(ResultEnum.ERROR_PASSWORD);
         }
         userInfo.setUserPassword(newPassword);
         userInfoRepository.save(userInfo);

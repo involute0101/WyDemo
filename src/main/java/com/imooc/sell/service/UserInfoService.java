@@ -31,5 +31,5 @@ public interface UserInfoService {
     //根据id查找用户
     UserInfoDTO findByUserId(Integer userId);
 
-    ResultVO modifyPassword(String userOpenId, String oldPassword, String newPassword);
+    ResultVO modifyPassword(String userOpenId, String newPassword);
 }

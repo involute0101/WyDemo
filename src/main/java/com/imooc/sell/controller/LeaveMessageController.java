@@ -135,4 +135,17 @@ public class LeaveMessageController {
         JSONObject result = leaveMessageService.likeLeaveMessageOrNot(leaveMessageLikeDTO);
         return ResultVOUtil.success(result);
     }
+
+    @ApiOperation(value = "查询用户是否点赞留言", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userOpenId",value = "用户openId",required=true),
+            @ApiImplicitParam(name = "leaveMessageId",value = "留言Id",required=true),
+    })
+    @PostMapping("/userLikeMessage")
+    public ResultVO userLikeMessage(@RequestParam(value = "leaveMessageId") Integer leaveMessageId,
+                                    @RequestParam(value = "userOpenId") String userOpenId){
+        JSONObject result = leaveMessageService.checkLikeOrNot(leaveMessageId, userOpenId);
+        return ResultVOUtil.success(result);
+    }
 }

@@ -8,7 +8,12 @@ import java.util.List;
 
 public interface JobsProjectService {
     JobsProjectDTO createJobsProjectOne(JobsProjectDTO jobsProjectDTO) throws Exception;
+
     List<JobsProjectDTO> findJobsProjectsOrderByUpdateTime(Pageable pageable);
+
     JobsProjectDTO findJobsProjectByProjectId(String projectId);
-    List<JobsProjectDTO> findJobsProjectByTagsLike(String keyword,Pageable pageable);
+
+    List<JobsProjectDTO> findJobsProjectByTagsLike(String keyword, Pageable pageable);
+
+    JobsProjectDTO updateJobsProject(JobsProjectDTO jobsProjectDTO);
 }

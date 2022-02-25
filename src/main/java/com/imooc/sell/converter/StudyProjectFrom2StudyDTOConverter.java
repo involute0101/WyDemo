@@ -22,6 +22,7 @@ public class StudyProjectFrom2StudyDTOConverter {
         studyProjectDTO.setPicture(studyProjectFrom.getPicture());
         studyProjectDTO.setLocation(studyProjectFrom.getLocation());
         studyProjectDTO.setHyperlink(studyProjectFrom.getHyperlink());
+        studyProjectDTO.setFavoriteNumber(0);
         studyProjectDTO.setCreateTime(new Date());
         studyProjectDTO.setUpdateTime(new Date());
         String tags = "";

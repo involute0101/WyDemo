@@ -1,9 +1,7 @@
 package com.imooc.sell.service.impl;
 
 import com.imooc.sell.dataobject.Favorites;
-import com.imooc.sell.dto.FavoritesDTO;
-import com.imooc.sell.dto.ProjectMasterDTO;
-import com.imooc.sell.dto.UserInfoDTO;
+import com.imooc.sell.dto.*;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
 import com.imooc.sell.repository.FavoritesRepository;
@@ -37,9 +35,30 @@ public class FavoritesServiceServiceImpl implements FavoritesService {
     @Autowired
     ProjectMasterServiceImpl projectMasterService;
 
+    @Autowired
+    PurchasingServiceImpl purchasingService;
+
+    @Autowired
+    RewardServiceImpl rewardService;
+
+    @Autowired
+    StudyServiceImpl studyService;
+
+    @Autowired
+    IdleProjectServiceImpl idleProjectService;
+
+    @Autowired
+    LostPropertyProjectServiceImpl lostPropertyProjectService;
+
+    @Autowired
+    JobsProjectServiceImpl jobsProjectService;
+
 
     @Override
-    public FavoritesDTO createFavoriteOne(String userOpenId, String projectId) {
+    @Transactional
+    public FavoritesDTO createFavoriteOne(FavoritesDTO favoritesDTO) {
+        String userOpenId = favoritesDTO.getUserOpenId();
+        String projectId = favoritesDTO.getProjectId();
         //验证用户ID是否存在
         UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(userOpenId);
         if (userInfoDTO == null){
@@ -55,15 +74,50 @@ public class FavoritesServiceServiceImpl implements FavoritesService {
         if (favorites != null){
             throw new SellException(ResultEnum.FAVORITES_EXISTED);
         }
+        Integer projectType = projectMasterDTO.getProjectType();
+        switch (projectType){
+            case 1:
+                PurchasingProjectDTO purchasingProjectDTO = purchasingService.findPurchasingByProjectId(projectId);
+                purchasingProjectDTO.setFavoriteNumber(purchasingProjectDTO.getFavoriteNumber()+1);
+                purchasingService.updatePurchasingProject(purchasingProjectDTO);
+                break;
+            case 2:
+                RewardProjectDTO rewardProjectDTO = rewardService.findRewardByProjectId(projectId);
+                System.out.println(rewardProjectDTO);
+                rewardProjectDTO.setFavoriteNumber(rewardProjectDTO.getFavoriteNumber()+1);
+                rewardService.updateRewardProject(rewardProjectDTO);
+                break;
+            case 3:
+                StudyProjectDTO studyProjectDTO = studyService.findStudyByProjectId(projectId);
+                studyProjectDTO.setFavoriteNumber(studyProjectDTO.getFavoriteNumber()+1);
+                studyService.updateStudyProjectDTO(studyProjectDTO);
+                break;
+            case 4:
+                IdleProjectDTO idleProjectDTO = idleProjectService.findIdleProjectByProjectId(projectId);
+                idleProjectDTO.setFavoriteNumber(idleProjectDTO.getFavoriteNumber()+1);
+                idleProjectService.updateIdleProjectDTO(idleProjectDTO);
+                break;
+            case 5:
+                LostPropertyProjectDTO lostPropertyProjectDTO = lostPropertyProjectService.findLostPropertyProjectByProjectId(projectId);
+                lostPropertyProjectDTO.setFavoriteNumber(lostPropertyProjectDTO.getFavoriteNumber()+1);
+                lostPropertyProjectService.updateLostPropertyProject(lostPropertyProjectDTO);
+                break;
+            case 6:
+                JobsProjectDTO jobsProjectDTO = jobsProjectService.findJobsProjectByProjectId(projectId);
+                jobsProjectDTO.setFavoriteNumber(jobsProjectDTO.getFavoriteNumber()+1);
+                jobsProjectService.updateJobsProject(jobsProjectDTO);
+                break;
+        }
         //写表
         favorites = new Favorites();
         favorites.setUserId(userInfoDTO.getUserId());
-        favorites.setProjectId(projectId);
-        logger.info("创建收藏项目:"+favorites.toString());
+        BeanUtils.copyProperties(favoritesDTO,favorites);
+        logger.info("创建收藏项目:"+favorites);
         favoritesRepository.save(favorites);
-        FavoritesDTO favoritesDTO = new FavoritesDTO();
-        BeanUtils.copyProperties(favorites, favoritesDTO);
-        return favoritesDTO;
+        FavoritesDTO favoritesDTOResult = new FavoritesDTO();
+        BeanUtils.copyProperties(favorites, favoritesDTOResult);
+        favoritesDTOResult.setUserOpenId(userOpenId);
+        return favoritesDTOResult;
     }
 
     @Override

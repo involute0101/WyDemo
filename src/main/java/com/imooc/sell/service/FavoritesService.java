@@ -7,7 +7,7 @@ import com.imooc.sell.dto.UserInfoDTO;
 import java.util.List;
 
 public interface FavoritesService {
-    FavoritesDTO createFavoriteOne (String userOpenId, String projectId);
+    FavoritesDTO createFavoriteOne (FavoritesDTO favoritesDTO);
 
     boolean deleteFavoriteOne(String userOpenId, String projectId);
 

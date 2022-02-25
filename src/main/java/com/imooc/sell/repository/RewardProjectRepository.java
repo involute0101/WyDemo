@@ -19,4 +19,5 @@ public interface RewardProjectRepository extends JpaRepository<RewardProject, In
     //调用者要在关键字前后加上“%”，以实现模糊查询
     Page<RewardProject> findByTagsLike(String keyword,Pageable pageable);
     Page<RewardProject> findByTitleLike(String keyword,Pageable pageable);
+    Page<RewardProject> findByOrderByFavoriteNumberDesc(Pageable pageable);
 }

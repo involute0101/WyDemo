@@ -9,6 +9,8 @@ import java.util.Date;
 
 @Data
 public class IdleProjectDTO {
+    private Integer id;
+
     private String userOpenid;
 
     private String projectId;
@@ -37,4 +39,6 @@ public class IdleProjectDTO {
     private Date updateTime;
 
     private String tags;
+
+    private Integer favoriteNumber;
 }
