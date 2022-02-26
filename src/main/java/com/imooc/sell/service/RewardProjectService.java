@@ -22,4 +22,6 @@ public interface RewardProjectService {
     RewardProjectDTO updateRewardProject(RewardProjectDTO rewardProjectDTO);
 
     List<RewardProjectDTO> findRewardProjectOrderByFavoritesNumber(Pageable pageable);
+
+    List<RewardProjectDTO> findByComplexService(Pageable pageable);
 }

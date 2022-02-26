@@ -220,4 +220,26 @@ public class RewardServiceImpl implements RewardProjectService {
         }
         return list;
     }
+
+    /**
+     * 综合排序查找，权重=时间戳*0.000001+点赞数*10
+     * @param pageable  分页请求
+     * @return
+     */
+    @Override
+    public List<RewardProjectDTO> findByComplexService(Pageable pageable) {
+        List<RewardProjectDTO> result = new ArrayList<>();
+        int pageSize = pageable.getPageSize();
+        int offsetNumber = pageable.getOffset();
+        List<RewardProject> rewardProjectList = rewardProjectRepository.findByComplex(pageSize, offsetNumber);
+        for(RewardProject rewardProject:rewardProjectList){
+            RewardProjectDTO rewardProjectDTO = new RewardProjectDTO();
+            BeanUtils.copyProperties(rewardProject, rewardProjectDTO,"picture");
+            if(rewardProject.getPicture()!=null){
+                rewardProjectDTO.setPicture(rewardProject.getPicture().split(","));
+            }
+            result.add(rewardProjectDTO);
+        }
+        return result;
+    }
 }

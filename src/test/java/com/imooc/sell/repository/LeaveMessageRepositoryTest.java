@@ -29,7 +29,7 @@ public class LeaveMessageRepositoryTest {
     }
     @Test
     public void findByProjectId() {
-        Assert.assertNotNull(leaveMessageRepository.findByProjectId("1599286362028845205"));
+        Assert.assertNotNull(leaveMessageRepository.findByProjectIdAndLmIdIsNull("1599286362028845205"));
     }
 
     @Test

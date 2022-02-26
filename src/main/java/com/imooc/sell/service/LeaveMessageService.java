@@ -3,6 +3,7 @@ package com.imooc.sell.service;
 import com.alibaba.fastjson.JSONObject;
 import com.imooc.sell.dto.LeaveMessageDTO;
 import com.imooc.sell.dto.LeaveMessageLikeDTO;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -20,4 +21,8 @@ public interface LeaveMessageService {
     JSONObject likeLeaveMessageOrNot(LeaveMessageLikeDTO leaveMessageLikeDTO);
 
     JSONObject checkLikeOrNot(Integer leaveMessageId,String userOpenId);
+
+    LeaveMessageDTO answerLeaveMessage(LeaveMessageDTO leaveMessageDTO);
+
+    List<LeaveMessageDTO> findAnswerOfLeaveMessage(Integer lmId, Pageable pageable);
 }

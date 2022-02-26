@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -103,7 +104,7 @@ public class LeaveMessageServiceImpl implements LeaveMessageService {
             throw new SellException(ResultEnum.PROJECT_MASTER_NOT_FOUND_BY_PROJECT_ID);
         }
         //查找LeaveMessages
-        List<LeaveMessage> leaveMessages = leaveMessageRepository.findByProjectId(projectId);
+        List<LeaveMessage> leaveMessages = leaveMessageRepository.findByProjectIdAndLmIdIsNull(projectId);
 
         //转成DTOS
         ArrayList<LeaveMessageDTO> leaveMessageDTOS = new ArrayList<>();
@@ -232,5 +233,55 @@ public class LeaveMessageServiceImpl implements LeaveMessageService {
             result.put("content",true);
         }
         return result;
+    }
+
+    /**
+     * 对留言进行回复
+     * @param leaveMessageDTO
+     * @return
+     */
+    @Override
+    public LeaveMessageDTO answerLeaveMessage(LeaveMessageDTO leaveMessageDTO) {
+        UserInfo userInfo = userInfoRepository.findByUserOpenid(leaveMessageDTO.getUserOpenid());
+        if (userInfo==null){
+            throw new SellException(ResultEnum.USER_NOT_FOUND);
+        }
+        leaveMessageDTO.setUserId(userInfo.getUserId());
+        //检查projetId
+        ProjectMaster projectMaster = projectMasterRepository.findByProjectId(leaveMessageDTO.getProjectId());
+        if (projectMaster == null) {
+            throw new SellException(ResultEnum.PROJECT_ID_NOT_FOUND);
+        }
+        LeaveMessage leaveMessage = new LeaveMessage();
+        BeanUtils.copyProperties(leaveMessageDTO,leaveMessage);
+        logger.info("创建留言:"+leaveMessage);
+        LeaveMessage result = leaveMessageRepository.save(leaveMessage);
+        if (result != null){
+            LeaveMessageDTO leaveMessageDTOResult = new LeaveMessageDTO();
+            BeanUtils.copyProperties(result,leaveMessageDTOResult);
+            leaveMessageDTOResult.setUserOpenid(leaveMessageDTO.getUserOpenid());
+            return leaveMessageDTOResult;
+        }
+        else
+            return null;
+    }
+
+    /**
+     * 查询对留言的回复
+     * @param lmId  留言Id
+     * @param pageable 分页请求
+     * @return
+     */
+    @Override
+    public List<LeaveMessageDTO> findAnswerOfLeaveMessage(Integer lmId, Pageable pageable) {
+        List<LeaveMessageDTO> list = new ArrayList<>();
+        List<LeaveMessage> page = leaveMessageRepository.findByLmId(lmId, pageable);
+        for(LeaveMessage leaveMessage:page){
+            LeaveMessageDTO leaveMessageDTO = new LeaveMessageDTO();
+            BeanUtils.copyProperties(leaveMessage,leaveMessageDTO);
+            leaveMessageDTO.setUserOpenid(userInfoRepository.findByUserId(leaveMessage.getUserId()).getUserOpenid());
+            list.add(leaveMessageDTO);
+        }
+        return list;
     }
 }

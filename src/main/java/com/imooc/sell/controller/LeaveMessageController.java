@@ -21,6 +21,7 @@ import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -146,6 +147,42 @@ public class LeaveMessageController {
     public ResultVO userLikeMessage(@RequestParam(value = "leaveMessageId") Integer leaveMessageId,
                                     @RequestParam(value = "userOpenId") String userOpenId){
         JSONObject result = leaveMessageService.checkLikeOrNot(leaveMessageId, userOpenId);
+        return ResultVOUtil.success(result);
+    }
+
+    @ApiOperation(value = "对留言进行回复", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "leaveMessageId",value = "留言Id",required=true),
+    })
+    @PostMapping("/answerLeaveMessage")
+    public ResultVO answerLeaveMessage(@Valid LeaveMessageForm leaveMessageForm, BindingResult bindingResult,
+                                       @RequestParam(value = "leaveMessageId") Integer leaveMessageId){
+        if (bindingResult.hasErrors()) {
+            log.error("【创建留言项目】参数不正确, leaveMessageForm={}", leaveMessageForm);
+            throw new SellException(ResultEnum.PARAM_ERROR.getCode(),
+                    bindingResult.getFieldError().getDefaultMessage());
+        }
+        LeaveMessageDTO leaveMessageDTO = LeaveMessageFrom2LeaveMessageDTOConverter.convert(leaveMessageForm);
+        leaveMessageDTO.setLmId(leaveMessageId);
+        LeaveMessageDTO result = leaveMessageService.answerLeaveMessage(leaveMessageDTO);
+        return ResultVOUtil.success(result);
+    }
+
+    @ApiOperation(value = "查询留言的回复", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "leaveMessageId",value = "留言Id",required=true),
+            @ApiImplicitParam(name = "page",value = "页数",required=true),
+            @ApiImplicitParam(name = "size",value = "页大小",required=true),
+    })
+    @PostMapping("/findAnswer")
+    public ResultVO findAnswerOfLeaveMessage(@RequestParam(value = "leaveMessageId") Integer leaveMessageId,
+                                             @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                             @RequestParam(value = "size", defaultValue = "10")Integer size){
+        if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
+        PageRequest pageRequest = new PageRequest(page - 1, size);
+        List<LeaveMessageDTO> result = leaveMessageService.findAnswerOfLeaveMessage(leaveMessageId, pageRequest);
         return ResultVOUtil.success(result);
     }
 }

@@ -24,4 +24,7 @@ public class LeaveMessageDTO {
 
     private int likeNumber;
 
+    //这个id存在表示这条留言是对某一条留言的回复
+    private Integer lmId;
+
 }

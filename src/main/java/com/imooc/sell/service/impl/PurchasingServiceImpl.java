@@ -208,4 +208,26 @@ public class PurchasingServiceImpl implements PurchasingProjectService {
         }
         return list;
     }
+
+    /**
+     * 综合排序查找，权重=时间戳*0.000001+点赞数*10
+     * @param pageable 分页请求
+     * @return
+     */
+    @Override
+    public List<PurchasingProjectDTO> findByComplexService(Pageable pageable) {
+        List<PurchasingProjectDTO> result = new ArrayList<>();
+        int pageSize = pageable.getPageSize();
+        int offsetNumber = pageable.getOffset();
+        List<PurchasingProject> purchasingProjectList = purchasingProjectRepository.findByComplex(pageSize, offsetNumber);
+        for(PurchasingProject purchasingProject : purchasingProjectList){
+            PurchasingProjectDTO purchasingProjectDTO = new PurchasingProjectDTO();
+            BeanUtils.copyProperties(purchasingProject, purchasingProjectDTO,"picture");
+            if(purchasingProject.getPicture()!=null){
+                purchasingProjectDTO.setPicture(purchasingProject.getPicture().split(","));
+            }
+            result.add(purchasingProjectDTO);
+        }
+        return result;
+    }
 }
