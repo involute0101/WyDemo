@@ -118,6 +118,8 @@ public class UserInfoController {
         user.put("QQ",userInfoDTO.getQqNumber());
         user.put("WeChat",userInfoDTO.getWeChat());
         user.put("telephone",userInfoDTO.getTelephone());
+        user.put("university",userInfoDTO.getUserUniversity());
+        user.put("degree",userInfoDTO.getUserDegree());
         return ResultVOUtil.success(user);
     }
 

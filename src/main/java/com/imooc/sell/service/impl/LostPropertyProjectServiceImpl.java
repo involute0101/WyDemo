@@ -144,4 +144,25 @@ public class LostPropertyProjectServiceImpl implements LostPropertyProjectServic
         return resultDTO;
     }
 
+    /**
+     * 增加项目浏览量
+     * @param projectId 项目Id
+     * @return
+     */
+    @Override
+    public LostPropertyProjectDTO increasePageviews(String projectId) {
+        LostPropertyProject lostPropertyProject = lostPropertyProjectRepository.findByProjectId(projectId);
+        if (lostPropertyProject==null){
+            throw new SellException(ResultEnum.PROJECT_ID_NOT_FOUND);
+        }
+        lostPropertyProject.setPageviews(lostPropertyProject.getPageviews()+1);
+        lostPropertyProjectRepository.save(lostPropertyProject);
+        LostPropertyProjectDTO lostPropertyProjectDTO = new LostPropertyProjectDTO();
+        BeanUtils.copyProperties(lostPropertyProject,lostPropertyProjectDTO,"picture");
+        if(lostPropertyProject.getPicture()!=null){
+            lostPropertyProjectDTO.setPicture(lostPropertyProject.getPicture().split(","));
+        }
+        return lostPropertyProjectDTO;
+    }
+
 }

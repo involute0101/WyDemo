@@ -16,4 +16,6 @@ public interface LostPropertyProjectService {
     List<LostPropertyProjectDTO> findLostPropertyProjectByTagsLike(String keyword, Pageable pageable);
 
     LostPropertyProjectDTO updateLostPropertyProject(LostPropertyProjectDTO lostPropertyProjectDTO);
+
+    LostPropertyProjectDTO increasePageviews(String projectId);
 }

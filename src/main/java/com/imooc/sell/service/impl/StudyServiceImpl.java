@@ -139,4 +139,24 @@ public class StudyServiceImpl implements StudyProjectService {
         BeanUtils.copyProperties(result, resultDTO);
         return resultDTO;
     }
+
+    /**
+     * 增加项目浏览量
+     * @param projectId 项目Id
+     * @return
+     */
+    public StudyProjectDTO increasePageviews(String projectId) {
+        StudyProject studyProject = studyProjectRepository.findByProjectId(projectId);
+        if(studyProject==null){
+            throw new SellException(ResultEnum.PROJECT_ID_NOT_FOUND);
+        }
+        studyProject.setPageviews(studyProject.getPageviews()+1);
+        studyProjectRepository.save(studyProject);
+        StudyProjectDTO studyProjectDTO = new StudyProjectDTO();
+        BeanUtils.copyProperties(studyProject,studyProjectDTO,"picture");
+        if (studyProject.getPicture()!=null){
+            studyProjectDTO.setPicture(studyProject.getPicture().split(","));
+        }
+        return studyProjectDTO;
+    }
 }

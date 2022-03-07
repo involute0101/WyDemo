@@ -230,4 +230,25 @@ public class PurchasingServiceImpl implements PurchasingProjectService {
         }
         return result;
     }
+
+    /**
+     * 增加项目浏览量
+     * @param projectId 项目Id
+     * @return
+     */
+    @Override
+    public PurchasingProjectDTO increasePageviews(String projectId) {
+        PurchasingProject purchasingProject = purchasingProjectRepository.findByProjectId(projectId);
+        if(purchasingProject==null){
+            throw new SellException(ResultEnum.PROJECT_ID_NOT_FOUND);
+        }
+        purchasingProject.setPageviews(purchasingProject.getPageviews()+1);
+        purchasingProjectRepository.save(purchasingProject);
+        PurchasingProjectDTO purchasingProjectDTO = new PurchasingProjectDTO();
+        BeanUtils.copyProperties(purchasingProject, purchasingProjectDTO,"picture");
+        if(purchasingProject.getPicture()!=null){
+            purchasingProjectDTO.setPicture(purchasingProject.getPicture().split(","));
+        }
+        return purchasingProjectDTO;
+    }
 }

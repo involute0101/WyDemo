@@ -23,6 +23,7 @@ public class PurchasingProjectFrom2PurchasingDTOConverter {
         purchasingProjectDTO.setPicture(purchasingProjectFrom.getPicture());
         purchasingProjectDTO.setLocation(purchasingProjectFrom.getLocation());
         purchasingProjectDTO.setFavoriteNumber(0);
+        purchasingProjectDTO.setPageviews(0);
         purchasingProjectDTO.setCreateTime(new Date());
         purchasingProjectDTO.setUpdateTime(new Date());
         String tags = "";

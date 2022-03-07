@@ -138,4 +138,25 @@ public class JobsProjectServiceImpl implements JobsProjectService {
         BeanUtils.copyProperties(result, resultDTO);
         return resultDTO;
     }
+
+    /**
+     * 增加项目浏览量
+     * @param projectId 项目Id
+     * @return
+     */
+    @Override
+    public JobsProjectDTO increasePageviews(String projectId) {
+        JobsProject jobsProject = jobsProjectRepository.findByProjectId(projectId);
+        if (jobsProject==null){
+            throw new SellException(ResultEnum.PROJECT_ID_NOT_FOUND);
+        }
+        jobsProject.setPageviews(jobsProject.getPageviews()+1);
+        jobsProjectRepository.save(jobsProject);
+        JobsProjectDTO jobsProjectDTO = new JobsProjectDTO();
+        BeanUtils.copyProperties(jobsProject, jobsProjectDTO,"picture");
+        if (jobsProject.getPicture()!=null){
+            jobsProjectDTO.setPicture(jobsProject.getPicture().split(","));
+        }
+        return jobsProjectDTO;
+    }
 }

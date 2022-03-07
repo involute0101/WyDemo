@@ -32,6 +32,9 @@ public class RewardProject {
 
     private Integer certificationStatus;
 
+    /**
+     * 浏览量
+     */
     private Integer pageviews;
 
     private BigDecimal amount;

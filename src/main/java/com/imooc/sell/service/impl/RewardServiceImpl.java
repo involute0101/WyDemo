@@ -242,4 +242,25 @@ public class RewardServiceImpl implements RewardProjectService {
         }
         return result;
     }
+
+    /**
+     * 增加项目浏览量
+     * @param projectId 项目Id
+     * @return
+     */
+    @Override
+    public RewardProjectDTO increasePageviews(String projectId) {
+        RewardProject rewardProjectByProId = rewardProjectRepository.findByProjectId(projectId);
+        if(rewardProjectByProId==null){
+            throw new SellException(ResultEnum.PROJECT_ID_NOT_FOUND);
+        }
+        rewardProjectByProId.setPageviews(rewardProjectByProId.getPageviews()+1);
+        rewardProjectRepository.save(rewardProjectByProId);
+        RewardProjectDTO rewardProjectDTO = new RewardProjectDTO();
+        BeanUtils.copyProperties(rewardProjectByProId, rewardProjectDTO,"picture");
+        if(rewardProjectByProId.getPicture()!=null){
+            rewardProjectDTO.setPicture(rewardProjectByProId.getPicture().split(","));
+        }
+        return rewardProjectDTO;
+    }
 }

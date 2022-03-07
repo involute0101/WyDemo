@@ -22,6 +22,7 @@ public class JobsProjectFrom2JobsProjectProjectDTOConverter {
         jobsProjectDTO.setGender(jobsProjectFrom.getGender());
         jobsProjectDTO.setPicture(jobsProjectFrom.getPicture());
         jobsProjectDTO.setFavoriteNumber(0);
+        jobsProjectDTO.setPageviews(0);
         jobsProjectDTO.setCreateTime(new Date());
         jobsProjectDTO.setUpdateTime(new Date());
         String tags = "";

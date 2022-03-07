@@ -22,6 +22,7 @@ public class IdleProjectFrom2IdleProjectDTOConverter {
         idleProjectDTO.setGender(idleProjectFrom.getGender());
         idleProjectDTO.setPicture(idleProjectFrom.getPicture());
         idleProjectDTO.setFavoriteNumber(0);
+        idleProjectDTO.setPageviews(0);
         idleProjectDTO.setCreateTime(new Date());
         idleProjectDTO.setUpdateTime(new Date());
         String tags = "";

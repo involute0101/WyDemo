@@ -20,4 +20,6 @@ public interface IdleProjectService {
     List<IdleProjectDTO> findIdleProjectByTitleLike(String titleKeyword, Pageable pageable);
 
     IdleProjectDTO updateIdleProjectDTO(IdleProjectDTO idleProjectDTO);
+
+    IdleProjectDTO increasePageviews(String projectId);
 }

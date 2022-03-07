@@ -185,4 +185,25 @@ public class IdleProjectServiceImpl implements IdleProjectService {
         BeanUtils.copyProperties(result, resultDTO);
         return resultDTO;
     }
+
+    /**
+     * 增加项目浏览量
+     * @param projectId 项目Id
+     * @return
+     */
+    @Override
+    public IdleProjectDTO increasePageviews(String projectId) {
+        IdleProject idleProject = idleProjectRepository.findByProjectId(projectId);
+        if(idleProject==null){
+            throw new SellException(ResultEnum.PROJECT_ID_NOT_FOUND);
+        }
+        idleProject.setPageviews(idleProject.getPageviews()+1);
+        idleProjectRepository.save(idleProject);
+        IdleProjectDTO idleProjectDTO = new IdleProjectDTO();
+        BeanUtils.copyProperties(idleProject,idleProjectDTO,"picture");
+        if (idleProject.getPicture()!=null){
+            idleProjectDTO.setPicture(idleProject.getPicture().split(","));
+        }
+        return idleProjectDTO;
+    }
 }

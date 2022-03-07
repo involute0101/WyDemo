@@ -33,6 +33,9 @@ public class PurchasingProject {
 
     private Integer certificationStatus;
 
+    /**
+     * 浏览量
+     */
     private Integer pageviews;
 
     private BigDecimal amount;

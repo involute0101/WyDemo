@@ -16,4 +16,6 @@ public interface JobsProjectService {
     List<JobsProjectDTO> findJobsProjectByTagsLike(String keyword, Pageable pageable);
 
     JobsProjectDTO updateJobsProject(JobsProjectDTO jobsProjectDTO);
+
+    JobsProjectDTO increasePageviews(String projectId);
 }

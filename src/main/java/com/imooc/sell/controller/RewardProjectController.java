@@ -176,4 +176,12 @@ public class RewardProjectController {
         List<RewardProjectDTO> reslut = rewardService.findByComplexService(pageRequest);
         return ResultVOUtil.success(reslut);
     }
+
+    @ApiOperation(value = "增加浏览量", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "projectId",value = "项目id",required=true)
+    @PostMapping("/pageviews")
+    public ResultVO incPageviews(@RequestParam(value = "projectId") String projectId){
+        return ResultVOUtil.success(rewardService.increasePageviews(projectId));
+    }
 }

@@ -15,4 +15,6 @@ public interface StudyProjectService {
     List<StudyProjectDTO> findStudyProjectByTagsLike(String keyword, Pageable pageable);
 
     StudyProjectDTO updateStudyProjectDTO(StudyProjectDTO studyProjectDTO);
+
+    StudyProjectDTO increasePageviews(String projectId);
 }
