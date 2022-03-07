@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.imooc.sell.VO.CaptchaVO;
 import com.imooc.sell.VO.ResultVO;
 
+import com.imooc.sell.controller.form.StudentCertificationForm;
 import com.imooc.sell.controller.form.UserInfoFrom;
 import com.imooc.sell.controller.form.UserInfoUpdateForm;
+import com.imooc.sell.converter.StudentCertificationForm2UserInfoDTOConverter;
 import com.imooc.sell.converter.UserInfoFrom2UserInfoDTOConverter;
 import com.imooc.sell.converter.UserInfoUpdateForm2UserInfoDTOConverter;
 import com.imooc.sell.dataobject.UserInfo;
@@ -157,5 +159,18 @@ public class UserInfoController {
     public ResultVO modifyPassword(@RequestParam("userOpenId") String userOpenId,
                                @RequestParam("newPassword") String newPassword){
         return userInfoService.modifyPassword(userOpenId,newPassword);
+    }
+
+    @ApiOperation(value = "用户学生认证", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @PostMapping("/studentCertification")
+    public ResultVO studentCertification(@Valid StudentCertificationForm studentCertificationForm, BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            log.error("[学生认证] 参数不正确， studentCertificationForm={}", studentCertificationForm);
+            throw new SellException(ResultEnum.PARAM_ERROR.getCode(),bindingResult.getFieldError().getDefaultMessage());
+        }
+        UserInfoDTO userInfoDTO = StudentCertificationForm2UserInfoDTOConverter.convert(studentCertificationForm);
+        UserInfoDTO result = userInfoService.studentCertification(userInfoDTO);
+        return ResultVOUtil.success(result);
     }
 }

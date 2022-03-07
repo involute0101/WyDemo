@@ -40,6 +40,31 @@ public class WhuService {
     }
 
     /**
+     * 获取答题认证的题目
+     * @return  问题数组，默认十个问题
+     * @throws IOException
+     */
+    public JSONArray getWhuQuestion() throws IOException {
+        JSONArray result = new JSONArray();
+        String startCmd = String.format("python3 /usr/java/wyxyScript/WhuQuestion.py");
+        String sh[] = {"/bin/sh","-c",startCmd};
+        StringBuilder sb =new StringBuilder();
+        Process process = Runtime.getRuntime().exec(sh);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line;
+        while ((line=bufferedReader.readLine())!=null) {
+            String[] rows = line.split(",");
+            JSONObject jsonObject = new JSONObject();
+            for(String field : rows){
+                String[] keyAndValue = field.split("=");
+                jsonObject.put(keyAndValue[0],keyAndValue[1]);
+            }
+            result.add(jsonObject);
+        }
+        return result;
+    }
+
+    /**
      * 获取Whu讲座列表
      * @param pageable 分页查询
      * @return

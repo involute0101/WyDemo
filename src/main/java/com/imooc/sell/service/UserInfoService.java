@@ -32,4 +32,6 @@ public interface UserInfoService {
     UserInfoDTO findByUserId(Integer userId);
 
     ResultVO modifyPassword(String userOpenId, String newPassword);
+
+    UserInfoDTO studentCertification(UserInfoDTO userInfoDTO);
 }

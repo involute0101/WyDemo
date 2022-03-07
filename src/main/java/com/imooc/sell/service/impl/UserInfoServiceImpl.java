@@ -171,4 +171,28 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfoRepository.save(userInfo);
         return ResultVOUtil.success("修改密码成功！");
     }
+
+    /**
+     * 用户进行学生认证
+     * @param userInfoDTO
+     * @return
+     */
+    @Override
+    @Transactional
+    public UserInfoDTO studentCertification(UserInfoDTO userInfoDTO) {
+        UserInfo userInfoResult = userInfoRepository.findByUserOpenid(userInfoDTO.getUserOpenid());
+        if(userInfoResult==null)throw new SellException(ResultEnum.USER_NOT_FOUND);
+        userInfoResult.setUserSex(userInfoDTO.getUserSex());
+        userInfoResult.setUserRealName(userInfoDTO.getUserRealName());
+        userInfoResult.setUserUniversity(userInfoDTO.getUserUniversity());
+        userInfoResult.setUserMajor(userInfoDTO.getUserMajor());
+        userInfoResult.setUserCollege(userInfoDTO.getUserCollege());
+        userInfoResult.setUserDegree(userInfoDTO.getUserDegree());
+        userInfoResult.setCertification(1);
+        userInfoResult.setStudentCardPhotos(userInfoDTO.getStudentCardPhotos());
+        UserInfo userInfo = userInfoRepository.save(userInfoResult);
+        UserInfoDTO result = new UserInfoDTO();
+        BeanUtils.copyProperties(userInfo,result);
+        return result;
+    }
 }

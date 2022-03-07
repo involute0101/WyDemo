@@ -42,6 +42,19 @@ public class WhuController {
             result.add(new JSONObject().put("title","出错啦！"));
             return result;
         }
+    }
+
+    @ApiOperation(value = "获取Whu的认证问题", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @PostMapping("/question")
+    public JSONArray WhuQuestion(){
+        try{
+            return whuService.getWhuQuestion();
+        }catch (IOException e){
+            JSONArray result = new JSONArray();
+            result.add(new JSONObject().put("title","出错啦！"));
+            return result;
+        }
 
     }
 

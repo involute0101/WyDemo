@@ -33,6 +33,10 @@ public class UserInfo {
     */
     private  String userName;
 
+    /*
+    真实姓名
+     */
+    private String userRealName;
 
     /*
     用户密码
@@ -54,7 +58,7 @@ public class UserInfo {
     //用户入学年份
     private String enrollmentYear;
 
-    //用户学历
+    //用户年级
     private String userDegree;
 
     //用户性别
@@ -83,4 +87,7 @@ public class UserInfo {
 
     //头像
     private String headPortrait;
+
+    // 学生证/学生卡照片
+    private String studentCardPhotos;
 }
