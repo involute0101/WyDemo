@@ -26,9 +26,13 @@ public interface RewardProjectRepository extends JpaRepository<RewardProject, In
     //调用者要在关键字前后加上“%”，以实现模糊查询
     Page<RewardProject> findByTagsLike(String keyword, Pageable pageable);
 
+    Page<RewardProject> findByTagsLikeOrderByUpdateTimeDesc(String keyword,Pageable pageable);
+
     Page<RewardProject> findByTitleLike(String keyword, Pageable pageable);
 
     Page<RewardProject> findByOrderByFavoriteNumberDesc(Pageable pageable);
+
+    Page<RewardProject> findByTagsLikeOrderByFavoriteNumberDesc(String keyword,Pageable pageable);
 
     @Query(value = "select * from reward_project order by update_time*0.000001+favorite_number*10 desc limit ?1 offset ?2",
             nativeQuery = true)

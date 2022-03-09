@@ -22,4 +22,8 @@ public interface IdleProjectService {
     IdleProjectDTO updateIdleProjectDTO(IdleProjectDTO idleProjectDTO);
 
     IdleProjectDTO increasePageviews(String projectId);
+
+    List<IdleProjectDTO> findIdleProjectByTagsLikeOrderByUpdateTime(String keyword,Pageable pageable);
+
+    List<IdleProjectDTO> findIdleProjectByTagsLikeOrderByFavoritesNumber(String keyword, Pageable pageable);
 }

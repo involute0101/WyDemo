@@ -251,4 +251,46 @@ public class PurchasingServiceImpl implements PurchasingProjectService {
         }
         return purchasingProjectDTO;
     }
+
+    /**
+     * 按照标签查询，并按时间排序（最新）
+     * @param keyword 标签关键字
+     * @param pageable 分页请求
+     * @return
+     */
+    @Override
+    public List<PurchasingProjectDTO> findPurchasingProjectByTagsLikeOrderByUpdateTime(String keyword, Pageable pageable) {
+        List<PurchasingProjectDTO> result = new ArrayList<>();
+        Page<PurchasingProject> page = purchasingProjectRepository.findByTagsLikeOrderByUpdateTimeDesc("%" + keyword + "%", pageable);
+        for(PurchasingProject purchasingProject : page){
+            PurchasingProjectDTO purchasingProjectDTO = new PurchasingProjectDTO();
+            BeanUtils.copyProperties(purchasingProject, purchasingProjectDTO,"picture");
+            if(purchasingProject.getPicture()!=null){
+                purchasingProjectDTO.setPicture(purchasingProject.getPicture().split(","));
+            }
+            result.add(purchasingProjectDTO);
+        }
+        return result;
+    }
+
+    /**
+     * 根据标签关键字查找，按照热度排序
+     * @param keyword 标签关键字
+     * @param pageable 分页请求
+     * @return
+     */
+    @Override
+    public List<PurchasingProjectDTO> findPurchasingProjectByTagsLikeOrderByFavoritesNumber(String keyword, Pageable pageable) {
+        List<PurchasingProjectDTO> result = new ArrayList<>();
+        Page<PurchasingProject> page = purchasingProjectRepository.findByTagsLikeOrderByFavoriteNumberDesc("%" + keyword + "%", pageable);
+        for(PurchasingProject purchasingProject : page){
+            PurchasingProjectDTO purchasingProjectDTO = new PurchasingProjectDTO();
+            BeanUtils.copyProperties(purchasingProject, purchasingProjectDTO,"picture");
+            if(purchasingProject.getPicture()!=null){
+                purchasingProjectDTO.setPicture(purchasingProject.getPicture().split(","));
+            }
+            result.add(purchasingProjectDTO);
+        }
+        return result;
+    }
 }

@@ -263,4 +263,46 @@ public class RewardServiceImpl implements RewardProjectService {
         }
         return rewardProjectDTO;
     }
+
+    /**
+     * 按照标签查询，并按时间排序（最新）
+     * @param keyword 标签关键字
+     * @param pageable 分页请求
+     * @return
+     */
+    @Override
+    public List<RewardProjectDTO> findRewardProjectByTagsLikeOrderByUpdateTime(String keyword, Pageable pageable) {
+        List<RewardProjectDTO> result = new ArrayList<>();
+        Page<RewardProject> page = rewardProjectRepository.findByTagsLikeOrderByUpdateTimeDesc("%"+keyword+"%", pageable);
+        for(RewardProject rewardProject : page){
+            RewardProjectDTO rewardProjectDTO = new RewardProjectDTO();
+            BeanUtils.copyProperties(rewardProject,rewardProjectDTO,"picture");
+            if(rewardProject.getPicture()!=null){
+                rewardProjectDTO.setPicture(rewardProject.getPicture().split(","));
+            }
+            result.add(rewardProjectDTO);
+        }
+        return result;
+    }
+
+    /**
+     * 根据标签关键字查找，按照热度排序
+     * @param keyword 标签关键字
+     * @param pageable 分页请求
+     * @return
+     */
+    @Override
+    public List<RewardProjectDTO> findRewardProjectByTagsLikeOrderByFavoritesNumber(String keyword, Pageable pageable) {
+        List<RewardProjectDTO> result = new ArrayList<>();
+        Page<RewardProject> page = rewardProjectRepository.findByTagsLikeOrderByFavoriteNumberDesc("%" + keyword + "%", pageable);
+        for(RewardProject rewardProject : page){
+            RewardProjectDTO rewardProjectDTO = new RewardProjectDTO();
+            BeanUtils.copyProperties(rewardProject,rewardProjectDTO,"picture");
+            if(rewardProject.getPicture()!=null){
+                rewardProjectDTO.setPicture(rewardProject.getPicture().split(","));
+            }
+            result.add(rewardProjectDTO);
+        }
+        return result;
+    }
 }

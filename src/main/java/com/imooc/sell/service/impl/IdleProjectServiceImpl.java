@@ -206,4 +206,46 @@ public class IdleProjectServiceImpl implements IdleProjectService {
         }
         return idleProjectDTO;
     }
+
+    /**
+     * 按照标签查询，并按时间排序（最新）
+     * @param keyword 标签关键字
+     * @param pageable 分页请求
+     * @return
+     */
+    @Override
+    public List<IdleProjectDTO> findIdleProjectByTagsLikeOrderByUpdateTime(String keyword, Pageable pageable) {
+        List<IdleProjectDTO> result = new ArrayList<>();
+        Page<IdleProject> page = idleProjectRepository.findByTagsLikeOrderByUpdateTimeDesc("%" + keyword + "%", pageable);
+        for(IdleProject idleProject : page){
+            IdleProjectDTO idleProjectDTO = new IdleProjectDTO();
+            BeanUtils.copyProperties(idleProject,idleProjectDTO,"picture");
+            if (idleProject.getPicture()!=null){
+                idleProjectDTO.setPicture(idleProject.getPicture().split(","));
+            }
+            result.add(idleProjectDTO);
+        }
+        return result;
+    }
+
+    /**
+     * 根据标签关键字查找，按照热度排序
+     * @param keyword 标签关键字
+     * @param pageable 分页请求
+     * @return
+     */
+    @Override
+    public List<IdleProjectDTO> findIdleProjectByTagsLikeOrderByFavoritesNumber(String keyword, Pageable pageable) {
+        List<IdleProjectDTO> result = new ArrayList<>();
+        Page<IdleProject> page = idleProjectRepository.findByTagsLikeOrderByFavoriteNumberDesc("%" + keyword + "%", pageable);
+        for(IdleProject idleProject : page){
+            IdleProjectDTO idleProjectDTO = new IdleProjectDTO();
+            BeanUtils.copyProperties(idleProject,idleProjectDTO,"picture");
+            if (idleProject.getPicture()!=null){
+                idleProjectDTO.setPicture(idleProject.getPicture().split(","));
+            }
+            result.add(idleProjectDTO);
+        }
+        return result;
+    }
 }

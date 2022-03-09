@@ -4,6 +4,7 @@ import com.imooc.sell.dataobject.PurchasingProject;
 import com.imooc.sell.dto.LostPropertyProjectDTO;
 import com.imooc.sell.dto.PurchasingProjectDTO;
 import com.imooc.sell.dto.RewardProjectDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -28,4 +29,8 @@ public interface PurchasingProjectService {
     List<PurchasingProjectDTO> findByComplexService(Pageable pageable);
 
     PurchasingProjectDTO increasePageviews(String projectId);
+
+    List<PurchasingProjectDTO> findPurchasingProjectByTagsLikeOrderByUpdateTime(String keyword, Pageable pageable);
+
+    List<PurchasingProjectDTO> findPurchasingProjectByTagsLikeOrderByFavoritesNumber(String keyword, Pageable pageable);
 }

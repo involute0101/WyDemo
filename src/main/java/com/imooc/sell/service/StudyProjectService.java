@@ -17,4 +17,8 @@ public interface StudyProjectService {
     StudyProjectDTO updateStudyProjectDTO(StudyProjectDTO studyProjectDTO);
 
     StudyProjectDTO increasePageviews(String projectId);
+
+    List<StudyProjectDTO> findStudyProjectByTagsLikeOrderByUpdateTime(String keyword, Pageable pageable);
+
+    List<StudyProjectDTO> findStudyProjectByTagsLikeOrderByFavoritesNumber(String keyword, Pageable pageable);
 }

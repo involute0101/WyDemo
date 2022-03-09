@@ -165,4 +165,46 @@ public class LostPropertyProjectServiceImpl implements LostPropertyProjectServic
         return lostPropertyProjectDTO;
     }
 
+    /**
+     * 按照标签查询，并按时间排序（最新）
+     * @param keyword 标签关键字
+     * @param pageable 分页请求
+     * @return
+     */
+    @Override
+    public List<LostPropertyProjectDTO> findLostPropertyProjectByTagsLikeOrderByUpdateTime(String keyword, Pageable pageable) {
+        List<LostPropertyProjectDTO> result = new ArrayList<>();
+        Page<LostPropertyProject> page = lostPropertyProjectRepository.findByTagsLikeOrderByUpdateTimeDesc("%" + keyword + "%", pageable);
+        for(LostPropertyProject lostPropertyProject : page){
+            LostPropertyProjectDTO lostPropertyProjectDTO = new LostPropertyProjectDTO();
+            BeanUtils.copyProperties(lostPropertyProject,lostPropertyProjectDTO,"picture");
+            if(lostPropertyProject.getPicture()!=null){
+                lostPropertyProjectDTO.setPicture(lostPropertyProject.getPicture().split(","));
+            }
+            result.add(lostPropertyProjectDTO);
+        }
+        return result;
+    }
+
+    /**
+     * 根据标签关键字查找，按照热度排序
+     * @param keyword 标签关键字
+     * @param pageable 分页请求
+     * @return
+     */
+    @Override
+    public List<LostPropertyProjectDTO> findLostPropertyProjectByTagsLikeOrderByFavoritesNumber(String keyword, Pageable pageable) {
+        List<LostPropertyProjectDTO> result = new ArrayList<>();
+        Page<LostPropertyProject> page = lostPropertyProjectRepository.findByTagsLikeOrderByFavoriteNumberDesc("%" + keyword + "%", pageable);
+        for(LostPropertyProject lostPropertyProject : page){
+            LostPropertyProjectDTO lostPropertyProjectDTO = new LostPropertyProjectDTO();
+            BeanUtils.copyProperties(lostPropertyProject,lostPropertyProjectDTO,"picture");
+            if(lostPropertyProject.getPicture()!=null){
+                lostPropertyProjectDTO.setPicture(lostPropertyProject.getPicture().split(","));
+            }
+            result.add(lostPropertyProjectDTO);
+        }
+        return result;
+    }
+
 }

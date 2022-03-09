@@ -18,4 +18,8 @@ public interface LostPropertyProjectService {
     LostPropertyProjectDTO updateLostPropertyProject(LostPropertyProjectDTO lostPropertyProjectDTO);
 
     LostPropertyProjectDTO increasePageviews(String projectId);
+
+    List<LostPropertyProjectDTO> findLostPropertyProjectByTagsLikeOrderByUpdateTime(String keyword,Pageable pageable);
+
+    List<LostPropertyProjectDTO> findLostPropertyProjectByTagsLikeOrderByFavoritesNumber(String keyword, Pageable pageable);
 }

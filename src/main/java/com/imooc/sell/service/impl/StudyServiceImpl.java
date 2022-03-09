@@ -159,4 +159,46 @@ public class StudyServiceImpl implements StudyProjectService {
         }
         return studyProjectDTO;
     }
+
+    /**
+     * 按照标签查询，并按时间排序（最新）
+     * @param keyword 标签关键字
+     * @param pageable 分页请求
+     * @return
+     */
+    @Override
+    public List<StudyProjectDTO> findStudyProjectByTagsLikeOrderByUpdateTime(String keyword, Pageable pageable) {
+        List<StudyProjectDTO> result = new ArrayList<>();
+        Page<StudyProject> page = studyProjectRepository.findByTagsLikeOrderByUpdateTimeDesc("%" + keyword + "%", pageable);
+        for(StudyProject studyProject : page){
+            StudyProjectDTO studyProjectDTO = new StudyProjectDTO();
+            BeanUtils.copyProperties(studyProject,studyProjectDTO,"picture");
+            if (studyProject.getPicture()!=null){
+                studyProjectDTO.setPicture(studyProject.getPicture().split(","));
+            }
+            result.add(studyProjectDTO);
+        }
+        return result;
+    }
+
+    /**
+     * 根据标签关键字查找，按照热度排序
+     * @param keyword 标签关键字
+     * @param pageable 分页请求
+     * @return
+     */
+    @Override
+    public List<StudyProjectDTO> findStudyProjectByTagsLikeOrderByFavoritesNumber(String keyword, Pageable pageable) {
+        List<StudyProjectDTO> result = new ArrayList<>();
+        Page<StudyProject> page = studyProjectRepository.findByTagsLikeOrderByFavoriteNumberDesc("%" + keyword + "%", pageable);
+        for(StudyProject studyProject : page){
+            StudyProjectDTO studyProjectDTO = new StudyProjectDTO();
+            BeanUtils.copyProperties(studyProject,studyProjectDTO,"picture");
+            if (studyProject.getPicture()!=null){
+                studyProjectDTO.setPicture(studyProject.getPicture().split(","));
+            }
+            result.add(studyProjectDTO);
+        }
+        return result;
+    }
 }

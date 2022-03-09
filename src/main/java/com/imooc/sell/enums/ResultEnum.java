@@ -48,7 +48,9 @@ public enum ResultEnum {
 
     ERROR_PASSWORD(20,"密码错误"),
 
-    USERINFO_OR_PROJECTINFO_NOT_MATCH(21,"用户信息或项目信息不匹配")
+    TAG_NOT_FOUND(21,"标签不存在"),
+
+    USERINFO_OR_PROJECTINFO_NOT_MATCH(22,"用户信息或项目信息不匹配")
     ;
 
     private Integer code;

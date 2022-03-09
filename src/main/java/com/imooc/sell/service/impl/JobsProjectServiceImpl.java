@@ -159,4 +159,46 @@ public class JobsProjectServiceImpl implements JobsProjectService {
         }
         return jobsProjectDTO;
     }
+
+    /**
+     * 按照标签查询，并按时间排序（最新）
+     * @param keyword 标签关键字
+     * @param pageable 分页请求
+     * @return
+     */
+    @Override
+    public List<JobsProjectDTO> findJobsProjectByTagsLikeOrderByUpdateTime(String keyword, Pageable pageable) {
+        List<JobsProjectDTO> result = new ArrayList<>();
+        Page<JobsProject> page = jobsProjectRepository.findByTagsLikeOrderByUpdateTimeDesc("%" + keyword + "%", pageable);
+        for(JobsProject jobsProject : page){
+            JobsProjectDTO jobsProjectDTO = new JobsProjectDTO();
+            BeanUtils.copyProperties(jobsProject, jobsProjectDTO,"picture");
+            if (jobsProject.getPicture()!=null){
+                jobsProjectDTO.setPicture(jobsProject.getPicture().split(","));
+            }
+            result.add(jobsProjectDTO);
+        }
+        return result;
+    }
+
+    /**
+     * 根据标签关键字查找，按照热度排序
+     * @param keyword 标签关键字
+     * @param pageable 分页请求
+     * @return
+     */
+    @Override
+    public List<JobsProjectDTO> findJobsProjectByTagsLikeOrderByFavoritesNumber(String keyword, Pageable pageable) {
+        List<JobsProjectDTO> result = new ArrayList<>();
+        Page<JobsProject> page = jobsProjectRepository.findByTagsLikeOrderByFavoriteNumberDesc("%" + keyword + "%", pageable);
+        for(JobsProject jobsProject : page){
+            JobsProjectDTO jobsProjectDTO = new JobsProjectDTO();
+            BeanUtils.copyProperties(jobsProject, jobsProjectDTO,"picture");
+            if (jobsProject.getPicture()!=null){
+                jobsProjectDTO.setPicture(jobsProject.getPicture().split(","));
+            }
+            result.add(jobsProjectDTO);
+        }
+        return result;
+    }
 }

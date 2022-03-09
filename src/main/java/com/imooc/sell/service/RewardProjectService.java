@@ -26,4 +26,8 @@ public interface RewardProjectService {
     List<RewardProjectDTO> findByComplexService(Pageable pageable);
 
     RewardProjectDTO increasePageviews(String projectId);
+
+    List<RewardProjectDTO> findRewardProjectByTagsLikeOrderByUpdateTime(String keyword,Pageable pageable);
+
+    List<RewardProjectDTO> findRewardProjectByTagsLikeOrderByFavoritesNumber(String keyword, Pageable pageable);
 }

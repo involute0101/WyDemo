@@ -18,4 +18,8 @@ public interface JobsProjectService {
     JobsProjectDTO updateJobsProject(JobsProjectDTO jobsProjectDTO);
 
     JobsProjectDTO increasePageviews(String projectId);
+
+    List<JobsProjectDTO> findJobsProjectByTagsLikeOrderByUpdateTime(String keyword,Pageable pageable);
+
+    List<JobsProjectDTO> findJobsProjectByTagsLikeOrderByFavoritesNumber(String keyword, Pageable pageable);
 }

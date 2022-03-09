@@ -14,10 +14,14 @@ public interface StudyProjectRepository extends JpaRepository<StudyProject, Inte
 
     Page<StudyProject> findByOrderByUpdateTimeDesc(Pageable pageable);
 
+    Page<StudyProject> findByTagsLikeOrderByUpdateTimeDesc(String keyword,Pageable pageable);
+
     List<StudyProject> findByTitle(String title);
 
     List<StudyProject> findByLocation(String location);
 
     //调用者要在关键字前后加上“%”，以实现模糊查询
     Page<StudyProject> findByTagsLike(String keyword, Pageable pageable);
+
+    Page<StudyProject> findByTagsLikeOrderByFavoriteNumberDesc(String keyword,Pageable pageable);
 }

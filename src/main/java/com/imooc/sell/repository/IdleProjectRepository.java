@@ -12,12 +12,23 @@ import java.util.List;
 
 public interface IdleProjectRepository extends JpaRepository<IdleProject, Integer> {
     IdleProject findByProjectId(String projectId);
+
     Page<IdleProject> findByOrderByUpdateTimeDesc(Pageable pageable);
+
+    Page<IdleProject> findByTagsLikeOrderByUpdateTimeDesc(String keyword,Pageable pageable);
+
     Page<IdleProject> findByOrderByAmount(Pageable pageable);
+
     Page<IdleProject> findByOrderByAmountDesc(Pageable pageable);
+
     List<IdleProject> findByTitle(String title);
+
     List<IdleProject> findByLocation(String location);
+
     //调用者要在关键字前后加上“%”，以实现模糊查询
-    Page<IdleProject> findByTagsLike(String keyword,Pageable pageable);
-    Page<IdleProject> findByTitleLike(String keyword,Pageable pageable);
+    Page<IdleProject> findByTagsLike(String keyword, Pageable pageable);
+
+    Page<IdleProject> findByTitleLike(String keyword, Pageable pageable);
+
+    Page<IdleProject> findByTagsLikeOrderByFavoriteNumberDesc(String keyword,Pageable pageable);
 }
