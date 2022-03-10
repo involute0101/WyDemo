@@ -1,5 +1,7 @@
 package com.imooc.sell.service.impl;
 
+import com.imooc.sell.controller.form.StudyProjectFrom;
+import com.imooc.sell.controller.form.TagForm;
 import com.imooc.sell.dataobject.PurchasingProject;
 import com.imooc.sell.dataobject.StudyProject;
 import com.imooc.sell.dto.ProjectMasterDTO;
@@ -40,6 +42,9 @@ public class StudyServiceImpl implements StudyProjectService {
     @Autowired
     ProjectMasterServiceImpl projectMasterService;
 
+    @Autowired
+    TagService tagService;
+
     @Override
     @Transactional
     public StudyProjectDTO createStudyProject(StudyProjectDTO studyProjectDTO) throws Exception {
@@ -60,10 +65,12 @@ public class StudyServiceImpl implements StudyProjectService {
         StudyProject studyProject = new StudyProject();
         BeanUtils.copyProperties(studyProjectDTO,studyProject,"picture");
         String pictureArray = "";
-        for(String picture : studyProjectDTO.getPicture()){
-            pictureArray = pictureArray + picture + ",";
+        if(studyProjectDTO.getPicture()!=null){
+            for(String picture : studyProjectDTO.getPicture()){
+                pictureArray = pictureArray + picture + ",";
+            }
+            studyProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
         }
-        studyProject.setPicture(pictureArray.substring(0,pictureArray.length()-1));
         logger.info("创建学习项目:"+studyProject.toString());
         StudyProject result = studyProjectRepository.save(studyProject);
         StudyProjectDTO resultDTO = new StudyProjectDTO();
@@ -200,5 +207,17 @@ public class StudyServiceImpl implements StudyProjectService {
             result.add(studyProjectDTO);
         }
         return result;
+    }
+
+    /**
+     * 处理标签（向上兼容），不存在则创建
+     * @param studyProjectFrom
+     */
+    @Override
+    public void tagHandler(StudyProjectFrom studyProjectFrom) {
+        TagForm tagForm = new TagForm();
+        tagForm.setUserOpenId(studyProjectFrom.getOpenid());
+        tagForm.setTagContent(studyProjectFrom.getTags());
+        tagService.createTag(tagForm);
     }
 }

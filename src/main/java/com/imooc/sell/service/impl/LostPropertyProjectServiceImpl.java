@@ -1,5 +1,7 @@
 package com.imooc.sell.service.impl;
 
+import com.imooc.sell.controller.form.LostPropertyProjectFrom;
+import com.imooc.sell.controller.form.TagForm;
 import com.imooc.sell.dataobject.JobsProject;
 import com.imooc.sell.dataobject.LostPropertyProject;
 import com.imooc.sell.dto.JobsProjectDTO;
@@ -39,6 +41,9 @@ public class LostPropertyProjectServiceImpl implements LostPropertyProjectServic
 
     @Autowired
     ProjectMasterServiceImpl projectMasterService;
+
+    @Autowired
+    TagService tagService;
 
     @Override
     @Transactional
@@ -205,6 +210,18 @@ public class LostPropertyProjectServiceImpl implements LostPropertyProjectServic
             result.add(lostPropertyProjectDTO);
         }
         return result;
+    }
+
+    /**
+     * 处理标签（向上兼容），不存在则创建
+     * @param lostPropertyProjectFrom
+     */
+    @Override
+    public void tagHandler(LostPropertyProjectFrom lostPropertyProjectFrom) {
+        TagForm tagForm = new TagForm();
+        tagForm.setUserOpenId(lostPropertyProjectFrom.getOpenid());
+        tagForm.setTagContent(lostPropertyProjectFrom.getTags());
+        tagService.createTag(tagForm);
     }
 
 }

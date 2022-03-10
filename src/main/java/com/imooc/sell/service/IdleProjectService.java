@@ -1,5 +1,6 @@
 package com.imooc.sell.service;
 
+import com.imooc.sell.controller.form.IdleProjectFrom;
 import com.imooc.sell.dataobject.IdleProject;
 import com.imooc.sell.dto.IdleProjectDTO;
 import org.springframework.data.domain.Pageable;
@@ -26,4 +27,6 @@ public interface IdleProjectService {
     List<IdleProjectDTO> findIdleProjectByTagsLikeOrderByUpdateTime(String keyword,Pageable pageable);
 
     List<IdleProjectDTO> findIdleProjectByTagsLikeOrderByFavoritesNumber(String keyword, Pageable pageable);
+
+    void tagHandler(IdleProjectFrom idleProjectFrom);
 }

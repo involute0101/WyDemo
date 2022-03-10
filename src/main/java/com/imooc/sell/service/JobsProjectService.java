@@ -1,5 +1,6 @@
 package com.imooc.sell.service;
 
+import com.imooc.sell.controller.form.JobsProjectFrom;
 import com.imooc.sell.dataobject.JobsProject;
 import com.imooc.sell.dto.JobsProjectDTO;
 import org.springframework.data.domain.Pageable;
@@ -22,4 +23,6 @@ public interface JobsProjectService {
     List<JobsProjectDTO> findJobsProjectByTagsLikeOrderByUpdateTime(String keyword,Pageable pageable);
 
     List<JobsProjectDTO> findJobsProjectByTagsLikeOrderByFavoritesNumber(String keyword, Pageable pageable);
+
+    void tagHandler(JobsProjectFrom jobsProjectFrom);
 }

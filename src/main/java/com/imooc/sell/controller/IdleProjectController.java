@@ -49,7 +49,7 @@ public class IdleProjectController {
             throw new SellException(ResultEnum.PARAM_ERROR.getCode(),
                     bindingResult.getFieldError().getDefaultMessage());
         }
-
+        idleProjectService.tagHandler(idleProjectFrom);
         IdleProjectDTO idleProjectDTO = IdleProjectFrom2IdleProjectDTOConverter.convert(idleProjectFrom);
 
         IdleProjectDTO registerResult = idleProjectService.createIdleProjectOne(idleProjectDTO);

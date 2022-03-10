@@ -41,4 +41,6 @@ public class IdleProjectDTO {
     private String tags;
 
     private Integer favoriteNumber;
+
+    private Integer type;
 }

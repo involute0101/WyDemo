@@ -43,7 +43,7 @@ public class JobsProjectController {
             throw new SellException(ResultEnum.PARAM_ERROR.getCode(),
                     bindingResult.getFieldError().getDefaultMessage());
         }
-
+        jobsProjectService.tagHandler(jobsProjectFrom);
         JobsProjectDTO jobsProjectDTO = JobsProjectFrom2JobsProjectProjectDTOConverter.convert(jobsProjectFrom);
 
         JobsProjectDTO registerResult = jobsProjectService.createJobsProjectOne(jobsProjectDTO);

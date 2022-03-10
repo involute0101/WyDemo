@@ -24,6 +24,7 @@ public class LostPropertyProjectFrom2LostPropertyProjectDTOConverter {
         lostPropertyProjectDTO.setLocation(lostPropertyProjectFrom.getLocation());
         lostPropertyProjectDTO.setFavoriteNumber(0);
         lostPropertyProjectDTO.setPageviews(0);
+        lostPropertyProjectDTO.setType(5);
         lostPropertyProjectDTO.setCreateTime(new Date());
         lostPropertyProjectDTO.setUpdateTime(new Date());
         String tags = "";

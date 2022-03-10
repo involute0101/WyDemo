@@ -1,5 +1,6 @@
 package com.imooc.sell.service;
 
+import com.imooc.sell.controller.form.RewardProjectFrom;
 import com.imooc.sell.dto.PurchasingProjectDTO;
 import com.imooc.sell.dto.RewardProjectDTO;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,8 @@ public interface RewardProjectService {
     List<RewardProjectDTO> findRewardProjectsOrderByUpdateTime(Pageable pageable);
 
     RewardProjectDTO findRewardByProjectId(String projectId);
+
+    void tagHandler(RewardProjectFrom rewardProjectFrom);
 
     List<RewardProjectDTO> findRewardProjectOrderByAmount(Pageable pageable, String sort);
 

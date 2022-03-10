@@ -46,7 +46,7 @@ public class StudyProjectController {
             throw new SellException(ResultEnum.PARAM_ERROR.getCode(),
                     bindingResult.getFieldError().getDefaultMessage());
         }
-
+        studyService.tagHandler(studyProjectFrom);
         StudyProjectDTO studyProjectDTO = StudyProjectFrom2StudyDTOConverter.convert(studyProjectFrom);
 
         StudyProjectDTO registerResult = studyService.createStudyProject(studyProjectDTO);

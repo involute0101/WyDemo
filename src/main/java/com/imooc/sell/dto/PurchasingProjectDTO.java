@@ -42,4 +42,6 @@ public class PurchasingProjectDTO {
     private String tags;
 
     private Integer favoriteNumber;
+
+    private Integer type;
 }

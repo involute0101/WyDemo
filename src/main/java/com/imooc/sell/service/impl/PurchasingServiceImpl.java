@@ -1,5 +1,7 @@
 package com.imooc.sell.service.impl;
 
+import com.imooc.sell.controller.form.PurchasingProjectFrom;
+import com.imooc.sell.controller.form.TagForm;
 import com.imooc.sell.dataobject.LostPropertyProject;
 import com.imooc.sell.dataobject.PurchasingProject;
 import com.imooc.sell.dto.LostPropertyProjectDTO;
@@ -39,6 +41,9 @@ public class PurchasingServiceImpl implements PurchasingProjectService {
 
     @Autowired
     ProjectMasterServiceImpl projectMasterService;
+
+    @Autowired
+    TagService tagService;
 
     @Override
     @Transactional
@@ -292,5 +297,17 @@ public class PurchasingServiceImpl implements PurchasingProjectService {
             result.add(purchasingProjectDTO);
         }
         return result;
+    }
+
+    /**
+     * 处理标签（向上兼容），不存在则创建
+     * @param purchasingProjectFrom
+     */
+    @Override
+    public void tagHandler(PurchasingProjectFrom purchasingProjectFrom) {
+        TagForm tagForm = new TagForm();
+        tagForm.setUserOpenId(purchasingProjectFrom.getOpenid());
+        tagForm.setTagContent(purchasingProjectFrom.getTags());
+        tagService.createTag(tagForm);
     }
 }

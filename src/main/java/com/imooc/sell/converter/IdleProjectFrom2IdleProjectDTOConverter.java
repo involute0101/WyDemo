@@ -23,6 +23,7 @@ public class IdleProjectFrom2IdleProjectDTOConverter {
         idleProjectDTO.setPicture(idleProjectFrom.getPicture());
         idleProjectDTO.setFavoriteNumber(0);
         idleProjectDTO.setPageviews(0);
+        idleProjectDTO.setType(4);
         idleProjectDTO.setCreateTime(new Date());
         idleProjectDTO.setUpdateTime(new Date());
         String tags = "";

@@ -1,5 +1,6 @@
 package com.imooc.sell.service;
 
+import com.imooc.sell.controller.form.LostPropertyProjectFrom;
 import com.imooc.sell.dto.IdleProjectDTO;
 import com.imooc.sell.dto.LostPropertyProjectDTO;
 import org.springframework.data.domain.Pageable;
@@ -22,4 +23,6 @@ public interface LostPropertyProjectService {
     List<LostPropertyProjectDTO> findLostPropertyProjectByTagsLikeOrderByUpdateTime(String keyword,Pageable pageable);
 
     List<LostPropertyProjectDTO> findLostPropertyProjectByTagsLikeOrderByFavoritesNumber(String keyword, Pageable pageable);
+
+    void tagHandler(LostPropertyProjectFrom lostPropertyProjectFrom);
 }

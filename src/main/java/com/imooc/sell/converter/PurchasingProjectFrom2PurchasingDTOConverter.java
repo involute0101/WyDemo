@@ -24,6 +24,7 @@ public class PurchasingProjectFrom2PurchasingDTOConverter {
         purchasingProjectDTO.setLocation(purchasingProjectFrom.getLocation());
         purchasingProjectDTO.setFavoriteNumber(0);
         purchasingProjectDTO.setPageviews(0);
+        purchasingProjectDTO.setType(1);
         purchasingProjectDTO.setCreateTime(new Date());
         purchasingProjectDTO.setUpdateTime(new Date());
         String tags = "";

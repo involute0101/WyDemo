@@ -41,7 +41,7 @@ public class LostPropertyProjectController {
             throw new SellException(ResultEnum.PARAM_ERROR.getCode(),
                     bindingResult.getFieldError().getDefaultMessage());
         }
-
+        lostPropertyProjectService.tagHandler(lostPropertyProjectFrom);
         LostPropertyProjectDTO lostPropertyProjectDTO = LostPropertyProjectFrom2LostPropertyProjectDTOConverter.convert(lostPropertyProjectFrom);
 
         LostPropertyProjectDTO registerResult = lostPropertyProjectService.createLostPropertyProject(lostPropertyProjectDTO);

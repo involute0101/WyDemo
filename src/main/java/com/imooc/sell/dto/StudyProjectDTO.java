@@ -40,4 +40,6 @@ public class StudyProjectDTO {
     private String tags;
 
     private Integer favoriteNumber;
+
+    private Integer type;
 }

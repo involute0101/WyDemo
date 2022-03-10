@@ -66,11 +66,14 @@ public class TagService {
      */
     public List<Tag> createTag(TagForm tagForm){
         List<Tag> tags = new ArrayList<>();
-        for(String tagContent : tagForm.getTagContent()){
-            Tag tag = new Tag();
-            tag.setUserOpenId(tagForm.getUserOpenId());
-            tag.setTagContent(tagContent);
-            tags.add(tagRepository.save(tag)) ;
+        if(tagForm.getTagContent()!=null){
+            for(String tagContent : tagForm.getTagContent()){
+                if(tagExist(tagContent))continue;
+                Tag tag = new Tag();
+                tag.setUserOpenId(tagForm.getUserOpenId());
+                tag.setTagContent(tagContent);
+                tags.add(tagRepository.save(tag)) ;
+            }
         }
         return tags;
     }
@@ -95,7 +98,7 @@ public class TagService {
      */
     public boolean tagExist(String keyword){
         PageRequest pageRequest = new PageRequest(0,1);
-        Page<Tag> page = tagRepository.findByTagContentLike(keyword, pageRequest);
+        Page<Tag> page = tagRepository.findByTagContentLike("%"+keyword+"%", pageRequest);
         if(page.getContent().isEmpty())return false;
         return true;
     }

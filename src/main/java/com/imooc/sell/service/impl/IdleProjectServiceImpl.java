@@ -1,5 +1,7 @@
 package com.imooc.sell.service.impl;
 
+import com.imooc.sell.controller.form.IdleProjectFrom;
+import com.imooc.sell.controller.form.TagForm;
 import com.imooc.sell.dataobject.IdleProject;
 import com.imooc.sell.dto.IdleProjectDTO;
 import com.imooc.sell.dto.ProjectMasterDTO;
@@ -37,6 +39,9 @@ public class IdleProjectServiceImpl implements IdleProjectService {
 
     @Autowired
     ProjectMasterServiceImpl projectMasterService;
+
+    @Autowired
+    TagService tagService;
 
     @Override
     @Transactional
@@ -247,5 +252,17 @@ public class IdleProjectServiceImpl implements IdleProjectService {
             result.add(idleProjectDTO);
         }
         return result;
+    }
+
+    /**
+     * 处理标签（向上兼容），不存在则创建
+     * @param idleProjectFrom
+     */
+    @Override
+    public void tagHandler(IdleProjectFrom idleProjectFrom) {
+        TagForm tagForm = new TagForm();
+        tagForm.setUserOpenId(idleProjectFrom.getOpenid());
+        tagForm.setTagContent(idleProjectFrom.getTags());
+        tagService.createTag(tagForm);
     }
 }

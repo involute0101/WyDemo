@@ -1,5 +1,7 @@
 package com.imooc.sell.service.impl;
 
+import com.imooc.sell.controller.form.JobsProjectFrom;
+import com.imooc.sell.controller.form.TagForm;
 import com.imooc.sell.dataobject.JobsProject;
 import com.imooc.sell.dto.JobsProjectDTO;
 import com.imooc.sell.dto.ProjectMasterDTO;
@@ -37,6 +39,9 @@ public class JobsProjectServiceImpl implements JobsProjectService {
 
     @Autowired
     JobsProjectRepository jobsProjectRepository;
+
+    @Autowired
+    TagService tagService;
 
     @Override
     @Transactional
@@ -200,5 +205,17 @@ public class JobsProjectServiceImpl implements JobsProjectService {
             result.add(jobsProjectDTO);
         }
         return result;
+    }
+
+    /**
+    * 处理标签（向上兼容），不存在则创建
+    * @param jobsProjectFrom
+    */
+    @Override
+    public void tagHandler(JobsProjectFrom jobsProjectFrom) {
+        TagForm tagForm = new TagForm();
+        tagForm.setUserOpenId(jobsProjectFrom.getOpenid());
+        tagForm.setTagContent(jobsProjectFrom.getTags());
+        tagService.createTag(tagForm);
     }
 }

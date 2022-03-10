@@ -2,12 +2,14 @@ package com.imooc.sell.controller;
 
 import com.imooc.sell.VO.ResultVO;
 import com.imooc.sell.controller.form.RewardProjectFrom;
+import com.imooc.sell.controller.form.TagForm;
 import com.imooc.sell.converter.RewardProjectFrom2RewardDTOConverter;
 import com.imooc.sell.dto.RewardProjectDTO;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
 import com.imooc.sell.service.impl.ProjectMasterServiceImpl;
 import com.imooc.sell.service.impl.RewardServiceImpl;
+import com.imooc.sell.service.impl.TagService;
 import com.imooc.sell.utils.ResultVOUtil;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +30,12 @@ import java.util.Map;
 public class RewardProjectController {
     @Autowired
     ProjectMasterServiceImpl projectMasterService;
+
     @Autowired
     RewardServiceImpl rewardService;
+
+    @Autowired
+    TagService tagService;
 
     @ApiOperation(value = "创建悬赏项目", notes = "")
     @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
@@ -41,7 +47,7 @@ public class RewardProjectController {
             throw new SellException(ResultEnum.PARAM_ERROR.getCode(),
                     bindingResult.getFieldError().getDefaultMessage());
         }
-
+        rewardService.tagHandler(rewardProjectFrom);
         RewardProjectDTO rewardProjectDTO = RewardProjectFrom2RewardDTOConverter.convert(rewardProjectFrom);
 
         RewardProjectDTO registerResult = rewardService.createRewardProject(rewardProjectDTO);

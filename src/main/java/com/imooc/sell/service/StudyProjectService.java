@@ -1,5 +1,6 @@
 package com.imooc.sell.service;
 
+import com.imooc.sell.controller.form.StudyProjectFrom;
 import com.imooc.sell.dto.StudyProjectDTO;
 import org.springframework.data.domain.Pageable;
 
@@ -21,4 +22,6 @@ public interface StudyProjectService {
     List<StudyProjectDTO> findStudyProjectByTagsLikeOrderByUpdateTime(String keyword, Pageable pageable);
 
     List<StudyProjectDTO> findStudyProjectByTagsLikeOrderByFavoritesNumber(String keyword, Pageable pageable);
+
+    void tagHandler(StudyProjectFrom studyProjectFrom);
 }

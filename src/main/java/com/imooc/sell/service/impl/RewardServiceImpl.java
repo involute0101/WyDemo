@@ -1,5 +1,7 @@
 package com.imooc.sell.service.impl;
 
+import com.imooc.sell.controller.form.RewardProjectFrom;
+import com.imooc.sell.controller.form.TagForm;
 import com.imooc.sell.dataobject.RewardProject;
 import com.imooc.sell.dto.ProjectMasterDTO;
 import com.imooc.sell.dto.RewardProjectDTO;
@@ -37,6 +39,9 @@ public class RewardServiceImpl implements RewardProjectService {
 
     @Autowired
     ProjectMasterServiceImpl projectMasterService;
+
+    @Autowired
+    TagService tagService;
 
     @Override
     @Transactional
@@ -104,6 +109,18 @@ public class RewardServiceImpl implements RewardProjectService {
             throw new SellException(ResultEnum.PROJECT_MASTER_NOT_FOUND_BY_PROJECT_ID);
         }
 
+    }
+
+    /**
+     * 处理标签（向上兼容），不存在则创建
+     * @param rewardProjectFrom
+     */
+    @Override
+    public void tagHandler(RewardProjectFrom rewardProjectFrom) {
+        TagForm tagForm = new TagForm();
+        tagForm.setUserOpenId(rewardProjectFrom.getOpenid());
+        tagForm.setTagContent(rewardProjectFrom.getTags());
+        tagService.createTag(tagForm);
     }
 
     /**

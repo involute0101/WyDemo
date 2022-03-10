@@ -54,4 +54,10 @@ public class JobsProject {
     private String tags;
 
     private Integer favoriteNumber;
+
+    /**项目类型
+     * 这个字段是前端非要加的，因为前端不会处理分类……（即使使用了json返回 说明了类别）
+     * 我觉得很多余.jpg
+     */
+    private Integer type;
 }

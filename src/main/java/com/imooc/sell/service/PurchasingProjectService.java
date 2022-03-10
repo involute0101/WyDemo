@@ -1,5 +1,6 @@
 package com.imooc.sell.service;
 
+import com.imooc.sell.controller.form.PurchasingProjectFrom;
 import com.imooc.sell.dataobject.PurchasingProject;
 import com.imooc.sell.dto.LostPropertyProjectDTO;
 import com.imooc.sell.dto.PurchasingProjectDTO;
@@ -33,4 +34,6 @@ public interface PurchasingProjectService {
     List<PurchasingProjectDTO> findPurchasingProjectByTagsLikeOrderByUpdateTime(String keyword, Pageable pageable);
 
     List<PurchasingProjectDTO> findPurchasingProjectByTagsLikeOrderByFavoritesNumber(String keyword, Pageable pageable);
+
+    void tagHandler(PurchasingProjectFrom purchasingProjectFrom);
 }
