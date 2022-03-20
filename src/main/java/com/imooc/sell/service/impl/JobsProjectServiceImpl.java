@@ -142,6 +142,29 @@ public class JobsProjectServiceImpl implements JobsProjectService {
     }
 
     /**
+     * 根据悬赏金额大小排序，查询悬赏项目
+     * @param pageable
+     * @param sort 升序（asc）降序（desc）方式
+     * @return
+     */
+    @Override
+    public List<JobsProjectDTO> findJobsProjectOrderByAmount(Pageable pageable, String sort) {
+        Page<JobsProject> page = null;
+        if("desc".equals(sort))page = jobsProjectRepository.findByOrderByAmountDesc(pageable);
+        else page = jobsProjectRepository.findByOrderByAmount(pageable);
+        List<JobsProjectDTO> list = new ArrayList<>();
+        for(JobsProject jobsProject : page){
+            JobsProjectDTO jobsProjectDTO = new JobsProjectDTO();
+            BeanUtils.copyProperties(jobsProject, jobsProjectDTO,"picture");
+            if (jobsProject.getPicture()!=null){
+                jobsProjectDTO.setPicture(jobsProject.getPicture().split(","));
+            }
+            list.add(jobsProjectDTO);
+        }
+        return list;
+    }
+
+    /**
      *
      * @param jobsProjectDTO
      * @return
@@ -183,6 +206,28 @@ public class JobsProjectServiceImpl implements JobsProjectService {
             jobsProjectDTO.setPicture(jobsProject.getPicture().split(","));
         }
         return jobsProjectDTO;
+    }
+
+    /**
+     * 综合排序查找，权重=时间戳*0.000001+点赞数*10
+     * @param pageable  分页请求
+     * @return
+     */
+    @Override
+    public List<JobsProjectDTO> findByComplexService(Pageable pageable) {
+        List<JobsProjectDTO> result = new ArrayList<>();
+        int pageSize = pageable.getPageSize();
+        int offsetNumber = pageable.getOffset();
+        List<JobsProject> jobsProjectList = jobsProjectRepository.findByComplex(pageSize, offsetNumber);
+        for(JobsProject jobsProject : jobsProjectList){
+            JobsProjectDTO jobsProjectDTO = new JobsProjectDTO();
+            BeanUtils.copyProperties(jobsProject, jobsProjectDTO,"picture");
+            if (jobsProject.getPicture()!=null){
+                jobsProjectDTO.setPicture(jobsProject.getPicture().split(","));
+            }
+            result.add(jobsProjectDTO);
+        }
+        return result;
     }
 
     /**

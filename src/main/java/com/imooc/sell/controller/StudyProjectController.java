@@ -130,4 +130,37 @@ public class StudyProjectController {
         List<StudyProjectDTO> result = studyService.findStudyProjectsOrderByFavoritesNumber(pageRequest);
         return ResultVOUtil.success(result);
     }
+
+    @ApiOperation(value = "综合排序", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page",value = "页数",required=true),
+            @ApiImplicitParam(name = "size",value = "页大小",required=true),
+    })
+    @PostMapping("/complex")
+    public ResultVO findRewardProjectComplex(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                             @RequestParam(value = "size", defaultValue = "10") Integer size) throws Exception {
+        if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
+        PageRequest pageRequest = new PageRequest(page - 1, size);
+        List<StudyProjectDTO> result = studyService.findByComplexService(pageRequest);
+        return ResultVOUtil.success(result);
+    }
+
+    @ApiOperation(value = "按照悬赏金额大小排序,查询学习项目", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page",value = "页数",required=true),
+            @ApiImplicitParam(name = "size",value = "页大小",required=true),
+            @ApiImplicitParam(name = "sort",value = "排序方式（asc/desc）",required=true),
+    })
+    @PostMapping("/orderByAmount")
+    public ResultVO findOrderByAmount(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                      @RequestParam(value = "size", defaultValue = "10") Integer size,
+                                      @RequestParam(value = "sort", defaultValue = "asc") String sort) {
+        if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
+        if (!"desc".equals(sort) && !"asc".equals(sort)) return ResultVOUtil.error(403, "排序方式不正确");
+        PageRequest pageRequest = new PageRequest(page - 1, size);
+        List<StudyProjectDTO> result = studyService.findStudyProjectOrderByAmount(pageRequest, sort);
+        return ResultVOUtil.success(result);
+    }
 }

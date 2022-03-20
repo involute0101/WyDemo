@@ -147,6 +147,51 @@ public class StudyServiceImpl implements StudyProjectService {
     }
 
     /**
+     * 综合排序查找，权重=时间戳*0.000001+点赞数*10
+     * @param pageable  分页请求
+     * @return
+     */
+    @Override
+    public List<StudyProjectDTO> findByComplexService(Pageable pageable) {
+        List<StudyProjectDTO> result = new ArrayList<>();
+        int pageSize = pageable.getPageSize();
+        int offsetNumber = pageable.getOffset();
+        List<StudyProject> studyProjectList = studyProjectRepository.findByComplex(pageSize, offsetNumber);
+        for(StudyProject studyProject : studyProjectList){
+            StudyProjectDTO studyProjectDTO = new StudyProjectDTO();
+            BeanUtils.copyProperties(studyProject,studyProjectDTO,"picture");
+            if (studyProject.getPicture()!=null){
+                studyProjectDTO.setPicture(studyProject.getPicture().split(","));
+            }
+            result.add(studyProjectDTO);
+        }
+        return result;
+    }
+
+    /**
+     * 根据悬赏金额大小排序，查询悬赏项目
+     * @param pageable
+     * @param sort 升序（asc）降序（desc）方式
+     * @return
+     */
+    @Override
+    public List<StudyProjectDTO> findStudyProjectOrderByAmount(Pageable pageable, String sort) {
+        Page<StudyProject> page = null;
+        if("desc".equals(sort))page = studyProjectRepository.findByOrderByAmountDesc(pageable);
+        else page = studyProjectRepository.findByOrderByAmount(pageable);
+        List<StudyProjectDTO> list = new ArrayList<>();
+        for(StudyProject studyProject: page){
+            StudyProjectDTO studyProjectDTO = new StudyProjectDTO();
+            BeanUtils.copyProperties(studyProject,studyProjectDTO,"picture");
+            if (studyProject.getPicture()!=null){
+                studyProjectDTO.setPicture(studyProject.getPicture().split(","));
+            }
+            list.add(studyProjectDTO);
+        }
+        return list;
+    }
+
+    /**
      * 更新项目，用于其他项目调用，当其他项目要修改信息时，调用此方法保存修改后的值
      * @param studyProjectDTO
      * @return

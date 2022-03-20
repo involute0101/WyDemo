@@ -233,6 +233,28 @@ public class IdleProjectServiceImpl implements IdleProjectService {
     }
 
     /**
+     * 综合排序查找，权重=时间戳*0.000001+点赞数*10
+     * @param pageable  分页请求
+     * @return
+     */
+    @Override
+    public List<IdleProjectDTO> findByComplexService(Pageable pageable) {
+        List<IdleProjectDTO> result = new ArrayList<>();
+        int pageSize = pageable.getPageSize();
+        int offsetNumber = pageable.getOffset();
+        List<IdleProject> idleProjectList = idleProjectRepository.findByComplex(pageSize, offsetNumber);
+        for(IdleProject idleProject : idleProjectList){
+            IdleProjectDTO idleProjectDTO = new IdleProjectDTO();
+            BeanUtils.copyProperties(idleProject,idleProjectDTO,"picture");
+            if (idleProject.getPicture()!=null){
+                idleProjectDTO.setPicture(idleProject.getPicture().split(","));
+            }
+            result.add(idleProjectDTO);
+        }
+        return result;
+    }
+
+    /**
      * 按照标签查询，并按时间排序（最新）
      * @param keyword 标签关键字
      * @param pageable 分页请求

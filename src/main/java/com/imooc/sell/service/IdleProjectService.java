@@ -26,6 +26,8 @@ public interface IdleProjectService {
 
     IdleProjectDTO increasePageviews(String projectId);
 
+    List<IdleProjectDTO> findByComplexService(Pageable pageable);
+
     List<IdleProjectDTO> findIdleProjectByTagsLikeOrderByUpdateTime(String keyword,Pageable pageable);
 
     List<IdleProjectDTO> findIdleProjectByTagsLikeOrderByFavoritesNumber(String keyword, Pageable pageable);

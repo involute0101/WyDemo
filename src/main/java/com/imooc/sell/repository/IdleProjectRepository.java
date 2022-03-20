@@ -4,6 +4,7 @@ import com.imooc.sell.dataobject.IdleProject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Id;
@@ -33,4 +34,8 @@ public interface IdleProjectRepository extends JpaRepository<IdleProject, Intege
     Page<IdleProject> findByTagsLikeOrderByFavoriteNumberDesc(String keyword,Pageable pageable);
 
     Page<IdleProject> findByOrderByFavoriteNumberDesc(Pageable pageable);
+
+    @Query(value = "select * from idle_project order by update_time*0.000001+favorite_number*10 desc limit ?1 offset ?2",
+            nativeQuery = true)
+    List<IdleProject> findByComplex(Integer pageSize, Integer offsetNumber);
 }

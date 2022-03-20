@@ -147,6 +147,51 @@ public class LostPropertyProjectServiceImpl implements LostPropertyProjectServic
     }
 
     /**
+     * 根据悬赏金额大小排序，查询悬赏项目
+     * @param pageable
+     * @param sort 升序（asc）降序（desc）方式
+     * @return
+     */
+    @Override
+    public List<LostPropertyProjectDTO> findLostPropertyProjectOrderByAmount(Pageable pageable, String sort) {
+        Page<LostPropertyProject> page = null;
+        if("desc".equals(sort))page = lostPropertyProjectRepository.findByOrderByAmountDesc(pageable);
+        else page = lostPropertyProjectRepository.findByOrderByAmount(pageable);
+        List<LostPropertyProjectDTO> list = new ArrayList<>();
+        for(LostPropertyProject lostPropertyProject : page){
+            LostPropertyProjectDTO lostPropertyProjectDTO = new LostPropertyProjectDTO();
+            BeanUtils.copyProperties(lostPropertyProject,lostPropertyProjectDTO,"picture");
+            if(lostPropertyProject.getPicture()!=null){
+                lostPropertyProjectDTO.setPicture(lostPropertyProject.getPicture().split(","));
+            }
+            list.add(lostPropertyProjectDTO);
+        }
+        return list;
+    }
+
+    /**
+     * 综合排序查找，权重=时间戳*0.000001+点赞数*10
+     * @param pageable  分页请求
+     * @return
+     */
+    @Override
+    public List<LostPropertyProjectDTO> findByComplexService(Pageable pageable) {
+        List<LostPropertyProjectDTO> result = new ArrayList<>();
+        int pageSize = pageable.getPageSize();
+        int offsetNumber = pageable.getOffset();
+        List<LostPropertyProject> lostPropertyProjectList = lostPropertyProjectRepository.findByComplex(pageSize, offsetNumber);
+        for(LostPropertyProject lostPropertyProject : lostPropertyProjectList){
+            LostPropertyProjectDTO lostPropertyProjectDTO = new LostPropertyProjectDTO();
+            BeanUtils.copyProperties(lostPropertyProject,lostPropertyProjectDTO,"picture");
+            if(lostPropertyProject.getPicture()!=null){
+                lostPropertyProjectDTO.setPicture(lostPropertyProject.getPicture().split(","));
+            }
+            result.add(lostPropertyProjectDTO);
+        }
+        return result;
+    }
+
+    /**
      * 更新项目，用于其他项目调用，当其他项目要修改信息时，调用此方法保存修改后的值
      * @param lostPropertyProjectDTO
      * @return

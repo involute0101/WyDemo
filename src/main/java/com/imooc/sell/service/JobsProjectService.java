@@ -19,9 +19,13 @@ public interface JobsProjectService {
 
     List<JobsProjectDTO> findJobsProjectOrderByFavoritesNumber(Pageable pageable);
 
+    List<JobsProjectDTO> findJobsProjectOrderByAmount(Pageable pageable, String sort);
+
     JobsProjectDTO updateJobsProject(JobsProjectDTO jobsProjectDTO);
 
     JobsProjectDTO increasePageviews(String projectId);
+
+    List<JobsProjectDTO> findByComplexService(Pageable pageable);
 
     List<JobsProjectDTO> findJobsProjectByTagsLikeOrderByUpdateTime(String keyword,Pageable pageable);
 
