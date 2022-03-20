@@ -192,6 +192,26 @@ public class IdleProjectServiceImpl implements IdleProjectService {
     }
 
     /**
+     * 根据收藏数降序，查询最热的项目
+     * @param pageable 分页请求
+     * @return
+     */
+    @Override
+    public List<IdleProjectDTO> findIdleProjectOrderByFavoritesNumber(Pageable pageable) {
+        Page<IdleProject> page = idleProjectRepository.findByOrderByFavoriteNumberDesc(pageable);
+        List<IdleProjectDTO> list = new ArrayList<>();
+        for(IdleProject idleProject : page){
+            IdleProjectDTO idleProjectDTO = new IdleProjectDTO();
+            BeanUtils.copyProperties(idleProject,idleProjectDTO,"picture");
+            if (idleProject.getPicture()!=null){
+                idleProjectDTO.setPicture(idleProject.getPicture().split(","));
+            }
+            list.add(idleProjectDTO);
+        }
+        return list;
+    }
+
+    /**
      * 增加项目浏览量
      * @param projectId 项目Id
      * @return

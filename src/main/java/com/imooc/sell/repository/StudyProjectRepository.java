@@ -16,6 +16,8 @@ public interface StudyProjectRepository extends JpaRepository<StudyProject, Inte
 
     Page<StudyProject> findByTagsLikeOrderByUpdateTimeDesc(String keyword,Pageable pageable);
 
+    Page<StudyProject> findByOrderByFavoriteNumberDesc(Pageable pageable);
+
     List<StudyProject> findByTitle(String title);
 
     List<StudyProject> findByLocation(String location);

@@ -1,5 +1,7 @@
 package com.imooc.sell.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.imooc.sell.VO.CaptchaVO;
 import com.imooc.sell.VO.ResultVO;
 import com.imooc.sell.dataobject.UserInfo;
@@ -12,11 +14,19 @@ import com.imooc.sell.utils.ResultVOUtil;
 import com.imooc.sell.utils.SendSms;
 import com.sun.org.apache.regexp.internal.RE;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -194,5 +204,49 @@ public class UserInfoServiceImpl implements UserInfoService {
         UserInfoDTO result = new UserInfoDTO();
         BeanUtils.copyProperties(userInfo,result);
         return result;
+    }
+
+    /**
+     * 获取用户openId
+     * @param code 授权码
+     * @return
+     * @throws IOException
+     */
+    @Override
+    public String getOpenId(String code) throws IOException {
+        log.info("用户授权码："+code);
+        String url = "https://api.weixin.qq.com/sns/jscode2session";
+        url += "?appid=wxfe433c89a52a7781";
+        url += "&secret=9e601f34864fd93570135190d30c308e";
+        url += "&js_code=" + code;
+        url += "&grant_type=authorization_code";
+        url += "&connect_redirect=1";
+        String res = null;
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        HttpGet httpget = new HttpGet(url);
+        CloseableHttpResponse response = null;
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(5000)        // 设置连接超时时间(单位毫秒)
+                .setConnectionRequestTimeout(5000)
+                .setSocketTimeout(5000)
+                .setRedirectsEnabled(false).build();
+        httpget.setConfig(requestConfig);
+        response = httpClient.execute(httpget);
+        HttpEntity responseEntity = response.getEntity();
+        log.info("响应状态为:" + response.getStatusLine());
+        if (responseEntity != null) {
+            res = EntityUtils.toString(responseEntity);
+            log.info("响应内容长度为:" + responseEntity.getContentLength());
+            log.info("响应内容为:" + res);
+        }
+        if (httpClient != null) {
+            httpClient.close();
+        }
+        if (response != null) {
+            response.close();
+        }
+        JSONObject jo = JSON.parseObject(res);
+        String openid = jo.getString("openid");
+        return openid;
     }
 }

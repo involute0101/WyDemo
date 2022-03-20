@@ -24,6 +24,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @CrossOrigin
 @RestController
@@ -174,5 +175,22 @@ public class UserInfoController {
         UserInfoDTO userInfoDTO = StudentCertificationForm2UserInfoDTOConverter.convert(studentCertificationForm);
         UserInfoDTO result = userInfoService.studentCertification(userInfoDTO);
         return ResultVOUtil.success(result);
+    }
+
+    @ApiOperation(value = "获取用户OpenId", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "code",value = "授权码",required=true)
+    @PostMapping("/openId")
+    public ResultVO getUserOpenId(@RequestParam("code") String code){
+        try{
+            String openId = userInfoService.getOpenId(code);
+            return ResultVOUtil.success(openId);
+        }catch (IOException e) {
+            JSONObject result = new JSONObject();
+            result.put("state","出现异常！");
+            result.put("message",e.getMessage());
+            return ResultVOUtil.success(result);
+        }
+
     }
 }

@@ -152,4 +152,19 @@ public class IdleProjectController {
     public ResultVO incPageviews(@RequestParam(value = "projectId") String projectId){
         return ResultVOUtil.success(idleProjectService.increasePageviews(projectId));
     }
+
+    @ApiOperation(value = "按照 热度 查询闲置项目", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page",value = "页数",required=true),
+            @ApiImplicitParam(name = "size",value = "页大小",required=true),
+    })
+    @PostMapping("/popular")
+    public ResultVO findIdleProjectOrderByFavoritesNumber(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                            @RequestParam(value = "size", defaultValue = "10") Integer size) throws Exception {
+        if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
+        PageRequest pageRequest = new PageRequest(page - 1, size);
+        List<IdleProjectDTO> result = idleProjectService.findIdleProjectOrderByFavoritesNumber(pageRequest);
+        return ResultVOUtil.success(result);
+    }
 }

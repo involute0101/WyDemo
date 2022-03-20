@@ -122,6 +122,26 @@ public class JobsProjectServiceImpl implements JobsProjectService {
     }
 
     /**
+     * 根据收藏数降序，查询最热的项目
+     * @param pageable 分页请求
+     * @return
+     */
+    @Override
+    public List<JobsProjectDTO> findJobsProjectOrderByFavoritesNumber(Pageable pageable) {
+        Page<JobsProject> page = jobsProjectRepository.findByOrderByFavoriteNumberDesc(pageable);
+        List<JobsProjectDTO> list = new ArrayList<>();
+        for(JobsProject jobsProject : page){
+            JobsProjectDTO jobsProjectDTO = new JobsProjectDTO();
+            BeanUtils.copyProperties(jobsProject, jobsProjectDTO,"picture");
+            if (jobsProject.getPicture()!=null){
+                jobsProjectDTO.setPicture(jobsProject.getPicture().split(","));
+            }
+            list.add(jobsProjectDTO);
+        }
+        return list;
+    }
+
+    /**
      *
      * @param jobsProjectDTO
      * @return

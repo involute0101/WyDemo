@@ -16,6 +16,8 @@ public interface JobsProjectRepository extends JpaRepository<JobsProject, Intege
 
     Page<JobsProject> findByTagsLikeOrderByUpdateTimeDesc(String keyword,Pageable pageable);
 
+    Page<JobsProject> findByOrderByFavoriteNumberDesc(Pageable pageable);
+
     List<JobsProject> findByTitle(String title);
 
     List<JobsProject> findByLocation(String location);

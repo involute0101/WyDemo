@@ -5,6 +5,7 @@ import com.imooc.sell.VO.ResultVO;
 import com.imooc.sell.dataobject.UserInfo;
 import com.imooc.sell.dto.UserInfoDTO;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -34,4 +35,6 @@ public interface UserInfoService {
     ResultVO modifyPassword(String userOpenId, String newPassword);
 
     UserInfoDTO studentCertification(UserInfoDTO userInfoDTO);
+
+    String getOpenId(String code) throws IOException;
 }

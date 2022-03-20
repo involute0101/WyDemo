@@ -127,6 +127,26 @@ public class LostPropertyProjectServiceImpl implements LostPropertyProjectServic
     }
 
     /**
+     * 根据收藏数降序，查询最热的项目
+     * @param pageable 分页请求
+     * @return
+     */
+    @Override
+    public List<LostPropertyProjectDTO> findLostPropertyProjectOrderByFavoritesNumber(Pageable pageable) {
+        Page<LostPropertyProject> page = lostPropertyProjectRepository.findByOrderByFavoriteNumberDesc(pageable);
+        List<LostPropertyProjectDTO> list = new ArrayList<>();
+        for(LostPropertyProject lostPropertyProject : page){
+            LostPropertyProjectDTO lostPropertyProjectDTO = new LostPropertyProjectDTO();
+            BeanUtils.copyProperties(lostPropertyProject,lostPropertyProjectDTO,"picture");
+            if(lostPropertyProject.getPicture()!=null){
+                lostPropertyProjectDTO.setPicture(lostPropertyProject.getPicture().split(","));
+            }
+            list.add(lostPropertyProjectDTO);
+        }
+        return list;
+    }
+
+    /**
      * 更新项目，用于其他项目调用，当其他项目要修改信息时，调用此方法保存修改后的值
      * @param lostPropertyProjectDTO
      * @return

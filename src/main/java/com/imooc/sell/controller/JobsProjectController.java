@@ -4,6 +4,7 @@ import com.imooc.sell.VO.ResultVO;
 import com.imooc.sell.controller.form.JobsProjectFrom;
 import com.imooc.sell.converter.JobsProjectFrom2JobsProjectProjectDTOConverter;
 import com.imooc.sell.dto.JobsProjectDTO;
+import com.imooc.sell.dto.RewardProjectDTO;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
 import com.imooc.sell.service.impl.JobsProjectServiceImpl;
@@ -65,6 +66,21 @@ public class JobsProjectController {
         PageRequest pageRequest = new PageRequest(page-1, size);
         List<JobsProjectDTO> list = jobsProjectService.findJobsProjectsOrderByUpdateTime(pageRequest);
         return ResultVOUtil.success(list);
+    }
+
+    @ApiOperation(value = "按照 热度 查询招聘项目", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page",value = "页数",required=true),
+            @ApiImplicitParam(name = "size",value = "页大小",required=true),
+    })
+    @PostMapping("/popular")
+    public ResultVO findJobsProjectOrderByFavoritesNumber(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                            @RequestParam(value = "size", defaultValue = "10") Integer size) throws Exception {
+        if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
+        PageRequest pageRequest = new PageRequest(page - 1, size);
+        List<JobsProjectDTO> result = jobsProjectService.findJobsProjectOrderByFavoritesNumber(pageRequest);
+        return ResultVOUtil.success(result);
     }
 
     @ApiOperation(value = "按照项目id查找项目详情", notes = "")

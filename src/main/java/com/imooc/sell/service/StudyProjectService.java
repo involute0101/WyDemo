@@ -11,6 +11,8 @@ public interface StudyProjectService {
 
     List<StudyProjectDTO> findStudyProjectsOrderByUpdateTime(Pageable pageable);
 
+    List<StudyProjectDTO> findStudyProjectsOrderByFavoritesNumber(Pageable pageable);
+
     StudyProjectDTO findStudyByProjectId(String projectId);
 
     List<StudyProjectDTO> findStudyProjectByTagsLike(String keyword, Pageable pageable);

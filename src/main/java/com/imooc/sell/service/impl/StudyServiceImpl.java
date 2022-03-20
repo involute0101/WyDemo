@@ -94,6 +94,26 @@ public class StudyServiceImpl implements StudyProjectService {
         return list;
     }
 
+    /**
+     * 根据收藏数降序，查询最热的项目
+     * @param pageable 分页请求
+     * @return
+     */
+    @Override
+    public List<StudyProjectDTO> findStudyProjectsOrderByFavoritesNumber(Pageable pageable) {
+        Page<StudyProject> page = studyProjectRepository.findByOrderByFavoriteNumberDesc(pageable);
+        List<StudyProjectDTO> list = new ArrayList<>();
+        for (StudyProject studyProject: page){
+            StudyProjectDTO studyProjectDTO = new StudyProjectDTO();
+            BeanUtils.copyProperties(studyProject, studyProjectDTO,"picture");
+            if (studyProject.getPicture()!=null){
+                studyProjectDTO.setPicture(studyProject.getPicture().split(","));
+            }
+            list.add(studyProjectDTO);
+        }
+        return list;
+    }
+
     @Override
     public StudyProjectDTO findStudyByProjectId(String projectId) {
         StudyProject studyProject = studyProjectRepository.findByProjectId(projectId);

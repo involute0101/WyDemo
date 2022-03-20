@@ -31,4 +31,6 @@ public interface IdleProjectRepository extends JpaRepository<IdleProject, Intege
     Page<IdleProject> findByTitleLike(String keyword, Pageable pageable);
 
     Page<IdleProject> findByTagsLikeOrderByFavoriteNumberDesc(String keyword,Pageable pageable);
+
+    Page<IdleProject> findByOrderByFavoriteNumberDesc(Pageable pageable);
 }
