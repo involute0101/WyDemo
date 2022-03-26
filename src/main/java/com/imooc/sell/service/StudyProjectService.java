@@ -17,6 +17,8 @@ public interface StudyProjectService {
 
     List<StudyProjectDTO> findStudyProjectByTagsLike(String keyword, Pageable pageable);
 
+    List<StudyProjectDTO> findStudyProjectByTitleLike(String titleKeyword,Pageable pageable);
+
     List<StudyProjectDTO> findByComplexService(Pageable pageable);
 
     List<StudyProjectDTO> findStudyProjectOrderByAmount(Pageable pageable, String sort);

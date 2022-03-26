@@ -26,6 +26,8 @@ public interface JobsProjectRepository extends JpaRepository<JobsProject, Intege
 
     List<JobsProject> findByTitle(String title);
 
+    Page<JobsProject> findByTitleLike(String keyword, Pageable pageable);
+
     List<JobsProject> findByLocation(String location);
 
     //调用者要在关键字前后加上“%”，以实现模糊查询

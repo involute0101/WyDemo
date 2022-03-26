@@ -5,15 +5,19 @@ import com.imooc.sell.VO.CaptchaVO;
 import com.imooc.sell.VO.ResultVO;
 
 import com.imooc.sell.controller.form.StudentCertificationForm;
+import com.imooc.sell.controller.form.UserFollowForm;
 import com.imooc.sell.controller.form.UserInfoFrom;
 import com.imooc.sell.controller.form.UserInfoUpdateForm;
 import com.imooc.sell.converter.StudentCertificationForm2UserInfoDTOConverter;
+import com.imooc.sell.converter.UserFollowForm2UserFollowDTOConverter;
 import com.imooc.sell.converter.UserInfoFrom2UserInfoDTOConverter;
 import com.imooc.sell.converter.UserInfoUpdateForm2UserInfoDTOConverter;
 import com.imooc.sell.dataobject.UserInfo;
+import com.imooc.sell.dto.UserFollowDTO;
 import com.imooc.sell.dto.UserInfoDTO;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
+import com.imooc.sell.service.UserFollowService;
 import com.imooc.sell.service.UserInfoService;
 import com.imooc.sell.utils.ResultVOUtil;
 
@@ -34,6 +38,9 @@ import java.io.IOException;
 public class UserInfoController {
     @Autowired
     private UserInfoService userInfoService;
+
+    @Autowired
+    private UserFollowService userFollowService;
 
     @ApiOperation(value = "注册账号", notes = "")
     @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
@@ -191,6 +198,18 @@ public class UserInfoController {
             result.put("message",e.getMessage());
             return ResultVOUtil.success(result);
         }
+    }
 
+    @ApiOperation(value = "根据openId关注用户", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @PostMapping("/follow")
+    public ResultVO followByUserOpenId(@Valid UserFollowForm userFollowForm, BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            log.error("[关注用户] 参数不正确， userFollowForm={}", userFollowForm);
+            throw new SellException(ResultEnum.PARAM_ERROR.getCode(),bindingResult.getFieldError().getDefaultMessage());
+        }
+        UserFollowDTO userFollowDTO = UserFollowForm2UserFollowDTOConverter.convert(userFollowForm);
+        UserFollowDTO result = userFollowService.createFollow(userFollowDTO);
+        return ResultVOUtil.success(result);
     }
 }

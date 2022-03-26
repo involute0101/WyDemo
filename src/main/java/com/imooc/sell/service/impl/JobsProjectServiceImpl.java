@@ -122,6 +122,27 @@ public class JobsProjectServiceImpl implements JobsProjectService {
     }
 
     /**
+     * 根据标题关键字查找招聘项目
+     * @param titleKeyword  标题的关键字
+     * @param pageable  分页请求
+     * @return
+     */
+    @Override
+    public List<JobsProjectDTO> findJobsProjectByTitleLike(String titleKeyword, Pageable pageable) {
+        List<JobsProjectDTO> list = new ArrayList<>();
+        Page<JobsProject> page = jobsProjectRepository.findByTitleLike("%" + titleKeyword + "%", pageable);
+        for (JobsProject jobsProject : page) {
+            JobsProjectDTO jobsProjectDTO = new JobsProjectDTO();
+            BeanUtils.copyProperties(jobsProject, jobsProjectDTO,"picture");
+            if (jobsProject.getPicture()!=null){
+                jobsProjectDTO.setPicture(jobsProject.getPicture().split(","));
+            }
+            list.add(jobsProjectDTO);
+        }
+        return list;
+    }
+
+    /**
      * 根据收藏数降序，查询最热的项目
      * @param pageable 分页请求
      * @return

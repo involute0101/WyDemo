@@ -26,6 +26,8 @@ public interface StudyProjectRepository extends JpaRepository<StudyProject, Inte
 
     List<StudyProject> findByTitle(String title);
 
+    Page<StudyProject> findByTitleLike(String keyword, Pageable pageable);
+
     List<StudyProject> findByLocation(String location);
 
     //调用者要在关键字前后加上“%”，以实现模糊查询

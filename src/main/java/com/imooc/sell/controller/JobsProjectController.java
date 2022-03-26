@@ -153,6 +153,23 @@ public class JobsProjectController {
         return ResultVOUtil.success(jobsProjectByTagsLike);
     }
 
+    @ApiOperation(value = "根据标题关键字搜索", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page",value = "页数",required=true),
+            @ApiImplicitParam(name = "size",value = "页大小",required=true),
+            @ApiImplicitParam(name = "titleKeyword",value = "标题（的关键字）",required=true),
+    })
+    @PostMapping("/titleLike")
+    public ResultVO findByTitleLike(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                    @RequestParam(value = "size", defaultValue = "10") Integer size,
+                                    @RequestParam(value = "titleKeyword", defaultValue = "") String titleKeyword) {
+        if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
+        PageRequest pageRequest = new PageRequest(page - 1, size);
+        List<JobsProjectDTO> result = jobsProjectService.findJobsProjectByTitleLike(titleKeyword, pageRequest);
+        return ResultVOUtil.success(result);
+    }
+
     @ApiOperation(value = "增加浏览量", notes = "")
     @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
     @ApiImplicitParam(name = "projectId",value = "项目id",required=true)

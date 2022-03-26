@@ -17,6 +17,8 @@ public interface JobsProjectService {
 
     List<JobsProjectDTO> findJobsProjectByTagsLike(String keyword, Pageable pageable);
 
+    List<JobsProjectDTO> findJobsProjectByTitleLike(String titleKeyword,Pageable pageable);
+
     List<JobsProjectDTO> findJobsProjectOrderByFavoritesNumber(Pageable pageable);
 
     List<JobsProjectDTO> findJobsProjectOrderByAmount(Pageable pageable, String sort);

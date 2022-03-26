@@ -126,6 +126,28 @@ public class LostPropertyProjectServiceImpl implements LostPropertyProjectServic
         return list;
     }
 
+
+    /**
+     * 根据标题关键字查找失物招领项目
+     * @param titleKeyword  标题的关键字
+     * @param pageable  分页请求
+     * @return
+     */
+    @Override
+    public List<LostPropertyProjectDTO> findLostPropertyProjectByTitleLike(String titleKeyword, Pageable pageable) {
+        List<LostPropertyProjectDTO> list = new ArrayList<>();
+        Page<LostPropertyProject> page = lostPropertyProjectRepository.findByTitleLike("%" + titleKeyword + "%", pageable);
+        for(LostPropertyProject lostPropertyProject: page){
+            LostPropertyProjectDTO lostPropertyProjectDTO = new LostPropertyProjectDTO();
+            BeanUtils.copyProperties(lostPropertyProject,lostPropertyProjectDTO,"picture");
+            if(lostPropertyProject.getPicture()!=null){
+                lostPropertyProjectDTO.setPicture(lostPropertyProject.getPicture().split(","));
+            }
+            list.add(lostPropertyProjectDTO);
+        }
+        return list;
+    }
+
     /**
      * 根据收藏数降序，查询最热的项目
      * @param pageable 分页请求

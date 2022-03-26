@@ -147,6 +147,27 @@ public class StudyServiceImpl implements StudyProjectService {
     }
 
     /**
+     * 根据标题关键字查找学习项目
+     * @param titleKeyword  标题的关键字
+     * @param pageable  分页请求
+     * @return
+     */
+    @Override
+    public List<StudyProjectDTO> findStudyProjectByTitleLike(String titleKeyword, Pageable pageable) {
+        List<StudyProjectDTO> list = new ArrayList<>();
+        Page<StudyProject> page = studyProjectRepository.findByTitleLike("%" + titleKeyword + "%", pageable);
+        for(StudyProject studyProject: page){
+            StudyProjectDTO studyProjectDTO = new StudyProjectDTO();
+            BeanUtils.copyProperties(studyProject,studyProjectDTO,"picture");
+            if (studyProject.getPicture()!=null){
+                studyProjectDTO.setPicture(studyProject.getPicture().split(","));
+            }
+            list.add(studyProjectDTO);
+        }
+        return list;
+    }
+
+    /**
      * 综合排序查找，权重=时间戳*0.000001+点赞数*10
      * @param pageable  分页请求
      * @return
