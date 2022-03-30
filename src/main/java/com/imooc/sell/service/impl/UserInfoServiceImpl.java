@@ -4,15 +4,16 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.imooc.sell.VO.CaptchaVO;
 import com.imooc.sell.VO.ResultVO;
+import com.imooc.sell.dataobject.Tag;
 import com.imooc.sell.dataobject.UserInfo;
 import com.imooc.sell.dto.UserInfoDTO;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
+import com.imooc.sell.repository.TagRepository;
 import com.imooc.sell.repository.UserInfoRepository;
 import com.imooc.sell.service.UserInfoService;
 import com.imooc.sell.utils.ResultVOUtil;
 import com.imooc.sell.utils.SendSms;
-import com.sun.org.apache.regexp.internal.RE;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
@@ -36,6 +37,10 @@ import java.util.List;
 public class UserInfoServiceImpl implements UserInfoService {
     @Autowired
     UserInfoRepository userInfoRepository;
+
+
+    @Autowired
+    TagRepository tagRepository;
 
     //注册
     @Override
@@ -101,6 +106,18 @@ public class UserInfoServiceImpl implements UserInfoService {
             log.error("[登录] 登陆失败,账号或密码错误");
             throw new SellException (ResultEnum.LOGIN_FAIL);
         }
+        return userInfoDTO;
+    }
+
+    public UserInfoDTO findUserInfoByUserOpenId(String openId){
+        UserInfo userInfo = userInfoRepository.findByUserOpenid(openId);
+        if(userInfo == null)
+        {
+            log.error("[登录] 登陆失败,账号不存在");
+            throw new SellException (ResultEnum.LOGIN_FAIL);
+        }
+        UserInfoDTO userInfoDTO = new UserInfoDTO();
+        BeanUtils.copyProperties(userInfo, userInfoDTO);
         return userInfoDTO;
     }
 
@@ -248,5 +265,53 @@ public class UserInfoServiceImpl implements UserInfoService {
         JSONObject jo = JSON.parseObject(res);
         String openid = jo.getString("openid");
         return openid;
+    }
+
+    /**
+     * 用户加入圈子
+     * @param userOpenId 用户openId
+     * @param circleName 圈子名称
+     * @return
+     */
+    @Override
+    @Transactional
+    public ResultVO joinDiscussionCircle(String userOpenId, String circleName) {
+        boolean flag = false;
+        UserInfo userInfo = userInfoRepository.findByUserOpenid(userOpenId);
+        if(userInfo==null){
+            throw new SellException(ResultEnum.USER_NOT_FOUND);
+        }
+        //判断圈子是否存在
+        Tag circle = tagRepository.findByTagContent(circleName);
+        if(circle==null){
+            throw new SellException(ResultEnum.CIRCLE_NOT_FOUND);
+        }
+        //判断重复加入圈子,重复加入则退出
+        String discussionCircle = userInfo.getDiscussionCircle();
+        if(discussionCircle==null || discussionCircle.equals("")){
+            discussionCircle = circleName;
+        }
+        else if(discussionCircle.contains(circleName)){
+            String[] splits = discussionCircle.split(",");
+            StringBuffer sb = new StringBuffer();
+            for(int i=0;i<splits.length;i++){
+                if(!splits[i].equals(circleName)){
+                    if(i>0)sb.append(",");
+                    sb.append(splits[i]);
+                }
+            }
+            discussionCircle = sb.toString();
+            flag = true;
+        }
+        else {
+            discussionCircle += (","+circleName);
+        }
+
+        circle.setPersonNumber(circle.getPersonNumber()+1);
+        tagRepository.save(circle);
+        userInfo.setDiscussionCircle(discussionCircle);
+        userInfoRepository.save(userInfo);
+        if(!flag) return ResultVOUtil.success("加入圈子 "+circleName+" 成功！");
+        return ResultVOUtil.success("您已退出 "+circleName+" 圈子");
     }
 }

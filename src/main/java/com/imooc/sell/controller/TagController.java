@@ -9,7 +9,6 @@ import com.imooc.sell.exception.SellException;
 import com.imooc.sell.service.impl.TagService;
 import com.imooc.sell.utils.ResultVOUtil;
 import io.swagger.annotations.*;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -18,10 +17,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
 
 @CrossOrigin
@@ -55,7 +50,7 @@ public class TagController {
             throw new SellException(ResultEnum.PARAM_ERROR.getCode(),
                     bindingResult.getFieldError().getDefaultMessage());
         }
-        List<Tag> result = tagService.createTag(tagForm);
+        List<Tag> result = tagService.createTag(tagForm,0);
         return ResultVOUtil.success(result);
     }
 
@@ -124,6 +119,15 @@ public class TagController {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         if (!tagService.tagExist(tagKeyword)) return ResultVOUtil.error(ResultEnum.TAG_NOT_FOUND);
         JSONObject result = tagService.findProjectByTagOrderByFavoriteNumber(tagKeyword, page, size / 6);
+        return ResultVOUtil.success(result);
+    }
+
+    @ApiOperation(value = "根据圈子名称，查询圈子信息", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "circleName",value = "圈子名称",required=true)
+    @PostMapping("/getCircle")
+    public ResultVO getInfoOfDiscussionCircle(@RequestParam(value = "circleName") String circleName){
+        Tag result = tagService.getDiscussionCircleInfo(circleName);
         return ResultVOUtil.success(result);
     }
 }

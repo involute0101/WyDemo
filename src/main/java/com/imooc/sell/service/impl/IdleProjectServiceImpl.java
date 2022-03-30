@@ -305,6 +305,6 @@ public class IdleProjectServiceImpl implements IdleProjectService {
         TagForm tagForm = new TagForm();
         tagForm.setUserOpenId(idleProjectFrom.getOpenid());
         tagForm.setTagContent(idleProjectFrom.getTags());
-        tagService.createTag(tagForm);
+        tagService.createTag(tagForm,1);
     }
 }

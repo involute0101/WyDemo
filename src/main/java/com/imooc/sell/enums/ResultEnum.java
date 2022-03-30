@@ -54,7 +54,13 @@ public enum ResultEnum {
 
     REPEAT_FOLLOW(23,"重复关注"),
 
-    USERINFO_OR_PROJECTINFO_NOT_MATCH(24,"用户信息或项目信息不匹配")
+    CIRCLE_NOT_FOUND(24,"圈子不存在"),
+
+    CIRCLE_HAD_EXIST(25,"圈子已经存在"),
+
+    REPEAT_JOIN_CIRCLE(26,"重复加入圈子"),
+
+    USERINFO_OR_PROJECTINFO_NOT_MATCH(27,"用户信息或项目信息不匹配")
     ;
 
     private Integer code;

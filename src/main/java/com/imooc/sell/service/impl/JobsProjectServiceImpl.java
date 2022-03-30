@@ -302,6 +302,6 @@ public class JobsProjectServiceImpl implements JobsProjectService {
         TagForm tagForm = new TagForm();
         tagForm.setUserOpenId(jobsProjectFrom.getOpenid());
         tagForm.setTagContent(jobsProjectFrom.getTags());
-        tagService.createTag(tagForm);
+        tagService.createTag(tagForm,1);
     }
 }

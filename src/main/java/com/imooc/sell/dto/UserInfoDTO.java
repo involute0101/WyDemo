@@ -82,4 +82,7 @@ public class UserInfoDTO {
 
     // 学生证/学生卡照片
     private String studentCardPhotos;
+
+    //用户加入的圈子，以“，”分割
+    private String discussionCircle;
 }

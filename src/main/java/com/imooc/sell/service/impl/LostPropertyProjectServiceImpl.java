@@ -308,7 +308,7 @@ public class LostPropertyProjectServiceImpl implements LostPropertyProjectServic
         TagForm tagForm = new TagForm();
         tagForm.setUserOpenId(lostPropertyProjectFrom.getOpenid());
         tagForm.setTagContent(lostPropertyProjectFrom.getTags());
-        tagService.createTag(tagForm);
+        tagService.createTag(tagForm,1);
     }
 
 }

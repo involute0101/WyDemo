@@ -18,6 +18,9 @@ public interface UserInfoService {
     //登录
     UserInfoDTO findUserInfoByBuyerOpenidAndPassword(String openid, String password);
 
+    //无密码登录
+    public UserInfoDTO findUserInfoByUserOpenId(String openId);
+
     //防止账号重复
     UserInfoDTO checkUserInfoByBuyerOpenid(String openid);
 
@@ -37,4 +40,6 @@ public interface UserInfoService {
     UserInfoDTO studentCertification(UserInfoDTO userInfoDTO);
 
     String getOpenId(String code) throws IOException;
+
+    ResultVO joinDiscussionCircle(String userOpenId,String circleName);
 }

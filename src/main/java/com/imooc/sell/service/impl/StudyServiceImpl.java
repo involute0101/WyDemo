@@ -304,6 +304,6 @@ public class StudyServiceImpl implements StudyProjectService {
         TagForm tagForm = new TagForm();
         tagForm.setUserOpenId(studyProjectFrom.getOpenid());
         tagForm.setTagContent(studyProjectFrom.getTags());
-        tagService.createTag(tagForm);
+        tagService.createTag(tagForm,1);
     }
 }

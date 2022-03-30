@@ -11,4 +11,5 @@ import java.util.List;
 public interface TagRepository extends JpaRepository<Tag, Integer> {
     List<Tag> findByUserOpenId(String userOpenId);
     Page<Tag> findByTagContentLike(String keyword, Pageable pageable);
+    Tag findByTagContent(String tagContent);
 }

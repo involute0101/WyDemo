@@ -23,4 +23,8 @@ public class Tag {
     private String tagContent;
 
     private String userOpenId;
+
+    private Integer personNumber;
+
+    private Integer postNumber;
 }

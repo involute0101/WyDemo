@@ -64,7 +64,7 @@ public class TagService {
      * @param tagForm 用户输入表单
      * @return
      */
-    public List<Tag> createTag(TagForm tagForm){
+    public List<Tag> createTag(TagForm tagForm,int postInit){
         List<Tag> tags = new ArrayList<>();
         if(tagForm.getTagContent()!=null){
             for(String tagContent : tagForm.getTagContent()){
@@ -72,6 +72,8 @@ public class TagService {
                 Tag tag = new Tag();
                 tag.setUserOpenId(tagForm.getUserOpenId());
                 tag.setTagContent(tagContent);
+                tag.setPersonNumber(1);
+                tag.setPostNumber(postInit);
                 tags.add(tagRepository.save(tag)) ;
             }
         }
@@ -176,5 +178,18 @@ public class TagService {
         result.put("RewardProject",rewardProjectDTOList);
         result.put("StudyProject",studyProjectDTOList);
         return result;
+    }
+
+    /**
+     * 得到圈子信息
+     * @param circleName 圈子名称
+     * @return
+     */
+    public Tag getDiscussionCircleInfo(String circleName){
+        Tag circle = tagRepository.findByTagContent(circleName);
+        if(circle==null){
+            throw new SellException(ResultEnum.CIRCLE_NOT_FOUND);
+        }
+        return circle;
     }
 }

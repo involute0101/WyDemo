@@ -308,6 +308,6 @@ public class PurchasingServiceImpl implements PurchasingProjectService {
         TagForm tagForm = new TagForm();
         tagForm.setUserOpenId(purchasingProjectFrom.getOpenid());
         tagForm.setTagContent(purchasingProjectFrom.getTags());
-        tagService.createTag(tagForm);
+        tagService.createTag(tagForm,1);
     }
 }

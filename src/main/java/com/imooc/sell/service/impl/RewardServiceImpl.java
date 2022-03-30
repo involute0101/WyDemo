@@ -120,7 +120,7 @@ public class RewardServiceImpl implements RewardProjectService {
         TagForm tagForm = new TagForm();
         tagForm.setUserOpenId(rewardProjectFrom.getOpenid());
         tagForm.setTagContent(rewardProjectFrom.getTags());
-        tagService.createTag(tagForm);
+        tagService.createTag(tagForm,1);
     }
 
     /**

@@ -63,15 +63,12 @@ public class UserInfoController {
     @ApiOperation(value = "登录", notes = "")
     @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "password",value = "密码",required=true),
-            @ApiImplicitParam(name = "openid",value = "用户Id",required=true),
+            @ApiImplicitParam(name = "openid",value = "用户openId",required=true),
     })
     @PostMapping("/login")
-    public ResultVO login(@RequestParam("openid") String openid,
-                          @RequestParam("password") String password){
-        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByBuyerOpenidAndPassword(openid,password);
+    public ResultVO login(@RequestParam("openid") String openid){
+        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(openid);
         return ResultVOUtil.success(userInfoDTO);
-
     }
 
     @ApiOperation(value = "发送验证码", notes = "")
@@ -211,5 +208,17 @@ public class UserInfoController {
         UserFollowDTO userFollowDTO = UserFollowForm2UserFollowDTOConverter.convert(userFollowForm);
         UserFollowDTO result = userFollowService.createFollow(userFollowDTO);
         return ResultVOUtil.success(result);
+    }
+
+    @ApiOperation(value = "用户加入圈子", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userOpenId",value = "用户openId",required=true),
+            @ApiImplicitParam(name = "circleName",value = "圈子名称",required=true)
+    })
+    @PostMapping("/joinCircle")
+    public ResultVO joinCircle(@RequestParam("userOpenId") String userOpenId,
+                               @RequestParam("circleName") String circleName){
+        return userInfoService.joinDiscussionCircle(userOpenId,circleName);
     }
 }
