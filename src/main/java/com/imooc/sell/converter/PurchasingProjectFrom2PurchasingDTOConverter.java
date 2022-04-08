@@ -14,7 +14,7 @@ public class PurchasingProjectFrom2PurchasingDTOConverter {
     public static PurchasingProjectDTO convert(PurchasingProjectFrom purchasingProjectFrom) {
         PurchasingProjectDTO purchasingProjectDTO = new PurchasingProjectDTO();
 
-        purchasingProjectDTO.setUserOpenid(purchasingProjectFrom.getOpenid());
+        purchasingProjectDTO.setUserOpenId(purchasingProjectFrom.getOpenid());
         purchasingProjectDTO.setTitle(purchasingProjectFrom.getTitle());
         purchasingProjectDTO.setAmount(purchasingProjectFrom.getAmount());
         purchasingProjectDTO.setContactNumber(purchasingProjectFrom.getContactNumber());

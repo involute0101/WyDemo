@@ -58,7 +58,7 @@ public class UserInfo {
     //用户入学年份
     private String enrollmentYear;
 
-    //用户年级
+    //用户年级,直接写大一、大二、研一、研二
     private String userDegree;
 
     //用户性别
@@ -90,6 +90,9 @@ public class UserInfo {
 
     // 学生证/学生卡照片
     private String studentCardPhotos;
+
+    //学号
+    private String studentId;
 
     //用户加入的圈子，以“，”分割
     private String discussionCircle;

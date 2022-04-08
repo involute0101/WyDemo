@@ -1,6 +1,7 @@
 package com.imooc.sell.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.imooc.sell.VO.CaptchaVO;
 import com.imooc.sell.VO.ResultVO;
@@ -215,6 +216,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfoResult.setUserMajor(userInfoDTO.getUserMajor());
         userInfoResult.setUserCollege(userInfoDTO.getUserCollege());
         userInfoResult.setUserDegree(userInfoDTO.getUserDegree());
+        userInfoResult.setStudentId(userInfoDTO.getStudentId());
         userInfoResult.setCertification(1);
         userInfoResult.setStudentCardPhotos(userInfoDTO.getStudentCardPhotos());
         UserInfo userInfo = userInfoRepository.save(userInfoResult);
@@ -313,5 +315,22 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfoRepository.save(userInfo);
         if(!flag) return ResultVOUtil.success("加入圈子 "+circleName+" 成功！");
         return ResultVOUtil.success("您已退出 "+circleName+" 圈子");
+    }
+
+    /**
+     * 根据openId，检查用户是否加入圈子
+     * @param userOpenId 用户openId
+     * @param circleName 圈子名称
+     * @return
+     */
+    @Override
+    public boolean checkUserJoinCircle(String userOpenId, String circleName) {
+        UserInfo userInfo = userInfoRepository.findByUserOpenid(userOpenId);
+        if(userInfo==null){
+            throw new SellException(ResultEnum.USER_NOT_FOUND);
+        }
+        String discussionCircle = userInfo.getDiscussionCircle();
+        if(discussionCircle.contains(circleName))return true;
+        return false;
     }
 }

@@ -1,5 +1,6 @@
 package com.imooc.sell.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.imooc.sell.VO.CaptchaVO;
 import com.imooc.sell.VO.ResultVO;
@@ -124,7 +125,12 @@ public class UserInfoController {
         user.put("WeChat",userInfoDTO.getWeChat());
         user.put("telephone",userInfoDTO.getTelephone());
         user.put("university",userInfoDTO.getUserUniversity());
-        user.put("degree",userInfoDTO.getUserDegree());
+        user.put("userCollege",userInfoDTO.getUserCollege());
+        user.put("realName",userInfoDTO.getUserRealName());
+        user.put("userDegree",userInfoDTO.getUserDegree());
+        user.put("circle",userInfoDTO.getDiscussionCircle());
+        user.put("studentId",userInfoDTO.getStudentId());
+        user.put("major",userInfoDTO.getUserMajor());
         return ResultVOUtil.success(user);
     }
 
@@ -140,6 +146,12 @@ public class UserInfoController {
         user.put("QQ",userInfoDTO.getQqNumber());
         user.put("WeChat",userInfoDTO.getWeChat());
         user.put("telephone",userInfoDTO.getTelephone());
+        user.put("university",userInfoDTO.getUserUniversity());
+        user.put("userCollege",userInfoDTO.getUserCollege());
+        user.put("realName",userInfoDTO.getUserRealName());
+        user.put("userDegree",userInfoDTO.getUserDegree());
+        user.put("circle",userInfoDTO.getDiscussionCircle());
+        user.put("major",userInfoDTO.getUserMajor());
         return ResultVOUtil.success(user);
     }
 
@@ -206,8 +218,8 @@ public class UserInfoController {
             throw new SellException(ResultEnum.PARAM_ERROR.getCode(),bindingResult.getFieldError().getDefaultMessage());
         }
         UserFollowDTO userFollowDTO = UserFollowForm2UserFollowDTOConverter.convert(userFollowForm);
-        UserFollowDTO result = userFollowService.createFollow(userFollowDTO);
-        return ResultVOUtil.success(result);
+        ResultVO result = userFollowService.createFollow(userFollowDTO);
+        return result;
     }
 
     @ApiOperation(value = "用户加入圈子", notes = "")
@@ -220,5 +232,30 @@ public class UserInfoController {
     public ResultVO joinCircle(@RequestParam("userOpenId") String userOpenId,
                                @RequestParam("circleName") String circleName){
         return userInfoService.joinDiscussionCircle(userOpenId,circleName);
+    }
+
+    @ApiOperation(value = "检查用户是否加入圈子", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userOpenId",value = "用户openId",required=true),
+            @ApiImplicitParam(name = "circleName",value = "圈子名称",required=true)
+    })
+    @PostMapping("/checkCircle")
+    public ResultVO checkUserJoinCircle(@RequestParam("userOpenId") String userOpenId,
+                                        @RequestParam("circleName") String circleName){
+        boolean result = userInfoService.checkUserJoinCircle(userOpenId, circleName);
+        return ResultVOUtil.success(result);
+    }
+
+    @ApiOperation(value = "用户关注检验", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @PostMapping("/checkUserFollow")
+    public ResultVO checkUserFollow(@Valid UserFollowForm userFollowForm, BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            log.error("[检查用户关注] 参数不正确， userFollowForm={}", userFollowForm);
+            throw new SellException(ResultEnum.PARAM_ERROR.getCode(),bindingResult.getFieldError().getDefaultMessage());
+        }
+        ResultVO result = userFollowService.checkUserFollow(userFollowForm.getUserOpenId(), userFollowForm.getGoalFollower());
+        return result;
     }
 }

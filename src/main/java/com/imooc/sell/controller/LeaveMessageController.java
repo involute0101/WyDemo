@@ -185,4 +185,13 @@ public class LeaveMessageController {
         List<LeaveMessageDTO> result = leaveMessageService.findAnswerOfLeaveMessage(leaveMessageId, pageRequest);
         return ResultVOUtil.success(result);
     }
+
+    @ApiOperation(value = "项目留言数量", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "projectId",value = "留言Id",required=true)
+    @PostMapping("/count")
+    public ResultVO getLeaveMessageCountOfProject(@RequestParam(value = "projectId")String projectId){
+        Long result = leaveMessageService.getMessageCountOfProject(projectId);
+        return ResultVOUtil.success(result);
+    }
 }

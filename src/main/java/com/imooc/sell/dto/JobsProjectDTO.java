@@ -12,7 +12,7 @@ public class JobsProjectDTO {
 
     private String projectId;
 
-    private String userOpenid;
+    private String userOpenId;
 
     private String title;
 

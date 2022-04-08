@@ -13,6 +13,7 @@ public class StudentCertificationForm2UserInfoDTOConverter {
         userInfoDTO.setUserRealName(studentCertificationForm.getUserRealName());
         userInfoDTO.setUserCollege(studentCertificationForm.getUserCollege());
         userInfoDTO.setUserDegree(studentCertificationForm.getUserDegree());
+        userInfoDTO.setStudentId(studentCertificationForm.getStudentId());
         String studentCardPhotos = "";
         for(String photo : studentCertificationForm.getStudentsCard()){
             studentCardPhotos = studentCardPhotos + photo + ",";

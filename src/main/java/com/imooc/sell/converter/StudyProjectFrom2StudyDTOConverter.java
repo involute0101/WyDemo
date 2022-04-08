@@ -14,7 +14,7 @@ public class StudyProjectFrom2StudyDTOConverter {
     public static StudyProjectDTO convert(StudyProjectFrom studyProjectFrom) {
         StudyProjectDTO studyProjectDTO = new StudyProjectDTO();
 
-        studyProjectDTO.setUserOpenid(studyProjectFrom.getOpenid());
+        studyProjectDTO.setUserOpenId(studyProjectFrom.getOpenid());
         studyProjectDTO.setTitle(studyProjectFrom.getTitle());
         studyProjectDTO.setAmount(studyProjectFrom.getAmount());
         studyProjectDTO.setContent(studyProjectFrom.getContent());

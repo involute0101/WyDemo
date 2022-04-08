@@ -60,4 +60,6 @@ public class LostPropertyProject {
      * 我觉得很多余.jpg
      */
     private Integer type;
+
+    private String userOpenId;
 }

@@ -284,4 +284,19 @@ public class LeaveMessageServiceImpl implements LeaveMessageService {
         }
         return list;
     }
+
+    /**
+     * 获得项目留言数
+     * @param projectId 项目id
+     * @return
+     */
+    @Override
+    public Long getMessageCountOfProject(String projectId) {
+        ProjectMaster project = projectMasterRepository.findByProjectId(projectId);
+        if(project==null){
+            throw new SellException(ResultEnum.PROJECT_ID_NOT_FOUND);
+        }
+        Long result = leaveMessageRepository.countByProjectId(projectId);
+        return result;
+    }
 }

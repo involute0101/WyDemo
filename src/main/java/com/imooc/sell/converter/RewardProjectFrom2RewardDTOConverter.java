@@ -14,7 +14,7 @@ public class RewardProjectFrom2RewardDTOConverter {
     public static RewardProjectDTO convert(RewardProjectFrom rewardProjectFrom) {
         RewardProjectDTO rewardProjectDTO = new RewardProjectDTO();
 
-        rewardProjectDTO.setUserOpenid(rewardProjectFrom.getOpenid());
+        rewardProjectDTO.setUserOpenId(rewardProjectFrom.getOpenid());
         rewardProjectDTO.setTitle(rewardProjectFrom.getTitle());
         rewardProjectDTO.setAmount(rewardProjectFrom.getAmount());
         rewardProjectDTO.setContactNumber(rewardProjectFrom.getContactNumber());

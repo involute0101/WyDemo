@@ -13,6 +13,10 @@ spring:
       ddl-auto: update
 #  jackson:
 #    default-property-inclusion: non_null
+  http:
+    multipart:
+      maxFileSize: 1000Mb
+      maxRequestSize: 1000Mb
 server:
   port: 8886
   context-path: /wy

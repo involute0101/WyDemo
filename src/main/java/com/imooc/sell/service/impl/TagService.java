@@ -4,10 +4,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.imooc.sell.controller.form.TagForm;
 import com.imooc.sell.dataobject.Tag;
+import com.imooc.sell.dataobject.UserFollow;
 import com.imooc.sell.dto.*;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
 import com.imooc.sell.repository.TagRepository;
+import com.imooc.sell.repository.UserFollowRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -45,6 +47,12 @@ public class TagService {
 
     @Autowired
     private StudyServiceImpl studyService;
+
+    @Autowired
+    private UserFollowRepository userFollowRepository;
+
+    @Autowired
+    private ProjectMasterServiceImpl projectMasterService;
 
     /**
      * 根据userOpenId查询tag
@@ -191,5 +199,59 @@ public class TagService {
             throw new SellException(ResultEnum.CIRCLE_NOT_FOUND);
         }
         return circle;
+    }
+
+    /**
+     * 通过用户自己的openId，查找所有关注的用户发布的项目，按标签搜索
+     * @param userOpenId
+     * @param tag
+     */
+    public JSONObject findGoalOpenIdProjectByTag(String userOpenId,String tag,int page,int size){
+        JSONObject result = new JSONObject();
+        PageRequest pageRequest = new PageRequest(page-1,size);
+        Page<UserFollow> userFollows = userFollowRepository.findByUserOpenId(userOpenId, pageRequest);
+        for(UserFollow userFollow : userFollows){
+            String goalUserOpenId = userFollow.getGoalFollower();
+            JSONObject userJson = new JSONObject();
+            List<ProjectMasterDTO> projectMasterDTOS = projectMasterService.findProjectMasterByUserOpenId(goalUserOpenId);
+            for(ProjectMasterDTO projectMasterDTO: projectMasterDTOS){
+                Integer projectType = projectMasterDTO.getProjectType();
+                JSONArray jsonArray = userJson.getJSONArray(projectType.toString());
+                if(jsonArray==null)jsonArray = new JSONArray();
+                try{
+                    switch (projectType){
+                        case 1:
+                            PurchasingProjectDTO purchasing = purchasingService.findPurchasingByProjectId(projectMasterDTO.getProjectId());
+                            if(purchasing!=null && purchasing.getTags()!=null && purchasing.getTags().contains(tag))jsonArray.add(purchasing);
+                            break;
+                        case 2:
+                            RewardProjectDTO rewardProjectDTO = rewardService.findRewardByProjectId(projectMasterDTO.getProjectId());
+                            if(rewardProjectDTO!=null && rewardProjectDTO.getTags()!=null && rewardProjectDTO.getTags().contains(tag))jsonArray.add(rewardProjectDTO);
+                            break;
+                        case 3:
+                            StudyProjectDTO studyProjectDTO = studyService.findStudyByProjectId(projectMasterDTO.getProjectId());
+                            if(studyProjectDTO!=null && studyProjectDTO.getTags()!=null && studyProjectDTO.getTags().contains(tag))jsonArray.add(studyProjectDTO);
+                            break;
+                        case 4:
+                            IdleProjectDTO idleProjectDTO = idleProjectService.findIdleProjectByProjectId(projectMasterDTO.getProjectId());
+                            if (idleProjectDTO!=null && idleProjectDTO.getTags()!=null && idleProjectDTO.getTags().contains(tag))jsonArray.add(idleProjectDTO);
+                            break;
+                        case 5:
+                            LostPropertyProjectDTO lostPropertyProjectDTO = lostPropertyProjectService.findLostPropertyProjectByProjectId(projectMasterDTO.getProjectId());
+                            if(lostPropertyProjectDTO!=null && lostPropertyProjectDTO.getTags()!=null && lostPropertyProjectDTO.getTags().contains(tag))jsonArray.add(lostPropertyProjectDTO);
+                            break;
+                        case 6:
+                            JobsProjectDTO jobsProjectDTO = jobsProjectService.findJobsProjectByProjectId(projectMasterDTO.getProjectId());
+                            if(jobsProjectDTO!=null && jobsProjectDTO.getTags()!=null && jobsProjectDTO.getTags().contains(tag))jsonArray.add(jobsProjectDTO);
+                            break;
+                    }
+                    userJson.put(projectType.toString(),jsonArray);
+                }catch (SellException e){
+
+                }
+            }
+            result.put(goalUserOpenId,userJson);
+        }
+        return result;
     }
 }

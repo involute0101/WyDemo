@@ -14,7 +14,7 @@ public class JobsProjectFrom2JobsProjectProjectDTOConverter {
     public static JobsProjectDTO convert(JobsProjectFrom jobsProjectFrom) {
         JobsProjectDTO jobsProjectDTO = new JobsProjectDTO();
 
-        jobsProjectDTO.setUserOpenid(jobsProjectFrom.getOpenid());
+        jobsProjectDTO.setUserOpenId(jobsProjectFrom.getOpenid());
         jobsProjectDTO.setTitle(jobsProjectFrom.getTitle());
         jobsProjectDTO.setAmount(jobsProjectFrom.getAmount());
         jobsProjectDTO.setHyperlink(jobsProjectFrom.getHyperlink());
@@ -24,6 +24,7 @@ public class JobsProjectFrom2JobsProjectProjectDTOConverter {
         jobsProjectDTO.setFavoriteNumber(0);
         jobsProjectDTO.setPageviews(0);
         jobsProjectDTO.setType(6);
+        jobsProjectDTO.setLocation(jobsProjectFrom.getLocation());
         jobsProjectDTO.setCreateTime(new Date());
         jobsProjectDTO.setUpdateTime(new Date());
         String tags = "";

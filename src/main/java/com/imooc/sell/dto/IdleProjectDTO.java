@@ -11,7 +11,7 @@ import java.util.Date;
 public class IdleProjectDTO {
     private Integer id;
 
-    private String userOpenid;
+    private String userOpenId;
 
     private String projectId;
 

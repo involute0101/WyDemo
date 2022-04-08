@@ -46,7 +46,7 @@ public class JobsProjectServiceImpl implements JobsProjectService {
     @Override
     @Transactional
     public JobsProjectDTO createJobsProjectOne(JobsProjectDTO jobsProjectDTO) throws Exception {
-        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(jobsProjectDTO.getUserOpenid());
+        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(jobsProjectDTO.getUserOpenId());
         if (userInfoDTO == null) {
             throw new SellException(ResultEnum.USER_NOT_FOUND);
         }

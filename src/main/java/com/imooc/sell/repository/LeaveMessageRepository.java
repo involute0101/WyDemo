@@ -16,4 +16,6 @@ public interface LeaveMessageRepository extends JpaRepository<LeaveMessage, Inte
     LeaveMessage findByUserIdAndProjectId(Integer userId, String projectId);
     
     List<LeaveMessage> findByLmId(Integer lmId, Pageable pageable);
+
+    Long countByProjectId(String projectId);
 }

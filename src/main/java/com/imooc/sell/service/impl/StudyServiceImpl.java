@@ -48,7 +48,7 @@ public class StudyServiceImpl implements StudyProjectService {
     @Override
     @Transactional
     public StudyProjectDTO createStudyProject(StudyProjectDTO studyProjectDTO) throws Exception {
-        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(studyProjectDTO.getUserOpenid());
+        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(studyProjectDTO.getUserOpenId());
         if (userInfoDTO == null){
             throw  new SellException(ResultEnum.USER_NOT_FOUND);
         }

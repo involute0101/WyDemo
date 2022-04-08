@@ -14,7 +14,7 @@ public class LostPropertyProjectFrom2LostPropertyProjectDTOConverter {
     public static LostPropertyProjectDTO convert(LostPropertyProjectFrom lostPropertyProjectFrom) {
         LostPropertyProjectDTO lostPropertyProjectDTO = new LostPropertyProjectDTO();
 
-        lostPropertyProjectDTO.setUserOpenid(lostPropertyProjectFrom.getOpenid());
+        lostPropertyProjectDTO.setUserOpenId(lostPropertyProjectFrom.getOpenid());
         lostPropertyProjectDTO.setTitle(lostPropertyProjectFrom.getTitle());
         lostPropertyProjectDTO.setAmount(lostPropertyProjectFrom.getAmount());
         lostPropertyProjectDTO.setContactNumber(lostPropertyProjectFrom.getContactNumber());

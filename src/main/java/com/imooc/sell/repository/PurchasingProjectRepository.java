@@ -38,4 +38,6 @@ public interface PurchasingProjectRepository extends JpaRepository<PurchasingPro
     @Query(value = "select * from purchasing_project order by update_time*0.000001+favorite_number*10 desc limit ?1 offset ?2",
             nativeQuery = true)
     List<PurchasingProject> findByComplex(Integer pageSize, Integer offsetNumber);
+
+
 }

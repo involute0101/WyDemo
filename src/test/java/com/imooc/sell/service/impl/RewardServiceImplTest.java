@@ -25,7 +25,7 @@ public class RewardServiceImplTest {
     public void createRewardProject() throws Exception {
         RewardProjectDTO rewardProjectDTO = new RewardProjectDTO();
         rewardProjectDTO.setTitle("悬赏一百万");
-        rewardProjectDTO.setUserOpenid("55555555556");
+        rewardProjectDTO.setUserOpenId("55555555556");
         rewardProjectDTO.setContactNumber("1123123");
         rewardProjectDTO.setAmount(new BigDecimal(100));
         rewardProjectDTO.setLocation("信息学部");

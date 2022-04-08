@@ -48,7 +48,7 @@ public class PurchasingServiceImpl implements PurchasingProjectService {
     @Override
     @Transactional
     public PurchasingProjectDTO createPurchasingProject(PurchasingProjectDTO purchasingProjectDTO) throws Exception {
-        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(purchasingProjectDTO.getUserOpenid());
+        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(purchasingProjectDTO.getUserOpenId());
         if (userInfoDTO == null){
             throw  new SellException(ResultEnum.USER_NOT_FOUND);
         }

@@ -1,5 +1,6 @@
 package com.imooc.sell.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.imooc.sell.VO.CaptchaVO;
 import com.imooc.sell.VO.ResultVO;
 import com.imooc.sell.dataobject.UserInfo;
@@ -42,4 +43,6 @@ public interface UserInfoService {
     String getOpenId(String code) throws IOException;
 
     ResultVO joinDiscussionCircle(String userOpenId,String circleName);
+
+    boolean checkUserJoinCircle(String userOpenId,String circleName);
 }

@@ -12,7 +12,7 @@ import java.util.Date;
 public class PurchasingProjectDTO {
     private Integer id;
 
-    private String userOpenid;
+    private String userOpenId;
 
     private String projectId;
 

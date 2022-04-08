@@ -48,7 +48,7 @@ public class LostPropertyProjectServiceImpl implements LostPropertyProjectServic
     @Override
     @Transactional
     public LostPropertyProjectDTO createLostPropertyProject(LostPropertyProjectDTO lostPropertyProjectDTO) throws Exception {
-        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(lostPropertyProjectDTO.getUserOpenid());
+        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(lostPropertyProjectDTO.getUserOpenId());
         if (userInfoDTO == null){
             throw  new SellException(ResultEnum.USER_NOT_FOUND);
         }

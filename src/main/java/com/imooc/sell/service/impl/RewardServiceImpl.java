@@ -46,7 +46,7 @@ public class RewardServiceImpl implements RewardProjectService {
     @Override
     @Transactional
     public RewardProjectDTO createRewardProject(RewardProjectDTO rewardProjectDTO) throws Exception {
-        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(rewardProjectDTO.getUserOpenid());
+        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(rewardProjectDTO.getUserOpenId());
         if (userInfoDTO == null){
             throw  new SellException(ResultEnum.USER_NOT_FOUND);
         }

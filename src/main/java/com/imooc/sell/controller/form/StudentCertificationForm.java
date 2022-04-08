@@ -37,6 +37,10 @@ public class StudentCertificationForm {
     @NotEmpty(message = "年级必填")
     private String userDegree;
 
+    @ApiModelProperty(value = "学号",required = true)
+    @NotEmpty(message = "学号必填")
+    private String studentId;
+
     @ApiModelProperty(value = "学生证/学生卡 照片",required = true)
     @NotEmpty(message = "学生证/学生卡 照片 必填")
     private String[] studentsCard;

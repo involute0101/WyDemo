@@ -14,7 +14,7 @@ public class IdleProjectFrom2IdleProjectDTOConverter {
     public static IdleProjectDTO convert(IdleProjectFrom idleProjectFrom) {
         IdleProjectDTO idleProjectDTO = new IdleProjectDTO();
 
-        idleProjectDTO.setUserOpenid(idleProjectFrom.getOpenid());
+        idleProjectDTO.setUserOpenId(idleProjectFrom.getOpenid());
         idleProjectDTO.setTitle(idleProjectFrom.getTitle());
         idleProjectDTO.setAmount(idleProjectFrom.getAmount());
         idleProjectDTO.setContactNumber(idleProjectFrom.getContactNumber());
@@ -23,6 +23,7 @@ public class IdleProjectFrom2IdleProjectDTOConverter {
         idleProjectDTO.setPicture(idleProjectFrom.getPicture());
         idleProjectDTO.setFavoriteNumber(0);
         idleProjectDTO.setPageviews(0);
+        idleProjectDTO.setLocation(idleProjectFrom.getLocation());
         idleProjectDTO.setType(4);
         idleProjectDTO.setCreateTime(new Date());
         idleProjectDTO.setUpdateTime(new Date());

@@ -25,7 +25,7 @@ public class PurchasingServiceImplTest {
     @Test
     public void createPurchasingProject() throws Exception {
         PurchasingProjectDTO purchasingProjectDTO = new PurchasingProjectDTO();
-        purchasingProjectDTO.setUserOpenid("12345678910");
+        purchasingProjectDTO.setUserOpenId("12345678910");
         purchasingProjectDTO.setTitle("带支铅笔");
         purchasingProjectDTO.setLocation("教2");
         purchasingProjectDTO.setAmount(new BigDecimal(10));

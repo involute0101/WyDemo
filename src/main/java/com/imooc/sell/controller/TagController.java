@@ -130,4 +130,23 @@ public class TagController {
         Tag result = tagService.getDiscussionCircleInfo(circleName);
         return ResultVOUtil.success(result);
     }
+
+    @ApiOperation(value = "查找关注用户发布的项目，按标签查找", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", value = "页数", required = true),
+            @ApiImplicitParam(name = "size", value = "页大小(分页按关注用户分页，不是按项目分页）", required = true),
+            @ApiImplicitParam(name = "tagKeyword", value = "标签（的关键字）", required = true),
+            @ApiImplicitParam(name = "userOpenId",value = "用户的openId",required = true),
+    })
+    @PostMapping("/followerProject")
+    public ResultVO findFollowerProjectByTag(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                             @RequestParam(value = "size", defaultValue = "10") Integer size,
+                                             @RequestParam(value = "tagKeyword", defaultValue = "") String tagKeyword,
+                                             @RequestParam(value = "userOpenId")String userOpenId){
+        if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
+        if (!tagService.tagExist(tagKeyword)) return ResultVOUtil.error(ResultEnum.TAG_NOT_FOUND);
+        JSONObject result = tagService.findGoalOpenIdProjectByTag(userOpenId, tagKeyword, page, size);
+        return ResultVOUtil.success(result);
+    }
 }

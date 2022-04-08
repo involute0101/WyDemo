@@ -25,4 +25,6 @@ public interface LeaveMessageService {
     LeaveMessageDTO answerLeaveMessage(LeaveMessageDTO leaveMessageDTO);
 
     List<LeaveMessageDTO> findAnswerOfLeaveMessage(Integer lmId, Pageable pageable);
+
+    Long getMessageCountOfProject(String projectId);
 }

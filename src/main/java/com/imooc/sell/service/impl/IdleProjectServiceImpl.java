@@ -46,7 +46,7 @@ public class IdleProjectServiceImpl implements IdleProjectService {
     @Override
     @Transactional
     public IdleProjectDTO createIdleProjectOne(IdleProjectDTO idleProjectDTO) throws Exception {
-        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(idleProjectDTO.getUserOpenid());
+        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpeinid(idleProjectDTO.getUserOpenId());
         if (userInfoDTO == null){
             throw  new SellException(ResultEnum.USER_NOT_FOUND);
         }
