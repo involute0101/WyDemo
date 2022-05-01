@@ -1,15 +1,18 @@
 package com.imooc.sell.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.imooc.sell.VO.ResultVO;
 import com.imooc.sell.controller.form.RewardProjectFrom;
 import com.imooc.sell.controller.form.TagForm;
 import com.imooc.sell.converter.RewardProjectFrom2RewardDTOConverter;
 import com.imooc.sell.dto.RewardProjectDTO;
+import com.imooc.sell.dto.UserInfoDTO;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
 import com.imooc.sell.service.impl.ProjectMasterServiceImpl;
 import com.imooc.sell.service.impl.RewardServiceImpl;
 import com.imooc.sell.service.impl.TagService;
+import com.imooc.sell.service.impl.UserInfoServiceImpl;
 import com.imooc.sell.utils.ResultVOUtil;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +40,9 @@ public class RewardProjectController {
 
     @Autowired
     TagService tagService;
+
+    @Autowired
+    UserInfoServiceImpl userInfoService;
 
     @ApiOperation(value = "创建悬赏项目", notes = "")
     @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
@@ -67,7 +74,7 @@ public class RewardProjectController {
                              @RequestParam(value = "size", defaultValue = "10") Integer size) throws Exception {
         if (page<=0)return ResultVOUtil.error(403,"请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page-1, size);
-        List<RewardProjectDTO> list = rewardService.findRewardProjectsOrderByUpdateTime(pageRequest);
+        List<JSONObject> list = rewardService.findRewardProjectsOrderByUpdateTime(pageRequest);
         return ResultVOUtil.success(list);
 
     }
@@ -77,7 +84,12 @@ public class RewardProjectController {
     @ApiImplicitParam(name = "projectId",value = "项目id",required=true)
     @PostMapping("/findOne")
     public ResultVO findOne(@RequestParam(value = "projectId") String projectId){
-        return  ResultVOUtil.success(rewardService.findRewardByProjectId(projectId));
+        RewardProjectDTO rewardProjectDTO = rewardService.findRewardByProjectId(projectId);
+        JSONObject rewordProjectInfo = JSONObject.parseObject(rewardProjectDTO.toString());
+        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(rewardProjectDTO.getUserOpenId());
+        rewordProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+        rewordProjectInfo.put("userName",userInfoDTO.getUserName());
+        return ResultVOUtil.success(rewordProjectInfo);
     }
 
     @ApiOperation(value = "删除项目", notes = "")
@@ -116,7 +128,16 @@ public class RewardProjectController {
         if(!"desc".equals(sort) && !"asc".equals(sort))return ResultVOUtil.error(403,"排序方式不正确");
         PageRequest pageRequest = new PageRequest(page-1,size);
         List<RewardProjectDTO> rewardProjectList = rewardService.findRewardProjectOrderByAmount(pageRequest,sort);
-        return ResultVOUtil.success(rewardProjectList);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(RewardProjectDTO rewardProjectDTO : rewardProjectList){
+            JSONObject rewardProjectInfo = JSONObject.parseObject(rewardProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(rewardProjectDTO.getUserOpenId());
+            rewardProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            rewardProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(rewardProjectInfo);
+        }
+        return ResultVOUtil.success(result);
     }
 
     @ApiOperation(value = "根据标签查找 悬赏项目", notes = "")
@@ -133,7 +154,16 @@ public class RewardProjectController {
         if (page<=0)return ResultVOUtil.error(403,"请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page-1,size);
         List<RewardProjectDTO> rewardProjectLikeTags = rewardService.findRewardProjectLikeTags(tagKeyword, pageRequest);
-        return ResultVOUtil.success(rewardProjectLikeTags);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(RewardProjectDTO rewardProjectDTO : rewardProjectLikeTags){
+            JSONObject rewardProjectInfo = JSONObject.parseObject(rewardProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(rewardProjectDTO.getUserOpenId());
+            rewardProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            rewardProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(rewardProjectInfo);
+        }
+        return ResultVOUtil.success(result);
     }
 
     @ApiOperation(value = "根据标题关键字搜索", notes = "")
@@ -149,7 +179,16 @@ public class RewardProjectController {
                                     @RequestParam(value = "titleKeyword", defaultValue = "") String titleKeyword){
         if (page<=0)return ResultVOUtil.error(403,"请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page-1,size);
-        List<RewardProjectDTO> result = rewardService.findRewardProjectByTitleLike(titleKeyword, pageRequest);
+        List<RewardProjectDTO> rewardProjectDTOList = rewardService.findRewardProjectByTitleLike(titleKeyword, pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(RewardProjectDTO rewardProjectDTO : rewardProjectDTOList){
+            JSONObject rewardProjectInfo = JSONObject.parseObject(rewardProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(rewardProjectDTO.getUserOpenId());
+            rewardProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            rewardProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(rewardProjectInfo);
+        }
         return ResultVOUtil.success(result);
     }
 
@@ -164,7 +203,16 @@ public class RewardProjectController {
                          @RequestParam(value = "size", defaultValue = "10") Integer size) throws Exception {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<RewardProjectDTO> result = rewardService.findRewardProjectOrderByFavoritesNumber(pageRequest);
+        List<RewardProjectDTO> rewardProjectDTOList = rewardService.findRewardProjectOrderByFavoritesNumber(pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(RewardProjectDTO rewardProjectDTO : rewardProjectDTOList){
+            JSONObject rewardProjectInfo = JSONObject.parseObject(rewardProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(rewardProjectDTO.getUserOpenId());
+            rewardProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            rewardProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(rewardProjectInfo);
+        }
         return ResultVOUtil.success(result);
     }
 
@@ -179,8 +227,17 @@ public class RewardProjectController {
                                                             @RequestParam(value = "size", defaultValue = "10") Integer size) throws Exception {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<RewardProjectDTO> reslut = rewardService.findByComplexService(pageRequest);
-        return ResultVOUtil.success(reslut);
+        List<RewardProjectDTO> rewardProjectDTOList = rewardService.findByComplexService(pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(RewardProjectDTO rewardProjectDTO : rewardProjectDTOList){
+            JSONObject rewardProjectInfo = JSONObject.parseObject(rewardProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(rewardProjectDTO.getUserOpenId());
+            rewardProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            rewardProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(rewardProjectInfo);
+        }
+        return ResultVOUtil.success(result);
     }
 
     @ApiOperation(value = "增加浏览量", notes = "")

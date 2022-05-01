@@ -3,8 +3,12 @@ package com.imooc.sell.dto;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.imooc.sell.utils.serializer.Date2LongSerializer;
 import lombok.Data;
+import lombok.ToString;
+
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
+
 
 @Data
 public class RewardProjectDTO {
@@ -42,4 +46,27 @@ public class RewardProjectDTO {
     private Integer favoriteNumber;
 
     private Integer type;
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"id\":\"" + id +
+                "\", \"userOpenId\":\"" + userOpenId + '\"' +
+                ", \"projectId\":\"" + projectId + '\"' +
+                ", \"title\":\"" + title + '\"' +
+                ", \"content\":\"" + content + '\"' +
+                ", \"location\":\"" + location + '\"' +
+                ", \"picture\":\"" + Arrays.toString(picture) +
+                "\", \"certificationStat\":\"" + certificationStat +
+                "\", \"pageviews\":\"" + pageviews +
+                "\", \"amount\":\"" + amount +
+                "\", \"contactNumber\":\"" + contactNumber + '\"' +
+                ", \"gender\":\"" + gender +
+                "\", \"createTime\":\"" + createTime.getTime()/1000 +
+                "\", \"updateTime\":\"" + updateTime.getTime()/1000 +
+                "\", \"tags\":\"" + tags + '\"' +
+                ", \"favoriteNumber\":\"" + favoriteNumber +
+                "\", \"type\":\"" + type +
+                "\"}";
+    }
 }

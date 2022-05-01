@@ -1,5 +1,6 @@
 package com.imooc.sell.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.imooc.sell.controller.form.RewardProjectFrom;
 import com.imooc.sell.dto.PurchasingProjectDTO;
 import com.imooc.sell.dto.RewardProjectDTO;
@@ -10,7 +11,7 @@ import java.util.List;
 public interface RewardProjectService {
     RewardProjectDTO createRewardProject(RewardProjectDTO rewardProjectDTO) throws Exception;
 
-    List<RewardProjectDTO> findRewardProjectsOrderByUpdateTime(Pageable pageable);
+    List<JSONObject> findRewardProjectsOrderByUpdateTime(Pageable pageable);
 
     RewardProjectDTO findRewardByProjectId(String projectId);
 

@@ -38,4 +38,6 @@ public interface IdleProjectRepository extends JpaRepository<IdleProject, Intege
     @Query(value = "select * from idle_project order by update_time*0.000001+favorite_number*10 desc limit ?1 offset ?2",
             nativeQuery = true)
     List<IdleProject> findByComplex(Integer pageSize, Integer offsetNumber);
+
+    List<IdleProject> findByUserOpenId(String userOpenId);
 }

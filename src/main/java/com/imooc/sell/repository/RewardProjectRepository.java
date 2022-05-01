@@ -39,4 +39,6 @@ public interface RewardProjectRepository extends JpaRepository<RewardProject, In
     @Query(value = "select * from reward_project order by update_time*0.000001+favorite_number*10 desc limit ?1 offset ?2",
             nativeQuery = true)
     List<RewardProject> findByComplex(Integer pageSize, Integer offsetNumber);
+
+    List<RewardProject> findByUserOpenId(String userOpenId);
 }

@@ -38,4 +38,6 @@ public interface JobsProjectRepository extends JpaRepository<JobsProject, Intege
     @Query(value = "select * from jobs_roject order by update_time*0.000001+favorite_number*10 desc limit ?1 offset ?2",
             nativeQuery = true)
     List<JobsProject> findByComplex(Integer pageSize, Integer offsetNumber);
+
+    List<JobsProject> findByUserOpenId(String userOpenId);
 }

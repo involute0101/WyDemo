@@ -1,5 +1,6 @@
 package com.imooc.sell.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.imooc.sell.VO.ResultVO;
 import com.imooc.sell.controller.form.RewardProjectFrom;
 import com.imooc.sell.controller.form.StudyProjectFrom;
@@ -7,12 +8,14 @@ import com.imooc.sell.converter.RewardProjectFrom2RewardDTOConverter;
 import com.imooc.sell.converter.StudyProjectFrom2StudyDTOConverter;
 import com.imooc.sell.dto.RewardProjectDTO;
 import com.imooc.sell.dto.StudyProjectDTO;
+import com.imooc.sell.dto.UserInfoDTO;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
 import com.imooc.sell.service.StudyProjectService;
 import com.imooc.sell.service.impl.ProjectMasterServiceImpl;
 import com.imooc.sell.service.impl.RewardServiceImpl;
 import com.imooc.sell.service.impl.StudyServiceImpl;
+import com.imooc.sell.service.impl.UserInfoServiceImpl;
 import com.imooc.sell.utils.ResultVOUtil;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +25,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +39,9 @@ public class StudyProjectController {
     ProjectMasterServiceImpl projectMasterService;
     @Autowired
     StudyServiceImpl studyService;
+
+    @Autowired
+    UserInfoServiceImpl userInfoService;
 
     @ApiOperation(value = "创建学习项目", notes = "")
     @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
@@ -67,7 +74,16 @@ public class StudyProjectController {
         if (page<=0)return ResultVOUtil.error(403,"请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page-1, size);
         List<StudyProjectDTO> list = studyService.findStudyProjectsOrderByUpdateTime(pageRequest);
-        return ResultVOUtil.success(list);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(StudyProjectDTO studyProjectDTO : list){
+            JSONObject studyProjectInfo = JSONObject.parseObject(studyProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(studyProjectDTO.getUserOpenId());
+            studyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            studyProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(studyProjectInfo);
+        }
+        return ResultVOUtil.success(result);
 
     }
 
@@ -76,7 +92,12 @@ public class StudyProjectController {
     @ApiImplicitParam(name = "projectId",value = "项目id",required=true)
     @PostMapping("/findOne")
     public ResultVO findOne(@RequestParam(value = "projectId") String projectId){
-        return  ResultVOUtil.success(studyService.findStudyByProjectId(projectId));
+        StudyProjectDTO studyProjectDTO = studyService.findStudyByProjectId(projectId);
+        JSONObject studyProjectInfo = JSONObject.parseObject(studyProjectDTO.toString());
+        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(studyProjectDTO.getUserOpenId());
+        studyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+        studyProjectInfo.put("userName",userInfoDTO.getUserName());
+        return ResultVOUtil.success(studyProjectInfo);
     }
 
     @ApiOperation(value = "删除项目", notes = "")
@@ -104,8 +125,17 @@ public class StudyProjectController {
                                   @RequestParam(value = "tagKeyword", defaultValue = "") String tagKeyword) {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<StudyProjectDTO> studyProjectByTagsLike = studyService.findStudyProjectByTagsLike(tagKeyword, pageRequest);
-        return ResultVOUtil.success(studyProjectByTagsLike);
+        List<StudyProjectDTO> list = studyService.findStudyProjectByTagsLike(tagKeyword, pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(StudyProjectDTO studyProjectDTO : list){
+            JSONObject studyProjectInfo = JSONObject.parseObject(studyProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(studyProjectDTO.getUserOpenId());
+            studyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            studyProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(studyProjectInfo);
+        }
+        return ResultVOUtil.success(result);
     }
 
     @ApiOperation(value = "增加浏览量", notes = "")
@@ -127,7 +157,16 @@ public class StudyProjectController {
                                                             @RequestParam(value = "size", defaultValue = "10") Integer size) throws Exception {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<StudyProjectDTO> result = studyService.findStudyProjectsOrderByFavoritesNumber(pageRequest);
+        List<StudyProjectDTO> list = studyService.findStudyProjectsOrderByFavoritesNumber(pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(StudyProjectDTO studyProjectDTO : list){
+            JSONObject studyProjectInfo = JSONObject.parseObject(studyProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(studyProjectDTO.getUserOpenId());
+            studyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            studyProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(studyProjectInfo);
+        }
         return ResultVOUtil.success(result);
     }
 
@@ -142,7 +181,16 @@ public class StudyProjectController {
                                              @RequestParam(value = "size", defaultValue = "10") Integer size) throws Exception {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<StudyProjectDTO> result = studyService.findByComplexService(pageRequest);
+        List<StudyProjectDTO> list = studyService.findByComplexService(pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(StudyProjectDTO studyProjectDTO : list){
+            JSONObject studyProjectInfo = JSONObject.parseObject(studyProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(studyProjectDTO.getUserOpenId());
+            studyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            studyProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(studyProjectInfo);
+        }
         return ResultVOUtil.success(result);
     }
 
@@ -160,7 +208,16 @@ public class StudyProjectController {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         if (!"desc".equals(sort) && !"asc".equals(sort)) return ResultVOUtil.error(403, "排序方式不正确");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<StudyProjectDTO> result = studyService.findStudyProjectOrderByAmount(pageRequest, sort);
+        List<StudyProjectDTO> list = studyService.findStudyProjectOrderByAmount(pageRequest, sort);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(StudyProjectDTO studyProjectDTO : list){
+            JSONObject studyProjectInfo = JSONObject.parseObject(studyProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(studyProjectDTO.getUserOpenId());
+            studyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            studyProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(studyProjectInfo);
+        }
         return ResultVOUtil.success(result);
     }
 
@@ -177,7 +234,16 @@ public class StudyProjectController {
                                     @RequestParam(value = "titleKeyword", defaultValue = "") String titleKeyword) {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<StudyProjectDTO> result = studyService.findStudyProjectByTitleLike(titleKeyword, pageRequest);
+        List<StudyProjectDTO> list = studyService.findStudyProjectByTitleLike(titleKeyword, pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(StudyProjectDTO studyProjectDTO : list){
+            JSONObject studyProjectInfo = JSONObject.parseObject(studyProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(studyProjectDTO.getUserOpenId());
+            studyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            studyProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(studyProjectInfo);
+        }
         return ResultVOUtil.success(result);
     }
 }

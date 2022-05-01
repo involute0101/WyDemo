@@ -39,5 +39,5 @@ public interface PurchasingProjectRepository extends JpaRepository<PurchasingPro
             nativeQuery = true)
     List<PurchasingProject> findByComplex(Integer pageSize, Integer offsetNumber);
 
-
+    List<PurchasingProject> findByUserOpenId(String userOpenId);
 }

@@ -1,5 +1,7 @@
 package com.imooc.sell.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.imooc.sell.controller.form.RewardProjectFrom;
 import com.imooc.sell.controller.form.TagForm;
 import com.imooc.sell.dataobject.RewardProject;
@@ -79,9 +81,9 @@ public class RewardServiceImpl implements RewardProjectService {
 
 
     @Override
-    public List<RewardProjectDTO> findRewardProjectsOrderByUpdateTime(Pageable pageable) {
+    public List<JSONObject> findRewardProjectsOrderByUpdateTime(Pageable pageable) {
         Page<RewardProject> page = rewardProjectRepository.findByOrderByUpdateTimeDesc(pageable);
-        List<RewardProjectDTO> list = new ArrayList<>();
+        List<JSONObject> list = new ArrayList<>();
 
         for (RewardProject rewardProject: page){
             RewardProjectDTO rewardProjectDTO = new RewardProjectDTO();
@@ -89,7 +91,11 @@ public class RewardServiceImpl implements RewardProjectService {
             if(rewardProject.getPicture()!=null){
                 rewardProjectDTO.setPicture(rewardProject.getPicture().split(","));
             }
-            list.add(rewardProjectDTO);
+            JSONObject rewardProjectInfo = JSONObject.parseObject(rewardProjectDTO.toString());
+            UserInfoDTO userInfo = userInfoService.findUserInfoByUserOpeinid(rewardProjectDTO.getUserOpenId());
+            rewardProjectInfo.put("headPortrait",userInfo.getHeadPortrait());
+            rewardProjectInfo.put("userName",userInfo.getUserName());
+            list.add(rewardProjectInfo);
         }
         return list;
     }

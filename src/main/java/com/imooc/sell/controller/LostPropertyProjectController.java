@@ -1,14 +1,18 @@
 package com.imooc.sell.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.imooc.sell.VO.ResultVO;
 import com.imooc.sell.controller.form.LostPropertyProjectFrom;
 import com.imooc.sell.converter.LostPropertyProjectFrom2LostPropertyProjectDTOConverter;
 import com.imooc.sell.dto.LostPropertyProjectDTO;
 import com.imooc.sell.dto.RewardProjectDTO;
+import com.imooc.sell.dto.UserInfoDTO;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
+import com.imooc.sell.service.UserInfoService;
 import com.imooc.sell.service.impl.LostPropertyProjectServiceImpl;
 import com.imooc.sell.service.impl.ProjectMasterServiceImpl;
+import com.imooc.sell.service.impl.UserInfoServiceImpl;
 import com.imooc.sell.utils.ResultVOUtil;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +36,9 @@ public class LostPropertyProjectController {
     ProjectMasterServiceImpl projectMasterService;
     @Autowired
     LostPropertyProjectServiceImpl lostPropertyProjectService;
+
+    @Autowired
+    UserInfoServiceImpl userInfoService;
 
     @ApiOperation(value = "创建 失物招领", notes = "")
     @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
@@ -63,7 +71,16 @@ public class LostPropertyProjectController {
         if (page<=0)return ResultVOUtil.error(403,"请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page-1, size);
         List<LostPropertyProjectDTO> list = lostPropertyProjectService.findLostPropertyProjectsOrderByUpdateTime(pageRequest);
-        return ResultVOUtil.success(list);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(LostPropertyProjectDTO lostPropertyProjectDTO : list){
+            JSONObject lostPropertyProjectInfo = JSONObject.parseObject(lostPropertyProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(lostPropertyProjectDTO.getUserOpenId());
+            lostPropertyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            lostPropertyProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(lostPropertyProjectInfo);
+        }
+        return ResultVOUtil.success(result);
 
     }
 
@@ -78,7 +95,16 @@ public class LostPropertyProjectController {
                                                             @RequestParam(value = "size", defaultValue = "10") Integer size) throws Exception {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<LostPropertyProjectDTO> result = lostPropertyProjectService.findLostPropertyProjectOrderByFavoritesNumber(pageRequest);
+        List<LostPropertyProjectDTO> list = lostPropertyProjectService.findLostPropertyProjectOrderByFavoritesNumber(pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(LostPropertyProjectDTO lostPropertyProjectDTO : list){
+            JSONObject lostPropertyProjectInfo = JSONObject.parseObject(lostPropertyProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(lostPropertyProjectDTO.getUserOpenId());
+            lostPropertyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            lostPropertyProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(lostPropertyProjectInfo);
+        }
         return ResultVOUtil.success(result);
     }
 
@@ -93,7 +119,16 @@ public class LostPropertyProjectController {
                                              @RequestParam(value = "size", defaultValue = "10") Integer size) throws Exception {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<LostPropertyProjectDTO> result = lostPropertyProjectService.findByComplexService(pageRequest);
+        List<LostPropertyProjectDTO> list = lostPropertyProjectService.findByComplexService(pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(LostPropertyProjectDTO lostPropertyProjectDTO : list){
+            JSONObject lostPropertyProjectInfo = JSONObject.parseObject(lostPropertyProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(lostPropertyProjectDTO.getUserOpenId());
+            lostPropertyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            lostPropertyProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(lostPropertyProjectInfo);
+        }
         return ResultVOUtil.success(result);
     }
 
@@ -111,7 +146,16 @@ public class LostPropertyProjectController {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         if (!"desc".equals(sort) && !"asc".equals(sort)) return ResultVOUtil.error(403, "排序方式不正确");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<LostPropertyProjectDTO> result = lostPropertyProjectService.findLostPropertyProjectOrderByAmount(pageRequest, sort);
+        List<LostPropertyProjectDTO> list = lostPropertyProjectService.findLostPropertyProjectOrderByAmount(pageRequest, sort);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(LostPropertyProjectDTO lostPropertyProjectDTO : list){
+            JSONObject lostPropertyProjectInfo = JSONObject.parseObject(lostPropertyProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(lostPropertyProjectDTO.getUserOpenId());
+            lostPropertyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            lostPropertyProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(lostPropertyProjectInfo);
+        }
         return ResultVOUtil.success(result);
     }
 
@@ -120,7 +164,12 @@ public class LostPropertyProjectController {
     @ApiImplicitParam(name = "projectId",value = "项目id",required=true)
     @PostMapping("/findOne")
     public ResultVO findOne(@RequestParam(value = "projectId") String projectId){
-        return  ResultVOUtil.success(lostPropertyProjectService.findLostPropertyProjectByProjectId(projectId));
+        LostPropertyProjectDTO lostPropertyProjectDTO = lostPropertyProjectService.findLostPropertyProjectByProjectId(projectId);
+        JSONObject lostPropertyProjectInfo = JSONObject.parseObject(lostPropertyProjectDTO.toString());
+        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(lostPropertyProjectDTO.getUserOpenId());
+        lostPropertyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+        lostPropertyProjectInfo.put("userName",userInfoDTO.getUserName());
+        return ResultVOUtil.success(lostPropertyProjectInfo);
     }
 
     @ApiOperation(value = "删除项目", notes = "")
@@ -148,8 +197,17 @@ public class LostPropertyProjectController {
                                   @RequestParam(value = "tagKeyword", defaultValue = "") String tagKeyword) {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<LostPropertyProjectDTO> lostPropertyProjectByTagsLike = lostPropertyProjectService.findLostPropertyProjectByTagsLike(tagKeyword, pageRequest);
-        return ResultVOUtil.success(lostPropertyProjectByTagsLike);
+        List<LostPropertyProjectDTO> list = lostPropertyProjectService.findLostPropertyProjectByTagsLike(tagKeyword, pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(LostPropertyProjectDTO lostPropertyProjectDTO : list){
+            JSONObject lostPropertyProjectInfo = JSONObject.parseObject(lostPropertyProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(lostPropertyProjectDTO.getUserOpenId());
+            lostPropertyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            lostPropertyProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(lostPropertyProjectInfo);
+        }
+        return ResultVOUtil.success(result);
     }
 
     @ApiOperation(value = "根据标题关键字搜索", notes = "")
@@ -165,7 +223,16 @@ public class LostPropertyProjectController {
                                     @RequestParam(value = "titleKeyword", defaultValue = "") String titleKeyword) {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<LostPropertyProjectDTO> result = lostPropertyProjectService.findLostPropertyProjectByTitleLike(titleKeyword, pageRequest);
+        List<LostPropertyProjectDTO> list = lostPropertyProjectService.findLostPropertyProjectByTitleLike(titleKeyword, pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(LostPropertyProjectDTO lostPropertyProjectDTO : list){
+            JSONObject lostPropertyProjectInfo = JSONObject.parseObject(lostPropertyProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(lostPropertyProjectDTO.getUserOpenId());
+            lostPropertyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            lostPropertyProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(lostPropertyProjectInfo);
+        }
         return ResultVOUtil.success(result);
     }
 

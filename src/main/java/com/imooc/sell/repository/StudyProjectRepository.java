@@ -38,4 +38,6 @@ public interface StudyProjectRepository extends JpaRepository<StudyProject, Inte
     @Query(value = "select * from study_project order by update_time*0.000001+favorite_number*10 desc limit ?1 offset ?2",
             nativeQuery = true)
     List<StudyProject> findByComplex(Integer pageSize, Integer offsetNumber);
+
+    List<StudyProject> findByUserOpenId(String userOpenId);
 }

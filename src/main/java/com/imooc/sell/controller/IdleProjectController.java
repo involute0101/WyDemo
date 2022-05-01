@@ -1,5 +1,6 @@
 package com.imooc.sell.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.imooc.sell.VO.ResultVO;
 import com.imooc.sell.controller.form.IdleProjectFrom;
 import com.imooc.sell.controller.form.UserInfoFrom;
@@ -14,6 +15,7 @@ import com.imooc.sell.service.ProjectMasterService;
 import com.imooc.sell.service.impl.IdleProjectServiceImpl;
 import com.imooc.sell.service.impl.JobsProjectServiceImpl;
 import com.imooc.sell.service.impl.ProjectMasterServiceImpl;
+import com.imooc.sell.service.impl.UserInfoServiceImpl;
 import com.imooc.sell.utils.ResultVOUtil;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +41,9 @@ public class IdleProjectController {
 
     @Autowired
     IdleProjectServiceImpl idleProjectService;
+
+    @Autowired
+    UserInfoServiceImpl userInfoServicel;
 
     @ApiOperation(value = "创建闲置项目", notes = "")
     @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
@@ -70,7 +76,16 @@ public class IdleProjectController {
         if (page<=0)return ResultVOUtil.error(403,"请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page-1, size);
         List<IdleProjectDTO> list = idleProjectService.findIdleProjectsOrderByUpdateTime(pageRequest);
-        return ResultVOUtil.success(list);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(IdleProjectDTO idleProjectDTO : list){
+            JSONObject idleProjectInfo = JSONObject.parseObject(idleProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoServicel.findUserInfoByUserOpenId(idleProjectDTO.getUserOpenId());
+            idleProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            idleProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(idleProjectInfo);
+        }
+        return ResultVOUtil.success(result);
     }
 
     @ApiOperation(value = "按照项目id查找项目详情", notes = "")
@@ -78,7 +93,12 @@ public class IdleProjectController {
     @ApiImplicitParam(name = "projectId",value = "项目id",required=true)
     @PostMapping("/findOne")
     public ResultVO findOne(@RequestParam(value = "projectId") String projectId){
-        return  ResultVOUtil.success(idleProjectService.findIdleProjectByProjectId(projectId));
+        IdleProjectDTO idleProjectDTO = idleProjectService.findIdleProjectByProjectId(projectId);
+        UserInfoDTO userInfoDTO = userInfoServicel.findUserInfoByUserOpenId(idleProjectDTO.getUserOpenId());
+        JSONObject idleProjectInfo = JSONObject.parseObject(idleProjectDTO.toString());
+        idleProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+        idleProjectInfo.put("userName",userInfoDTO.getUserName());
+        return ResultVOUtil.success(idleProjectInfo);
     }
 
     @ApiOperation(value = "删除项目", notes = "")
@@ -107,7 +127,16 @@ public class IdleProjectController {
         if (page<=0)return ResultVOUtil.error(403,"请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page-1,size);
         List<IdleProjectDTO> idleProjectByTagsLike = idleProjectService.findIdleProjectByTagsLike(tagKeyword, pageRequest);
-        return ResultVOUtil.success(idleProjectByTagsLike);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(IdleProjectDTO idleProjectDTO : idleProjectByTagsLike){
+            JSONObject idleProjectInfo = JSONObject.parseObject(idleProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoServicel.findUserInfoByUserOpenId(idleProjectDTO.getUserOpenId());
+            idleProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            idleProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(idleProjectInfo);
+        }
+        return ResultVOUtil.success(result);
     }
 
     @ApiOperation(value = "按照悬赏金额大小排序,查询闲置项目", notes = "")
@@ -125,7 +154,16 @@ public class IdleProjectController {
         if(!"desc".equals(sort) && !"asc".equals(sort))return ResultVOUtil.error(403,"排序方式不正确");
         PageRequest pageRequest = new PageRequest(page-1,size);
         List<IdleProjectDTO> idleProjectOrderByAmount = idleProjectService.findIdleProjectOrderByAmount(pageRequest, sort);
-        return ResultVOUtil.success(idleProjectOrderByAmount);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(IdleProjectDTO idleProjectDTO : idleProjectOrderByAmount){
+            JSONObject idleProjectInfo = JSONObject.parseObject(idleProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoServicel.findUserInfoByUserOpenId(idleProjectDTO.getUserOpenId());
+            idleProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            idleProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(idleProjectInfo);
+        }
+        return ResultVOUtil.success(result);
     }
 
     @ApiOperation(value = "根据标题关键字搜索", notes = "")
@@ -141,7 +179,16 @@ public class IdleProjectController {
                                     @RequestParam(value = "titleKeyword", defaultValue = "") String titleKeyword) {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<IdleProjectDTO> result = idleProjectService.findIdleProjectByTitleLike(titleKeyword, pageRequest);
+        List<IdleProjectDTO> list = idleProjectService.findIdleProjectByTitleLike(titleKeyword, pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(IdleProjectDTO idleProjectDTO : list){
+            JSONObject idleProjectInfo = JSONObject.parseObject(idleProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoServicel.findUserInfoByUserOpenId(idleProjectDTO.getUserOpenId());
+            idleProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            idleProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(idleProjectInfo);
+        }
         return ResultVOUtil.success(result);
     }
 
@@ -164,7 +211,16 @@ public class IdleProjectController {
                                                             @RequestParam(value = "size", defaultValue = "10") Integer size) throws Exception {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<IdleProjectDTO> result = idleProjectService.findIdleProjectOrderByFavoritesNumber(pageRequest);
+        List<IdleProjectDTO> list = idleProjectService.findIdleProjectOrderByFavoritesNumber(pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(IdleProjectDTO idleProjectDTO : list){
+            JSONObject idleProjectInfo = JSONObject.parseObject(idleProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoServicel.findUserInfoByUserOpenId(idleProjectDTO.getUserOpenId());
+            idleProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            idleProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(idleProjectInfo);
+        }
         return ResultVOUtil.success(result);
     }
 
@@ -179,7 +235,16 @@ public class IdleProjectController {
                                              @RequestParam(value = "size", defaultValue = "10") Integer size) throws Exception {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<IdleProjectDTO> result = idleProjectService.findByComplexService(pageRequest);
+        List<IdleProjectDTO> list = idleProjectService.findByComplexService(pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(IdleProjectDTO idleProjectDTO : list){
+            JSONObject idleProjectInfo = JSONObject.parseObject(idleProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoServicel.findUserInfoByUserOpenId(idleProjectDTO.getUserOpenId());
+            idleProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            idleProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(idleProjectInfo);
+        }
         return ResultVOUtil.success(result);
     }
 }

@@ -1,18 +1,18 @@
 package com.imooc.sell.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.imooc.sell.VO.ResultVO;
 import com.imooc.sell.controller.form.LostPropertyProjectFrom;
 import com.imooc.sell.controller.form.PurchasingProjectFrom;
 import com.imooc.sell.converter.LostPropertyProjectFrom2LostPropertyProjectDTOConverter;
 import com.imooc.sell.converter.PurchasingProjectFrom2PurchasingDTOConverter;
-import com.imooc.sell.dto.IdleProjectDTO;
-import com.imooc.sell.dto.LostPropertyProjectDTO;
-import com.imooc.sell.dto.PurchasingProjectDTO;
+import com.imooc.sell.dto.*;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
 import com.imooc.sell.service.impl.LostPropertyProjectServiceImpl;
 import com.imooc.sell.service.impl.ProjectMasterServiceImpl;
 import com.imooc.sell.service.impl.PurchasingServiceImpl;
+import com.imooc.sell.service.impl.UserInfoServiceImpl;
 import com.imooc.sell.utils.ResultVOUtil;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +36,9 @@ public class PurchasingProjectController {
     ProjectMasterServiceImpl projectMasterService;
     @Autowired
     PurchasingServiceImpl purchasingService;
+
+    @Autowired
+    UserInfoServiceImpl userInfoService;
 
     @ApiOperation(value = "创建跑腿项目", notes = "")
     @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
@@ -67,7 +71,16 @@ public class PurchasingProjectController {
         if (page<=0)return ResultVOUtil.error(403,"请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page-1, size);
         List<PurchasingProjectDTO> list = purchasingService.findPurchasingProjectsOrderByUpdateTime(pageRequest);
-        return ResultVOUtil.success(list);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(PurchasingProjectDTO purchasingProjectDTO : list){
+            JSONObject purchasingProjectInfo = JSONObject.parseObject(purchasingProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(purchasingProjectDTO.getUserOpenId());
+            purchasingProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            purchasingProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(purchasingProjectInfo);
+        }
+        return ResultVOUtil.success(result);
 
     }
 
@@ -76,7 +89,12 @@ public class PurchasingProjectController {
     @ApiImplicitParam(name = "projectId",value = "项目id",required=true)
     @PostMapping("/findOne")
     public ResultVO findOne(@RequestParam(value = "projectId") String projectId){
-        return  ResultVOUtil.success(purchasingService.findPurchasingByProjectId(projectId));
+        PurchasingProjectDTO purchasingProjectDTO = purchasingService.findPurchasingByProjectId(projectId);
+        JSONObject purchasingProjectInfo = JSONObject.parseObject(purchasingProjectDTO.toString());
+        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(purchasingProjectDTO.getUserOpenId());
+        purchasingProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+        purchasingProjectInfo.put("userName",userInfoDTO.getUserName());
+        return ResultVOUtil.success(purchasingProjectInfo);
     }
 
     @ApiOperation(value = "删除项目", notes = "")
@@ -104,8 +122,17 @@ public class PurchasingProjectController {
                                   @RequestParam(value = "tagKeyword", defaultValue = "") String tagKeyword) {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<PurchasingProjectDTO> purchasingProjectByTagsLike = purchasingService.findPurchasingProjectByTagsLike(tagKeyword, pageRequest);
-        return ResultVOUtil.success(purchasingProjectByTagsLike);
+        List<PurchasingProjectDTO> list = purchasingService.findPurchasingProjectByTagsLike(tagKeyword, pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(PurchasingProjectDTO purchasingProjectDTO : list){
+            JSONObject purchasingProjectInfo = JSONObject.parseObject(purchasingProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(purchasingProjectDTO.getUserOpenId());
+            purchasingProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            purchasingProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(purchasingProjectInfo);
+        }
+        return ResultVOUtil.success(result);
     }
 
     @ApiOperation(value = "按照悬赏金额大小排序,查询跑腿项目", notes = "")
@@ -122,8 +149,17 @@ public class PurchasingProjectController {
         if (page<=0)return ResultVOUtil.error(403,"请求页不合规范！");
         if(!"desc".equals(sort) && !"asc".equals(sort))return ResultVOUtil.error(403,"排序方式不正确");
         PageRequest pageRequest = new PageRequest(page-1,size);
-        List<PurchasingProjectDTO> purchasingProjectOrderByAmount = purchasingService.findPurchasingProjectOrderByAmount(pageRequest, sort);
-        return ResultVOUtil.success(purchasingProjectOrderByAmount);
+        List<PurchasingProjectDTO> list = purchasingService.findPurchasingProjectOrderByAmount(pageRequest, sort);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(PurchasingProjectDTO purchasingProjectDTO : list){
+            JSONObject purchasingProjectInfo = JSONObject.parseObject(purchasingProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(purchasingProjectDTO.getUserOpenId());
+            purchasingProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            purchasingProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(purchasingProjectInfo);
+        }
+        return ResultVOUtil.success(result);
     }
 
     @ApiOperation(value = "根据标题关键字搜索", notes = "")
@@ -139,7 +175,16 @@ public class PurchasingProjectController {
                                     @RequestParam(value = "titleKeyword", defaultValue = "") String titleKeyword) {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<PurchasingProjectDTO> result = purchasingService.findByPurchasingProjectByTitleLike(titleKeyword, pageRequest);
+        List<PurchasingProjectDTO> list = purchasingService.findByPurchasingProjectByTitleLike(titleKeyword, pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(PurchasingProjectDTO purchasingProjectDTO : list){
+            JSONObject purchasingProjectInfo = JSONObject.parseObject(purchasingProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(purchasingProjectDTO.getUserOpenId());
+            purchasingProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            purchasingProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(purchasingProjectInfo);
+        }
         return ResultVOUtil.success(result);
     }
 
@@ -154,7 +199,16 @@ public class PurchasingProjectController {
                                                             @RequestParam(value = "size", defaultValue = "10") Integer size) throws Exception {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<PurchasingProjectDTO> result = purchasingService.findPurchasingProjectOrderByFavoritesNumber(pageRequest);
+        List<PurchasingProjectDTO> list = purchasingService.findPurchasingProjectOrderByFavoritesNumber(pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(PurchasingProjectDTO purchasingProjectDTO : list){
+            JSONObject purchasingProjectInfo = JSONObject.parseObject(purchasingProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(purchasingProjectDTO.getUserOpenId());
+            purchasingProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            purchasingProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(purchasingProjectInfo);
+        }
         return ResultVOUtil.success(result);
     }
 
@@ -169,8 +223,17 @@ public class PurchasingProjectController {
                                              @RequestParam(value = "size", defaultValue = "10") Integer size) throws Exception {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<PurchasingProjectDTO> reslut = purchasingService.findByComplexService(pageRequest);
-        return ResultVOUtil.success(reslut);
+        List<PurchasingProjectDTO> list = purchasingService.findByComplexService(pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(PurchasingProjectDTO purchasingProjectDTO : list){
+            JSONObject purchasingProjectInfo = JSONObject.parseObject(purchasingProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(purchasingProjectDTO.getUserOpenId());
+            purchasingProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            purchasingProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(purchasingProjectInfo);
+        }
+        return ResultVOUtil.success(result);
     }
 
     @ApiOperation(value = "增加浏览量", notes = "")

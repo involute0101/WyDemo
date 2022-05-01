@@ -1,17 +1,14 @@
 package com.imooc.sell.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.imooc.sell.VO.CaptchaVO;
 import com.imooc.sell.VO.ResultVO;
-import com.imooc.sell.dataobject.Tag;
-import com.imooc.sell.dataobject.UserInfo;
-import com.imooc.sell.dto.UserInfoDTO;
+import com.imooc.sell.dataobject.*;
+import com.imooc.sell.dto.*;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
-import com.imooc.sell.repository.TagRepository;
-import com.imooc.sell.repository.UserInfoRepository;
+import com.imooc.sell.repository.*;
 import com.imooc.sell.service.UserInfoService;
 import com.imooc.sell.utils.ResultVOUtil;
 import com.imooc.sell.utils.SendSms;
@@ -25,6 +22,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +41,27 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Autowired
     TagRepository tagRepository;
+
+    @Autowired
+    IdleProjectRepository idleProjectRepository;
+
+    @Autowired
+    private JobsProjectRepository jobsProjectRepository;
+
+    @Autowired
+    private LostPropertyProjectRepository lostPropertyProjectRepository;
+
+    @Autowired
+    private PurchasingProjectRepository purchasingProjectRepository;
+
+    @Autowired
+    private RewardProjectRepository rewardProjectRepository;
+
+    @Autowired
+    private StudyProjectRepository studyProjectRepository;
+
+    @Autowired
+    private UserFollowRepository userFollowRepository;
 
     //注册
     @Override
@@ -308,8 +328,8 @@ public class UserInfoServiceImpl implements UserInfoService {
         else {
             discussionCircle += (","+circleName);
         }
-
-        circle.setPersonNumber(circle.getPersonNumber()+1);
+        if(!flag)circle.setPersonNumber(circle.getPersonNumber()+1);
+        else circle.setPersonNumber(circle.getPersonNumber()-1);
         tagRepository.save(circle);
         userInfo.setDiscussionCircle(discussionCircle);
         userInfoRepository.save(userInfo);
@@ -330,7 +350,110 @@ public class UserInfoServiceImpl implements UserInfoService {
             throw new SellException(ResultEnum.USER_NOT_FOUND);
         }
         String discussionCircle = userInfo.getDiscussionCircle();
+        if(discussionCircle==null)return false;
         if(discussionCircle.contains(circleName))return true;
         return false;
+    }
+
+    /**
+     * 根据openId获得用户发布过的所有项目
+     * @param userOpenId 用户openId
+     * @return
+     */
+    @Override
+    public List<JSONObject> findProjectByUserOpenId(String userOpenId) {
+        UserInfo userInfo = userInfoRepository.findByUserOpenid(userOpenId);
+        if(userInfo==null){
+            throw new SellException(ResultEnum.USER_NOT_FOUND);
+        }
+        List<JSONObject> result = new ArrayList<>();
+        List<IdleProject> idleProjectList = idleProjectRepository.findByUserOpenId(userOpenId);
+        for(IdleProject idleProject:idleProjectList){
+            IdleProjectDTO idleProjectDTO = new IdleProjectDTO();
+            BeanUtils.copyProperties(idleProject, idleProjectDTO,"picture");
+            if (idleProject.getPicture()!=null){
+                idleProjectDTO.setPicture(idleProject.getPicture().split(","));
+            }
+            JSONObject projectInfo = JSONObject.parseObject(idleProjectDTO.toString());
+            projectInfo.put("headPortrait",userInfo.getHeadPortrait());
+            projectInfo.put("userName",userInfo.getUserName());
+            result.add(projectInfo);
+        }
+        List<JobsProject> jobsProjectList = jobsProjectRepository.findByUserOpenId(userOpenId);
+        for(JobsProject jobsProject : jobsProjectList){
+            JobsProjectDTO jobsProjectDTO = new JobsProjectDTO();
+            BeanUtils.copyProperties(jobsProject, jobsProjectDTO,"picture");
+            if (jobsProject.getPicture()!=null){
+                jobsProjectDTO.setPicture(jobsProject.getPicture().split(","));
+            }
+            JSONObject projectInfo = JSONObject.parseObject(jobsProjectDTO.toString());
+            projectInfo.put("headPortrait",userInfo.getHeadPortrait());
+            projectInfo.put("userName",userInfo.getUserName());
+            result.add(projectInfo);
+        }
+        List<LostPropertyProject> lostPropertyProjectsList = lostPropertyProjectRepository.findByUserOpenId(userOpenId);
+        for(LostPropertyProject lostPropertyProject:lostPropertyProjectsList){
+            LostPropertyProjectDTO lostPropertyProjectDTO = new LostPropertyProjectDTO();
+            BeanUtils.copyProperties(lostPropertyProject, lostPropertyProjectDTO,"picture");
+            if(lostPropertyProject.getPicture()!=null){
+                lostPropertyProjectDTO.setPicture(lostPropertyProject.getPicture().split(","));
+            }
+            JSONObject projectInfo = JSONObject.parseObject(lostPropertyProjectDTO.toString());
+            projectInfo.put("headPortrait",userInfo.getHeadPortrait());
+            projectInfo.put("userName",userInfo.getUserName());
+            result.add(projectInfo);
+        }
+        List<PurchasingProject> purchasingProjectList = purchasingProjectRepository.findByUserOpenId(userOpenId);
+        for(PurchasingProject purchasingProject : purchasingProjectList){
+            PurchasingProjectDTO purchasingProjectDTO = new PurchasingProjectDTO();
+            BeanUtils.copyProperties(purchasingProject, purchasingProjectDTO,"picture");
+            if(purchasingProject.getPicture()!=null){
+                purchasingProjectDTO.setPicture(purchasingProject.getPicture().split(","));
+            }
+            JSONObject projectInfo = JSONObject.parseObject(purchasingProjectDTO.toString());
+            projectInfo.put("headPortrait",userInfo.getHeadPortrait());
+            projectInfo.put("userName",userInfo.getUserName());
+            result.add(projectInfo);
+        }
+        List<RewardProject> rewardProjectList = rewardProjectRepository.findByUserOpenId(userOpenId);
+        for(RewardProject rewardProject : rewardProjectList){
+            RewardProjectDTO rewardProjectDTO = new RewardProjectDTO();
+            BeanUtils.copyProperties(rewardProject, rewardProjectDTO,"picture");
+            if(rewardProject.getPicture()!=null){
+                rewardProjectDTO.setPicture(rewardProject.getPicture().split(","));
+            }
+            JSONObject projectInfo = JSONObject.parseObject(rewardProjectDTO.toString());
+            projectInfo.put("headPortrait",userInfo.getHeadPortrait());
+            projectInfo.put("userName",userInfo.getUserName());
+            result.add(projectInfo);
+        }
+        List<StudyProject> studyProjectsList = studyProjectRepository.findByUserOpenId(userOpenId);
+        for(StudyProject studyProject : studyProjectsList){
+            StudyProjectDTO studyProjectDTO = new StudyProjectDTO();
+            BeanUtils.copyProperties(studyProject, studyProjectDTO,"picture");
+            if (studyProject.getPicture()!=null){
+                studyProjectDTO.setPicture(studyProject.getPicture().split(","));
+            }
+            JSONObject projectInfo = JSONObject.parseObject(studyProjectDTO.toString());
+            projectInfo.put("headPortrait",userInfo.getHeadPortrait());
+            projectInfo.put("userName",userInfo.getUserName());
+            result.add(projectInfo);
+        }
+        return result;
+    }
+
+    @Override
+    public List<JSONObject> getProjectByFollow(String userOpenId) {
+        UserInfo userInfo = userInfoRepository.findByUserOpenid(userOpenId);
+        if(userInfo==null){
+            throw new SellException(ResultEnum.USER_NOT_FOUND);
+        }
+        Page<UserFollow> page = userFollowRepository.findByUserOpenId(userOpenId, new PageRequest(0, 10000));
+        List<JSONObject> result = new ArrayList<>();
+        for(UserFollow userFollow : page){
+            List<JSONObject> followProject = findProjectByUserOpenId(userFollow.getGoalFollower());
+            result.addAll(followProject);
+        }
+        return result;
     }
 }

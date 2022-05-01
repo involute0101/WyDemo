@@ -258,4 +258,20 @@ public class UserInfoController {
         ResultVO result = userFollowService.checkUserFollow(userFollowForm.getUserOpenId(), userFollowForm.getGoalFollower());
         return result;
     }
+
+    @ApiOperation(value = "我的发布", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "userOpenId",value = "用户openId",required=true)
+    @PostMapping("/allProject")
+    public ResultVO getAllProjectByUserOpenId(@RequestParam("userOpenId") String userOpenId){
+        return ResultVOUtil.success(userInfoService.findProjectByUserOpenId(userOpenId));
+    }
+
+    @ApiOperation(value = "关注的用户所发布的项目", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "userOpenId",value = "用户openId",required=true)
+    @PostMapping("/followProject")
+    public ResultVO goalUserProject(@RequestParam("userOpenId") String userOpenId){
+        return ResultVOUtil.success(userInfoService.getProjectByFollow(userOpenId));
+    }
 }

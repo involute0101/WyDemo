@@ -1,14 +1,17 @@
 package com.imooc.sell.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.imooc.sell.VO.ResultVO;
 import com.imooc.sell.controller.form.JobsProjectFrom;
 import com.imooc.sell.converter.JobsProjectFrom2JobsProjectProjectDTOConverter;
 import com.imooc.sell.dto.JobsProjectDTO;
 import com.imooc.sell.dto.RewardProjectDTO;
+import com.imooc.sell.dto.UserInfoDTO;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
 import com.imooc.sell.service.impl.JobsProjectServiceImpl;
 import com.imooc.sell.service.impl.ProjectMasterServiceImpl;
+import com.imooc.sell.service.impl.UserInfoServiceImpl;
 import com.imooc.sell.utils.ResultVOUtil;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +21,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +37,9 @@ public class JobsProjectController {
 
     @Autowired
     JobsProjectServiceImpl jobsProjectService;
+
+    @Autowired
+    UserInfoServiceImpl userInfoService;
 
     @ApiOperation(value = "创建招聘项目", notes = "")
     @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
@@ -65,7 +72,16 @@ public class JobsProjectController {
         if (page<=0)return ResultVOUtil.error(403,"请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page-1, size);
         List<JobsProjectDTO> list = jobsProjectService.findJobsProjectsOrderByUpdateTime(pageRequest);
-        return ResultVOUtil.success(list);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(JobsProjectDTO jobsProjectDTO : list){
+            JSONObject jobsProjectInfo = JSONObject.parseObject(jobsProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(jobsProjectDTO.getUserOpenId());
+            jobsProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            jobsProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(jobsProjectInfo);
+        }
+        return ResultVOUtil.success(result);
     }
 
     @ApiOperation(value = "按照 热度 查询招聘项目", notes = "")
@@ -79,7 +95,16 @@ public class JobsProjectController {
                                                             @RequestParam(value = "size", defaultValue = "10") Integer size) throws Exception {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<JobsProjectDTO> result = jobsProjectService.findJobsProjectOrderByFavoritesNumber(pageRequest);
+        List<JobsProjectDTO> list = jobsProjectService.findJobsProjectOrderByFavoritesNumber(pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(JobsProjectDTO jobsProjectDTO : list){
+            JSONObject jobsProjectInfo = JSONObject.parseObject(jobsProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(jobsProjectDTO.getUserOpenId());
+            jobsProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            jobsProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(jobsProjectInfo);
+        }
         return ResultVOUtil.success(result);
     }
 
@@ -97,7 +122,16 @@ public class JobsProjectController {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         if (!"desc".equals(sort) && !"asc".equals(sort)) return ResultVOUtil.error(403, "排序方式不正确");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<JobsProjectDTO> result = jobsProjectService.findJobsProjectOrderByAmount(pageRequest, sort);
+        List<JobsProjectDTO> list = jobsProjectService.findJobsProjectOrderByAmount(pageRequest, sort);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(JobsProjectDTO jobsProjectDTO : list){
+            JSONObject jobsProjectInfo = JSONObject.parseObject(jobsProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(jobsProjectDTO.getUserOpenId());
+            jobsProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            jobsProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(jobsProjectInfo);
+        }
         return ResultVOUtil.success(result);
     }
 
@@ -112,7 +146,16 @@ public class JobsProjectController {
                                              @RequestParam(value = "size", defaultValue = "10") Integer size) throws Exception {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<JobsProjectDTO> result = jobsProjectService.findByComplexService(pageRequest);
+        List<JobsProjectDTO> list = jobsProjectService.findByComplexService(pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(JobsProjectDTO jobsProjectDTO : list){
+            JSONObject jobsProjectInfo = JSONObject.parseObject(jobsProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(jobsProjectDTO.getUserOpenId());
+            jobsProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            jobsProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(jobsProjectInfo);
+        }
         return ResultVOUtil.success(result);
     }
 
@@ -121,7 +164,12 @@ public class JobsProjectController {
     @ApiImplicitParam(name = "projectId",value = "项目id",required=true)
     @PostMapping("/findOne")
     public ResultVO findOne(@RequestParam(value = "projectId") String projectId){
-        return  ResultVOUtil.success(jobsProjectService.findJobsProjectByProjectId(projectId));
+        JobsProjectDTO jobsProjectDTO = jobsProjectService.findJobsProjectByProjectId(projectId);
+        JSONObject jobsProjectInfo = JSONObject.parseObject(jobsProjectDTO.toString());
+        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(jobsProjectDTO.getUserOpenId());
+        jobsProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+        jobsProjectInfo.put("userName",userInfoDTO.getUserName());
+        return ResultVOUtil.success(jobsProjectInfo);
     }
 
     @ApiOperation(value = "删除项目", notes = "")
@@ -149,8 +197,17 @@ public class JobsProjectController {
                                   @RequestParam(value = "tagKeyword", defaultValue = "") String tagKeyword){
         if (page<=0)return ResultVOUtil.error(403,"请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page-1,size);
-        List<JobsProjectDTO> jobsProjectByTagsLike = jobsProjectService.findJobsProjectByTagsLike(tagKeyword, pageRequest);
-        return ResultVOUtil.success(jobsProjectByTagsLike);
+        List<JobsProjectDTO> list = jobsProjectService.findJobsProjectByTagsLike(tagKeyword, pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(JobsProjectDTO jobsProjectDTO : list){
+            JSONObject jobsProjectInfo = JSONObject.parseObject(jobsProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(jobsProjectDTO.getUserOpenId());
+            jobsProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            jobsProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(jobsProjectInfo);
+        }
+        return ResultVOUtil.success(result);
     }
 
     @ApiOperation(value = "根据标题关键字搜索", notes = "")
@@ -166,7 +223,16 @@ public class JobsProjectController {
                                     @RequestParam(value = "titleKeyword", defaultValue = "") String titleKeyword) {
         if (page <= 0) return ResultVOUtil.error(403, "请求页不合规范！");
         PageRequest pageRequest = new PageRequest(page - 1, size);
-        List<JobsProjectDTO> result = jobsProjectService.findJobsProjectByTitleLike(titleKeyword, pageRequest);
+        List<JobsProjectDTO> list = jobsProjectService.findJobsProjectByTitleLike(titleKeyword, pageRequest);
+
+        List<JSONObject> result = new ArrayList<>();
+        for(JobsProjectDTO jobsProjectDTO : list){
+            JSONObject jobsProjectInfo = JSONObject.parseObject(jobsProjectDTO.toString());
+            UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(jobsProjectDTO.getUserOpenId());
+            jobsProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+            jobsProjectInfo.put("userName",userInfoDTO.getUserName());
+            result.add(jobsProjectInfo);
+        }
         return ResultVOUtil.success(result);
     }
 

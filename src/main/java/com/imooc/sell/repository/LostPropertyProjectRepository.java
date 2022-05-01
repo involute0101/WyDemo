@@ -38,4 +38,6 @@ public interface LostPropertyProjectRepository extends JpaRepository<LostPropert
     @Query(value = "select * from lost_property_project order by update_time*0.000001+favorite_number*10 desc limit ?1 offset ?2",
             nativeQuery = true)
     List<LostPropertyProject> findByComplex(Integer pageSize, Integer offsetNumber);
+
+    List<LostPropertyProject> findByUserOpenId(String userOpenId);
 }
