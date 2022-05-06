@@ -165,4 +165,36 @@ public class DailyProjectController {
         }
         return ResultVOUtil.success(result);
     }
+
+    @ApiOperation(value = "按照项目id查找项目详情", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "projectId",value = "项目id",required=true)
+    @PostMapping("/findOne")
+    public ResultVO findOne(@RequestParam(value = "projectId") String projectId){
+        DailyProjectDTO dailyProjectDTO = dailyProjectService.findRewardByProjectId(projectId);
+        JSONObject dailyProjectInfo = JSONObject.parseObject(dailyProjectDTO.toString());
+        UserInfoDTO userInfoDTO = userInfoServicel.findUserInfoByUserOpenId(dailyProjectDTO.getUserOpenId());
+        dailyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+        dailyProjectInfo.put("userName",userInfoDTO.getUserName());
+        dailyProjectInfo.put("major",userInfoDTO.getUserMajor());
+        dailyProjectInfo.put("university",userInfoDTO.getUserUniversity());
+        dailyProjectInfo.put("leaveMessage",leaveMessageService.getMessageCountOfProject(dailyProjectDTO.getProjectId()));
+        return ResultVOUtil.success(dailyProjectInfo);
+    }
+
+    @ApiOperation(value = "增加浏览量", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "projectId",value = "项目id",required=true)
+    @PostMapping("/pageviews")
+    public ResultVO incPageviews(@RequestParam(value = "projectId") String projectId){
+        DailyProjectDTO dailyProjectDTO = dailyProjectService.increasePageviews(projectId);
+        JSONObject dailyProjectInfo = JSONObject.parseObject(dailyProjectDTO.toString());
+        UserInfoDTO userInfoDTO = userInfoServicel.findUserInfoByUserOpenId(dailyProjectDTO.getUserOpenId());
+        dailyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+        dailyProjectInfo.put("userName",userInfoDTO.getUserName());
+        dailyProjectInfo.put("major",userInfoDTO.getUserMajor());
+        dailyProjectInfo.put("university",userInfoDTO.getUserUniversity());
+        dailyProjectInfo.put("leaveMessage",leaveMessageService.getMessageCountOfProject(dailyProjectDTO.getProjectId()));
+        return ResultVOUtil.success(dailyProjectInfo);
+    }
 }

@@ -187,4 +187,43 @@ public class MakeFriendProjectServiceImpl {
         }
         return list;
     }
+
+    /**
+     * 根据projectId查询项目
+     * @param projectId 项目Id
+     * @return
+     */
+    public MakeFriendProjectDTO findRewardByProjectId(String projectId) {
+        MakeFriendProject makeFriendProject = makeFriendProjectRepository.findByProjectId(projectId);
+        MakeFriendProjectDTO makeFriendProjectDTO = new MakeFriendProjectDTO();
+        if(makeFriendProject!=null){
+            BeanUtils.copyProperties(makeFriendProject, makeFriendProjectDTO,"picture");
+            if(makeFriendProject.getPicture()!=null){
+                makeFriendProjectDTO.setPicture(makeFriendProject.getPicture().split(","));
+            }
+            return makeFriendProjectDTO;
+        }else{
+            throw new SellException(ResultEnum.PROJECT_MASTER_NOT_FOUND_BY_PROJECT_ID);
+        }
+    }
+
+    /**
+     * 增加浏览量
+     * @param projectId
+     * @return
+     */
+    public MakeFriendProjectDTO increasePageviews(String projectId) {
+        MakeFriendProject makeFriendProject = makeFriendProjectRepository.findByProjectId(projectId);
+        if(makeFriendProject==null){
+            throw new SellException(ResultEnum.PROJECT_ID_NOT_FOUND);
+        }
+        makeFriendProject.setPageviews(makeFriendProject.getPageviews()+1);
+        makeFriendProjectRepository.save(makeFriendProject);
+        MakeFriendProjectDTO makeFriendProjectDTO = new MakeFriendProjectDTO();
+        BeanUtils.copyProperties(makeFriendProject, makeFriendProjectDTO,"picture");
+        if(makeFriendProject.getPicture()!=null){
+            makeFriendProjectDTO.setPicture(makeFriendProject.getPicture().split(","));
+        }
+        return makeFriendProjectDTO;
+    }
 }

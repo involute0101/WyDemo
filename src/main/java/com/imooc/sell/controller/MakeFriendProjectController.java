@@ -152,4 +152,36 @@ public class MakeFriendProjectController {
         }
         return ResultVOUtil.success(result);
     }
+
+    @ApiOperation(value = "按照项目id查找项目详情", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "projectId",value = "项目id",required=true)
+    @PostMapping("/findOne")
+    public ResultVO findOne(@RequestParam(value = "projectId") String projectId){
+        MakeFriendProjectDTO makeFriendProjectDTO = makeFriendProjectService.findRewardByProjectId(projectId);
+        JSONObject makeFriendProjectInfo = JSONObject.parseObject(makeFriendProjectDTO.toString());
+        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(makeFriendProjectDTO.getUserOpenId());
+        makeFriendProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+        makeFriendProjectInfo.put("userName",userInfoDTO.getUserName());
+        makeFriendProjectInfo.put("major",userInfoDTO.getUserMajor());
+        makeFriendProjectInfo.put("university",userInfoDTO.getUserUniversity());
+        makeFriendProjectInfo.put("leaveMessage",leaveMessageService.getMessageCountOfProject(makeFriendProjectDTO.getProjectId()));
+        return ResultVOUtil.success(makeFriendProjectInfo);
+    }
+
+    @ApiOperation(value = "增加浏览量", notes = "")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
+    @ApiImplicitParam(name = "projectId",value = "项目id",required=true)
+    @PostMapping("/pageviews")
+    public ResultVO incPageviews(@RequestParam(value = "projectId") String projectId){
+        MakeFriendProjectDTO makeFriendProjectDTO = makeFriendProjectService.increasePageviews(projectId);
+        JSONObject makeFriendProjectInfo = JSONObject.parseObject(makeFriendProjectDTO.toString());
+        UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(makeFriendProjectDTO.getUserOpenId());
+        makeFriendProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
+        makeFriendProjectInfo.put("userName",userInfoDTO.getUserName());
+        makeFriendProjectInfo.put("major",userInfoDTO.getUserMajor());
+        makeFriendProjectInfo.put("university",userInfoDTO.getUserUniversity());
+        makeFriendProjectInfo.put("leaveMessage",leaveMessageService.getMessageCountOfProject(makeFriendProjectDTO.getProjectId()));
+        return ResultVOUtil.success(makeFriendProjectInfo);
+    }
 }

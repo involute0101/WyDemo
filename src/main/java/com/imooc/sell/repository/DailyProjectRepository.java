@@ -19,4 +19,6 @@ public interface DailyProjectRepository extends JpaRepository<DailyProject,Integ
     List<DailyProject> findByComplex(Integer pageSize, Integer offsetNumber);
 
     Page<DailyProject> findByTitleLike(String keyword, Pageable pageable);
+
+    DailyProject findByProjectId(String projectId);
 }

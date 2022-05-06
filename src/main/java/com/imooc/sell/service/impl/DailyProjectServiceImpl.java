@@ -6,10 +6,7 @@ import com.imooc.sell.controller.form.MakeFriendProjectForm;
 import com.imooc.sell.controller.form.TagForm;
 import com.imooc.sell.dataobject.DailyProject;
 import com.imooc.sell.dataobject.IdleProject;
-import com.imooc.sell.dto.DailyProjectDTO;
-import com.imooc.sell.dto.IdleProjectDTO;
-import com.imooc.sell.dto.ProjectMasterDTO;
-import com.imooc.sell.dto.UserInfoDTO;
+import com.imooc.sell.dto.*;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
 import com.imooc.sell.repository.DailyProjectRepository;
@@ -175,5 +172,44 @@ public class DailyProjectServiceImpl {
             list.add(dailyProjectDTO);
         }
         return list;
+    }
+
+    /**
+     * 根据id查找项目
+     * @param projectId
+     * @return
+     */
+    public DailyProjectDTO findRewardByProjectId(String projectId) {
+        DailyProject dailyProject = dailyProjectRepository.findByProjectId(projectId);
+        DailyProjectDTO dailyProjectDTO = new DailyProjectDTO();
+        if(dailyProject!=null){
+            BeanUtils.copyProperties(dailyProject, dailyProjectDTO,"picture");
+            if (dailyProject.getPicture()!=null){
+                dailyProjectDTO.setPicture(dailyProject.getPicture().split(","));
+            }
+            return dailyProjectDTO;
+        }else{
+            throw new SellException(ResultEnum.PROJECT_MASTER_NOT_FOUND_BY_PROJECT_ID);
+        }
+    }
+
+    /**
+     * 增加浏览量
+     * @param projectId
+     * @return
+     */
+    public DailyProjectDTO increasePageviews(String projectId) {
+        DailyProject dailyProject = dailyProjectRepository.findByProjectId(projectId);
+        if(dailyProject==null){
+            throw new SellException(ResultEnum.PROJECT_ID_NOT_FOUND);
+        }
+        dailyProject.setPageviews(dailyProject.getPageviews()+1);
+        dailyProjectRepository.save(dailyProject);
+        DailyProjectDTO dailyProjectDTO = new DailyProjectDTO();
+        BeanUtils.copyProperties(dailyProject, dailyProjectDTO,"picture");
+        if(dailyProject.getPicture()!=null){
+            dailyProjectDTO.setPicture(dailyProject.getPicture().split(","));
+        }
+        return dailyProjectDTO;
     }
 }

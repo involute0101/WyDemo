@@ -18,4 +18,6 @@ public interface MakeFriendProjectRepository extends JpaRepository<MakeFriendPro
     List<MakeFriendProject> findByComplex(Integer pageSize, Integer offsetNumber);
 
     Page<MakeFriendProject> findByTitleLike(String keyword, Pageable pageable);
+
+    MakeFriendProject findByProjectId(String projectId);
 }
