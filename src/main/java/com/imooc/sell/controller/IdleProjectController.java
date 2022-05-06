@@ -12,10 +12,7 @@ import com.imooc.sell.dto.UserInfoDTO;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
 import com.imooc.sell.service.ProjectMasterService;
-import com.imooc.sell.service.impl.IdleProjectServiceImpl;
-import com.imooc.sell.service.impl.JobsProjectServiceImpl;
-import com.imooc.sell.service.impl.ProjectMasterServiceImpl;
-import com.imooc.sell.service.impl.UserInfoServiceImpl;
+import com.imooc.sell.service.impl.*;
 import com.imooc.sell.utils.ResultVOUtil;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +41,9 @@ public class IdleProjectController {
 
     @Autowired
     UserInfoServiceImpl userInfoServicel;
+
+    @Autowired
+    LeaveMessageServiceImpl leaveMessageService;
 
     @ApiOperation(value = "创建闲置项目", notes = "")
     @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
@@ -83,6 +83,9 @@ public class IdleProjectController {
             UserInfoDTO userInfoDTO = userInfoServicel.findUserInfoByUserOpenId(idleProjectDTO.getUserOpenId());
             idleProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
             idleProjectInfo.put("userName",userInfoDTO.getUserName());
+            idleProjectInfo.put("major",userInfoDTO.getUserMajor());
+            idleProjectInfo.put("university",userInfoDTO.getUserUniversity());
+            idleProjectInfo.put("leaveMessage",leaveMessageService.getMessageCountOfProject(idleProjectDTO.getProjectId()));
             result.add(idleProjectInfo);
         }
         return ResultVOUtil.success(result);
@@ -98,6 +101,9 @@ public class IdleProjectController {
         JSONObject idleProjectInfo = JSONObject.parseObject(idleProjectDTO.toString());
         idleProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
         idleProjectInfo.put("userName",userInfoDTO.getUserName());
+        idleProjectInfo.put("major",userInfoDTO.getUserMajor());
+        idleProjectInfo.put("university",userInfoDTO.getUserUniversity());
+        idleProjectInfo.put("leaveMessage",leaveMessageService.getMessageCountOfProject(idleProjectDTO.getProjectId()));
         return ResultVOUtil.success(idleProjectInfo);
     }
 
@@ -134,6 +140,9 @@ public class IdleProjectController {
             UserInfoDTO userInfoDTO = userInfoServicel.findUserInfoByUserOpenId(idleProjectDTO.getUserOpenId());
             idleProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
             idleProjectInfo.put("userName",userInfoDTO.getUserName());
+            idleProjectInfo.put("major",userInfoDTO.getUserMajor());
+            idleProjectInfo.put("university",userInfoDTO.getUserUniversity());
+            idleProjectInfo.put("leaveMessage",leaveMessageService.getMessageCountOfProject(idleProjectDTO.getProjectId()));
             result.add(idleProjectInfo);
         }
         return ResultVOUtil.success(result);
@@ -161,6 +170,9 @@ public class IdleProjectController {
             UserInfoDTO userInfoDTO = userInfoServicel.findUserInfoByUserOpenId(idleProjectDTO.getUserOpenId());
             idleProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
             idleProjectInfo.put("userName",userInfoDTO.getUserName());
+            idleProjectInfo.put("major",userInfoDTO.getUserMajor());
+            idleProjectInfo.put("university",userInfoDTO.getUserUniversity());
+            idleProjectInfo.put("leaveMessage",leaveMessageService.getMessageCountOfProject(idleProjectDTO.getProjectId()));
             result.add(idleProjectInfo);
         }
         return ResultVOUtil.success(result);
@@ -187,6 +199,9 @@ public class IdleProjectController {
             UserInfoDTO userInfoDTO = userInfoServicel.findUserInfoByUserOpenId(idleProjectDTO.getUserOpenId());
             idleProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
             idleProjectInfo.put("userName",userInfoDTO.getUserName());
+            idleProjectInfo.put("major",userInfoDTO.getUserMajor());
+            idleProjectInfo.put("university",userInfoDTO.getUserUniversity());
+            idleProjectInfo.put("leaveMessage",leaveMessageService.getMessageCountOfProject(idleProjectDTO.getProjectId()));
             result.add(idleProjectInfo);
         }
         return ResultVOUtil.success(result);
@@ -219,6 +234,9 @@ public class IdleProjectController {
             UserInfoDTO userInfoDTO = userInfoServicel.findUserInfoByUserOpenId(idleProjectDTO.getUserOpenId());
             idleProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
             idleProjectInfo.put("userName",userInfoDTO.getUserName());
+            idleProjectInfo.put("major",userInfoDTO.getUserMajor());
+            idleProjectInfo.put("university",userInfoDTO.getUserUniversity());
+            idleProjectInfo.put("leaveMessage",leaveMessageService.getMessageCountOfProject(idleProjectDTO.getProjectId()));
             result.add(idleProjectInfo);
         }
         return ResultVOUtil.success(result);
@@ -243,6 +261,9 @@ public class IdleProjectController {
             UserInfoDTO userInfoDTO = userInfoServicel.findUserInfoByUserOpenId(idleProjectDTO.getUserOpenId());
             idleProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
             idleProjectInfo.put("userName",userInfoDTO.getUserName());
+            idleProjectInfo.put("major",userInfoDTO.getUserMajor());
+            idleProjectInfo.put("university",userInfoDTO.getUserUniversity());
+            idleProjectInfo.put("leaveMessage",leaveMessageService.getMessageCountOfProject(idleProjectDTO.getProjectId()));
             result.add(idleProjectInfo);
         }
         return ResultVOUtil.success(result);

@@ -12,10 +12,7 @@ import com.imooc.sell.dto.UserInfoDTO;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
 import com.imooc.sell.service.StudyProjectService;
-import com.imooc.sell.service.impl.ProjectMasterServiceImpl;
-import com.imooc.sell.service.impl.RewardServiceImpl;
-import com.imooc.sell.service.impl.StudyServiceImpl;
-import com.imooc.sell.service.impl.UserInfoServiceImpl;
+import com.imooc.sell.service.impl.*;
 import com.imooc.sell.utils.ResultVOUtil;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +39,9 @@ public class StudyProjectController {
 
     @Autowired
     UserInfoServiceImpl userInfoService;
+
+    @Autowired
+    LeaveMessageServiceImpl leaveMessageService;
 
     @ApiOperation(value = "创建学习项目", notes = "")
     @ApiResponses({@ApiResponse(code = 200, message = "成功"), @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")})
@@ -81,6 +81,9 @@ public class StudyProjectController {
             UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(studyProjectDTO.getUserOpenId());
             studyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
             studyProjectInfo.put("userName",userInfoDTO.getUserName());
+            studyProjectInfo.put("major",userInfoDTO.getUserMajor());
+            studyProjectInfo.put("university",userInfoDTO.getUserUniversity());
+            studyProjectInfo.put("leaveMessage",leaveMessageService.getMessageCountOfProject(studyProjectDTO.getProjectId()));
             result.add(studyProjectInfo);
         }
         return ResultVOUtil.success(result);
@@ -97,6 +100,9 @@ public class StudyProjectController {
         UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(studyProjectDTO.getUserOpenId());
         studyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
         studyProjectInfo.put("userName",userInfoDTO.getUserName());
+        studyProjectInfo.put("major",userInfoDTO.getUserMajor());
+        studyProjectInfo.put("university",userInfoDTO.getUserUniversity());
+        studyProjectInfo.put("leaveMessage",leaveMessageService.getMessageCountOfProject(studyProjectDTO.getProjectId()));
         return ResultVOUtil.success(studyProjectInfo);
     }
 
@@ -133,6 +139,9 @@ public class StudyProjectController {
             UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(studyProjectDTO.getUserOpenId());
             studyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
             studyProjectInfo.put("userName",userInfoDTO.getUserName());
+            studyProjectInfo.put("major",userInfoDTO.getUserMajor());
+            studyProjectInfo.put("university",userInfoDTO.getUserUniversity());
+            studyProjectInfo.put("leaveMessage",leaveMessageService.getMessageCountOfProject(studyProjectDTO.getProjectId()));
             result.add(studyProjectInfo);
         }
         return ResultVOUtil.success(result);
@@ -165,6 +174,9 @@ public class StudyProjectController {
             UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(studyProjectDTO.getUserOpenId());
             studyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
             studyProjectInfo.put("userName",userInfoDTO.getUserName());
+            studyProjectInfo.put("major",userInfoDTO.getUserMajor());
+            studyProjectInfo.put("university",userInfoDTO.getUserUniversity());
+            studyProjectInfo.put("leaveMessage",leaveMessageService.getMessageCountOfProject(studyProjectDTO.getProjectId()));
             result.add(studyProjectInfo);
         }
         return ResultVOUtil.success(result);
@@ -189,6 +201,9 @@ public class StudyProjectController {
             UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(studyProjectDTO.getUserOpenId());
             studyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
             studyProjectInfo.put("userName",userInfoDTO.getUserName());
+            studyProjectInfo.put("major",userInfoDTO.getUserMajor());
+            studyProjectInfo.put("university",userInfoDTO.getUserUniversity());
+            studyProjectInfo.put("leaveMessage",leaveMessageService.getMessageCountOfProject(studyProjectDTO.getProjectId()));
             result.add(studyProjectInfo);
         }
         return ResultVOUtil.success(result);
@@ -216,6 +231,9 @@ public class StudyProjectController {
             UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(studyProjectDTO.getUserOpenId());
             studyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
             studyProjectInfo.put("userName",userInfoDTO.getUserName());
+            studyProjectInfo.put("major",userInfoDTO.getUserMajor());
+            studyProjectInfo.put("university",userInfoDTO.getUserUniversity());
+            studyProjectInfo.put("leaveMessage",leaveMessageService.getMessageCountOfProject(studyProjectDTO.getProjectId()));
             result.add(studyProjectInfo);
         }
         return ResultVOUtil.success(result);
@@ -242,6 +260,9 @@ public class StudyProjectController {
             UserInfoDTO userInfoDTO = userInfoService.findUserInfoByUserOpenId(studyProjectDTO.getUserOpenId());
             studyProjectInfo.put("headPortrait",userInfoDTO.getHeadPortrait());
             studyProjectInfo.put("userName",userInfoDTO.getUserName());
+            studyProjectInfo.put("major",userInfoDTO.getUserMajor());
+            studyProjectInfo.put("university",userInfoDTO.getUserUniversity());
+            studyProjectInfo.put("leaveMessage",leaveMessageService.getMessageCountOfProject(studyProjectDTO.getProjectId()));
             result.add(studyProjectInfo);
         }
         return ResultVOUtil.success(result);
