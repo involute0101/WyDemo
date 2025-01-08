@@ -24,7 +24,7 @@ public class SendSms
     public static boolean sendSms (String captcha ,String phoneNumbers, String limitTime) {
         try{
 
-            Credential cred = new Credential("AKIDJRJuEIuJTO4UfbHhtpWyB8pHTP6XjgOr", "EDwRggQxEF0WmmW0FEzUklW1GEySggQu");
+            Credential cred = new Credential("密钥ID", "密钥key");
 
             HttpProfile httpProfile = new HttpProfile();
             httpProfile.setEndpoint("sms.tencentcloudapi.com");
